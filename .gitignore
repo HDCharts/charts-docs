@@ -1,0 +1,29 @@
+# OS/editor
+.DS_Store
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Docs app (if kept under docs/docs-app during transition)
+docs-app/node_modules/
+docs-app/.next/
+docs/docs-app/node_modules/
+docs/docs-app/.next/
+
+# Python virtual environments
+.venv/
+docs/.venv/
+
+# Generated build artifacts
+build/
+*/build/
+
+# Static docs artifacts are published from docs-static branch
+static/
