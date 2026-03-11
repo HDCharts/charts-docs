@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "../../scripts/fetch-docs-static.sh",
+    "prebuild": "../scripts/fetch-docs-static.sh",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

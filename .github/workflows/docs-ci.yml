@@ -1,0 +1,47 @@
+name: Docs CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: Docs Build and Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: docs-app/package-lock.json
+
+      - name: Validate docs release link contract
+        run: bash scripts/test-docs-release-links-contract.sh
+
+      - name: Validate docs static publish behavior
+        run: bash scripts/test-publish-docs-static.sh
+
+      - name: Install docs app dependencies
+        working-directory: docs-app
+        run: npm ci
+
+      - name: Build docs app
+        working-directory: docs-app
+        run: npm run build
