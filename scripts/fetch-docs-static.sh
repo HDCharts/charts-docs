@@ -92,12 +92,6 @@ if ! git -C "${REPO_ROOT}" remote get-url "${REMOTE}" >/dev/null 2>&1; then
 fi
 
 echo "Fetching static from ${REMOTE}/${BRANCH}..."
-if ! git -C "${REPO_ROOT}" ls-remote --exit-code --heads "${REMOTE}" "${BRANCH}" >/dev/null 2>&1; then
-  echo "Remote branch ${REMOTE}/${BRANCH} not found; skipping static fetch." >&2
-  sync_public_assets
-  exit 0
-fi
-
 git -C "${REPO_ROOT}" fetch "${REMOTE}" "${BRANCH}"
 git -C "${REPO_ROOT}" checkout "${REMOTE}/${BRANCH}" -- static
 sync_public_assets
