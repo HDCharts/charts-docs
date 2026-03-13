@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import { getDefaultVersionId } from "./lib/versions";
 
 const defaultDocsVersion = getDefaultVersionId();
+const docsStaticBaseUrl = (process.env.DOCS_STATIC_BASE_URL ?? "")
+  .trim()
+  .replace(/\/+$/, "");
+if (docsStaticBaseUrl.length === 0) {
+  throw new Error("DOCS_STATIC_BASE_URL must be set for docs-app builds and runtime.");
+}
 
 const nextConfig: NextConfig = {
   // Enable trailing slashes for clean URLs
@@ -14,7 +20,6 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     '*': [
       './public/content/**/*',
-      './public/static/**/*',
     ],
   },
   
@@ -52,24 +57,31 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
+    const staticOrigin = `${docsStaticBaseUrl}/static`;
+    const routes = [
+      {
+        source: "/static/:path*",
+        destination: `${staticOrigin}/:path*`,
+      },
       {
         source: "/demo/:version/",
-        destination: "/static/demo/:version/index.html",
+        destination: `${staticOrigin}/demo/:version/index.html`,
       },
       {
         source: "/demo/:version/:path*",
-        destination: "/static/demo/:version/:path*",
+        destination: `${staticOrigin}/demo/:version/:path*`,
       },
       {
         source: "/playground/:version/",
-        destination: "/static/playground/:version/index.html",
+        destination: `${staticOrigin}/playground/:version/index.html`,
       },
       {
         source: "/playground/:version/:path*",
-        destination: "/static/playground/:version/:path*",
+        destination: `${staticOrigin}/playground/:version/:path*`,
       },
     ];
+
+    return routes;
   },
   
   // Redirects for convenience
@@ -91,40 +103,20 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/static/demo/:version",
-        destination: "/demo/:version/",
-        permanent: true,
-      },
-      {
-        source: "/static/demo/:version/index.html",
-        destination: "/demo/:version/",
-        permanent: true,
-      },
-      {
         source: "/playground/:version/index.html",
-        destination: "/playground/:version/",
-        permanent: true,
-      },
-      {
-        source: "/static/playground/:version",
-        destination: "/playground/:version/",
-        permanent: true,
-      },
-      {
-        source: "/static/playground/:version/index.html",
         destination: "/playground/:version/",
         permanent: true,
       },
       // Redirect /docs to current version
       {
         source: '/docs',
-        destination: '/v2/wiki',
+        destination: `/${defaultDocsVersion}/wiki`,
         permanent: false,
       },
       // Redirect /wiki to current version wiki
       {
         source: '/wiki',
-        destination: '/v2/wiki',
+        destination: `/${defaultDocsVersion}/wiki`,
         permanent: false,
       },
     ];

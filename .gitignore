@@ -24,6 +24,3 @@ docs/.venv/
 # Generated build artifacts
 build/
 */build/
-
-# Static docs artifacts are published from docs-static branch
-static/

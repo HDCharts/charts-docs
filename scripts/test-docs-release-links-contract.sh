@@ -5,7 +5,6 @@ set -euo pipefail
 # - registry path conventions
 # - required docs content entries
 # - route rewrites/redirects and user-facing links
-# Does not require built static assets.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -113,12 +112,13 @@ test_registry_release_links() {
 test_clean_link_routes_are_present() {
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo"' "next config redirects /demo to latest release"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/playground"' "next config redirects /playground to snapshot"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'throw new Error("DOCS_STATIC_BASE_URL must be set for docs-app builds and runtime.")' "next config requires DOCS_STATIC_BASE_URL"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'const staticOrigin = `${docsStaticBaseUrl}/static`' "next config resolves static origin from DOCS_STATIC_BASE_URL"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/static/:path*"' "next config rewrites static assets through CDN origin"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo/:version/"' "next config rewrites clean demo entry route"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: "/static/demo/:version/index.html"' "next config maps clean demo entry route"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: `${staticOrigin}/demo/:version/index.html`' "next config maps clean demo entry route"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/playground/:version/"' "next config rewrites clean playground entry route"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: "/static/playground/:version/index.html"' "next config maps clean playground entry route"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/static/demo/:version/index.html"' "next config redirects legacy demo index link"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/static/playground/:version/index.html"' "next config redirects legacy playground index link"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: `${staticOrigin}/playground/:version/index.html`' "next config maps clean playground entry route"
 }
 
 test_user_facing_links_use_clean_paths() {

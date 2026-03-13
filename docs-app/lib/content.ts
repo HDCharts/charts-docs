@@ -3,12 +3,13 @@ import path from 'path';
 import matter from 'gray-matter';
 import { DocPage, NavItem, PageFrontmatter } from './types';
 import { createHeadingSlugger } from './anchors';
+import { getVersion } from './versions';
 
 /**
  * Base path to wiki content
  */
 const CONTENT_BASE = path.join(process.cwd(), '..', 'content');
-const SNAPSHOT_CHANGESETS_PATH = path.join(CONTENT_BASE, 'snapshot', 'changes');
+const CHANGESETS_DIR_NAME = 'changes';
 
 /**
  * Get the wiki content directory for a version
@@ -21,7 +22,11 @@ function getBreakingChangesPath(versionId: string): string {
   return path.join(CONTENT_BASE, versionId, 'breaking-changes.md');
 }
 
-interface SnapshotChangeset {
+function getChangesetsPath(versionId: string): string {
+  return path.join(CONTENT_BASE, versionId, CHANGESETS_DIR_NAME);
+}
+
+interface VersionChangeset {
   fileName: string;
   type: string;
   module: string;
@@ -45,7 +50,7 @@ function normalizeChangesetValue(value: string): string {
   return normalized.trim();
 }
 
-function parseChangesetFile(filePath: string): SnapshotChangeset | null {
+function parseChangesetFile(filePath: string): VersionChangeset | null {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     const record: Record<string, string> = {};
@@ -76,17 +81,18 @@ function parseChangesetFile(filePath: string): SnapshotChangeset | null {
   }
 }
 
-function getSnapshotChangesets(): SnapshotChangeset[] {
-  if (!fs.existsSync(SNAPSHOT_CHANGESETS_PATH)) {
+function getVersionChangesets(versionId: string): VersionChangeset[] {
+  const changesetsPath = getChangesetsPath(versionId);
+  if (!fs.existsSync(changesetsPath)) {
     return [];
   }
 
   return fs
-    .readdirSync(SNAPSHOT_CHANGESETS_PATH)
+    .readdirSync(changesetsPath)
     .filter((file) => /\.mdx?$/.test(file))
     .sort((a, b) => a.localeCompare(b))
-    .map((file) => parseChangesetFile(path.join(SNAPSHOT_CHANGESETS_PATH, file)))
-    .filter((item): item is SnapshotChangeset => item !== null);
+    .map((file) => parseChangesetFile(path.join(changesetsPath, file)))
+    .filter((item): item is VersionChangeset => item !== null);
 }
 
 function typeHeading(type: string): string {
@@ -106,13 +112,13 @@ function typeHeading(type: string): string {
   }
 }
 
-function renderSnapshotChangesetsMarkdown(changesets: SnapshotChangeset[]): string {
+function renderChangesetsMarkdown(changesets: VersionChangeset[]): string {
   if (changesets.length === 0) {
     return '';
   }
 
   const typeOrder = ['feature', 'fix', 'refactor', 'docs', 'chore', 'other'];
-  const grouped = new Map<string, SnapshotChangeset[]>();
+  const grouped = new Map<string, VersionChangeset[]>();
 
   for (const changeset of changesets) {
     const key = typeOrder.includes(changeset.type) ? changeset.type : 'other';
@@ -504,10 +510,14 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     const { data, content } = matter(fileContent);
     
     const frontmatter = data as PageFrontmatter;
-    let pageContent = content;
+    // Resolve simple version placeholders used by docs markdown links/headings.
+    const versionLabel = getVersion(versionId)?.label ?? versionId;
+    let pageContent = content
+      .replace(/\{\{version\}\}/g, versionId)
+      .replace(/\{\{versionLabel\}\}/g, versionLabel);
 
-    if (versionId === 'snapshot' && slug === '') {
-      const changesetsMarkdown = renderSnapshotChangesetsMarkdown(getSnapshotChangesets());
+    if (slug === '') {
+      const changesetsMarkdown = renderChangesetsMarkdown(getVersionChangesets(versionId));
       if (changesetsMarkdown) {
         pageContent = injectIntoWhatsNewSection(pageContent, changesetsMarkdown);
       }

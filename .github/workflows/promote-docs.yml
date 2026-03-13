@@ -1,0 +1,96 @@
+name: Promote Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release version to promote from snapshot (e.g. 2.3.0)"
+        required: true
+        type: string
+      release_notes:
+        description: "Optional registry notes for the new release entry"
+        required: false
+        type: string
+      source_repository:
+        description: "Source repository that triggered this promotion"
+        required: false
+        type: string
+      source_sha:
+        description: "Source SHA used to compute release version"
+        required: false
+        type: string
+      source_run_url:
+        description: "Source workflow run URL"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: promote-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  promote-docs:
+    name: Promote snapshot docs to release
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'HDCharts' }}
+    steps:
+      - name: Checkout charts-docs
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Promote snapshot content and update registry
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${RELEASE_NOTES:-}" ]]; then
+            bash scripts/promote-snapshot-to-release.sh "${RELEASE_VERSION}" "${RELEASE_NOTES}"
+          else
+            bash scripts/promote-snapshot-to-release.sh "${RELEASE_VERSION}"
+          fi
+
+      - name: Reset snapshot baseline
+        shell: bash
+        run: bash scripts/reset-snapshot-content.sh
+
+      - name: Validate docs release link contract
+        shell: bash
+        run: bash scripts/test-docs-release-links-contract.sh
+
+      - name: Build docs app
+        env:
+          DOCS_STATIC_BASE_URL: ${{ vars.DOCS_STATIC_BASE_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --prefix docs-app
+          npm run build --prefix docs-app
+
+      - name: Create promotion pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/promote-docs-${{ github.event.inputs.release_version }}
+          delete-branch: true
+          commit-message: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
+          title: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
+          add-paths: |
+            content/snapshot/**
+            content/${{ github.event.inputs.release_version }}/**
+            registry/versions.json
+          body: |
+            Promotes `content/snapshot` to `content/${{ github.event.inputs.release_version }}` and updates `registry/versions.json`.
+
+            Source context:
+            - source_repository: `${{ github.event.inputs.source_repository || 'n/a' }}`
+            - source_sha: `${{ github.event.inputs.source_sha || 'n/a' }}`
+            - source_run_url: `${{ github.event.inputs.source_run_url || 'n/a' }}`
+          labels: |
+            docs
+            automation
