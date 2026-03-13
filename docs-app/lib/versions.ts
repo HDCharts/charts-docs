@@ -69,7 +69,7 @@ export function getCurrentVersion(): DocVersion | undefined {
  */
 export function getDefaultVersionId(): string {
   const current = getCurrentVersion();
-  return current?.id ?? getAllVersions()[0]?.id ?? 'v2';
+  return current?.id ?? getAllVersions()[0]?.id ?? 'snapshot';
 }
 
 /**
