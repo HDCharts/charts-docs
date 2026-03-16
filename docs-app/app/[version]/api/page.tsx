@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { getAllVersions, getVersion } from '@/lib/versions';
+import { getVersionApiIndexUrl } from '@/lib/version-links';
 
 interface ApiPageProps {
   params: Promise<{ version: string }>;
@@ -21,8 +22,7 @@ export default async function ApiPage({ params }: ApiPageProps) {
     return <div>Version not found</div>;
   }
 
-  // The API docs are served from static assets
-  const apiUrl = `/static/api/${versionId}/index.html`;
+  const apiUrl = getVersionApiIndexUrl(version);
 
   return (
     <div className="docs-content animate-fadeIn" style={{ maxWidth: 'none' }}>

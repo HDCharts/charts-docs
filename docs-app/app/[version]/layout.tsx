@@ -24,7 +24,7 @@ export default async function VersionLayout({ children, params }: VersionLayoutP
   return (
     <div className="docs-layout">
       <Header versions={versions} currentVersion={version} />
-      <Sidebar navigation={navigation} versionId={versionId} />
+      <Sidebar navigation={navigation} version={version} />
       <main className="docs-main">
         {children}
       </main>

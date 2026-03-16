@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NavItem } from '@/lib/types';
+import { DocVersion, NavItem } from '@/lib/types';
+import { getVersionDemoUrl } from '@/lib/version-links';
 import {
   ApiReferenceIcon,
   DemoGalleryIcon,
@@ -17,7 +18,7 @@ import {
 
 interface SidebarProps {
   navigation: NavItem[];
-  versionId: string;
+  version: DocVersion;
 }
 
 function sanitizeNavigationPath(rawPath: string): string {
@@ -55,11 +56,12 @@ function getDocumentationIcon(slug: string) {
   }
 }
 
-export function Sidebar({ navigation, versionId }: SidebarProps) {
+export function Sidebar({ navigation, version }: SidebarProps) {
   const pathname = usePathname();
   const [hash, setHash] = useState('');
   const [mobileNavPath, setMobileNavPath] = useState<string | null>(null);
   const isMobileNavOpen = mobileNavPath === pathname;
+  const demoUrl = getVersionDemoUrl(version);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -169,7 +171,7 @@ export function Sidebar({ navigation, versionId }: SidebarProps) {
           <div className="docs-sidebar__section-title">Resources</div>
           <nav className="docs-sidebar__nav">
             <Link
-              href={`/${versionId}/api`}
+              href={`/${version.id}/api`}
               className={`docs-sidebar__link ${pathname.includes('/api') ? 'docs-sidebar__link--active' : ''}`}
               onClick={closeMobileNavigation}
             >
@@ -177,7 +179,7 @@ export function Sidebar({ navigation, versionId }: SidebarProps) {
               API Reference
             </Link>
             <a
-              href={`/demo/${versionId}/`}
+              href={demoUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="docs-sidebar__link"
