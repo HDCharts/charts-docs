@@ -12,6 +12,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 REGISTRY_PATH="${REPO_ROOT}/registry/versions.json"
 NEXT_CONFIG_PATH="${REPO_ROOT}/docs-app/next.config.ts"
 SIDEBAR_PATH="${REPO_ROOT}/docs-app/components/Sidebar.tsx"
+API_PAGE_PATH="${REPO_ROOT}/docs-app/app/[version]/api/page.tsx"
 
 failures=0
 
@@ -122,8 +123,10 @@ test_clean_link_routes_are_present() {
 }
 
 test_user_facing_links_use_clean_paths() {
-  assert_file_contains "${SIDEBAR_PATH}" 'href={`/demo/${versionId}/`}' "sidebar demo link uses clean URL"
+  assert_file_contains "${SIDEBAR_PATH}" 'href={demoUrl}' "sidebar demo link resolves via version registry URL"
+  assert_file_contains "${SIDEBAR_PATH}" 'const demoUrl = getVersionDemoUrl(version);' "sidebar uses version demoBase helper"
   assert_file_contains "${SIDEBAR_PATH}" 'href="/playground"' "sidebar playground link uses clean URL"
+  assert_file_contains "${API_PAGE_PATH}" 'const apiUrl = getVersionApiIndexUrl(version);' "api page uses version apiBase helper"
 }
 
 main() {
