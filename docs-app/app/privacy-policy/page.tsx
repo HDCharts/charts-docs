@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
       <p>
         If you have questions about this Privacy Policy, contact us via{' '}
         <a
-          href="https://github.com/dautovicharis/Charts/issues"
+          href="https://github.com/HDCharts/charts/issues"
           target="_blank"
           rel="noopener noreferrer"
         >

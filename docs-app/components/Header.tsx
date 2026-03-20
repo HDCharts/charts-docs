@@ -30,7 +30,7 @@ export function Header({ versions, currentVersion }: HeaderProps) {
           </Link>
         ) : null}
         <a
-          href="https://github.com/dautovicharis/charts"
+          href="https://github.com/HDCharts/charts"
           className="docs-header__link docs-header__link--github"
           target="_blank"
           rel="noopener noreferrer"
