@@ -105,6 +105,24 @@ private fun ShowStackedBar() {
 }
 ```
 
+### Histogram
+
+<div style="text-align: center; margin: 1rem 0 1.25rem;">
+  <img src="/content/{{version}}/wiki/assets/histogram_default.gif" alt="Histogram Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+</div>
+
+```kotlin
+@Composable
+private fun ShowHistogram() {
+    val dataSet = listOf(3f, 6f, 11f, 16f, 14f, 9f, 5f).toChartDataSet(
+        title = "Request Duration Distribution",
+        labels = listOf("0-50ms", "50-100ms", "100-150ms", "150-200ms", "200-250ms", "250-300ms", "300ms+")
+    )
+
+    HistogramChart(dataSet)
+}
+```
+
 ### Stacked Area
 
 <div style="text-align: center; margin: 1rem 0 1.25rem;">
