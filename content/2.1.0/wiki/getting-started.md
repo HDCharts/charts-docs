@@ -1,5 +1,8 @@
+---
+title: Setup
+---
 
-# Getting Started with Charts
+# Manual Setup
 
 This guide will help you integrate the Charts library into your Kotlin Multiplatform project.
 
