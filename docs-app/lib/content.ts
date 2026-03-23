@@ -363,6 +363,21 @@ export function getNavigation(versionId: string): NavItem[] {
         }
       }
 
+      if (slug === 'getting-started') {
+        navItem.children = [
+          {
+            title: 'Manual',
+            slug: 'manual',
+            path: pagePath,
+          },
+          {
+            title: 'Agent',
+            slug: 'agent',
+            path: `/${versionId}/agent`,
+          },
+        ];
+      }
+
       if (slug === 'migration' && (markdownContent || hasBreakingChanges)) {
         const baseMigrationMarkdown = markdownContent || getDefaultMigrationPageMarkdown();
         const markdownWithBreakingChanges = versionBreakingChangesMarkdown

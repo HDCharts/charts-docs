@@ -87,7 +87,19 @@ export function Sidebar({ navigation, version }: SidebarProps) {
     const currentPath = pathname.replace(/\/$/, '');
     const normalizedPath = (itemPath ?? '').replace(/\/$/, '');
 
-    return normalizedPath === currentPath && !!itemHash && hash === `#${itemHash}`;
+    if (normalizedPath !== currentPath) {
+      return false;
+    }
+
+    if (!itemHash) {
+      return true;
+    }
+
+    return hash === `#${itemHash}`;
+  }
+
+  function hasActiveChild(item: NavItem): boolean {
+    return (item.children ?? []).some((child) => isChildActive(child));
   }
 
   function closeMobileNavigation() {
@@ -148,7 +160,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
                     ) : null}
                   </span>
                 </Link>
-                {item.children && item.children.length > 0 && isActive(item) && (
+                {item.children && item.children.length > 0 && (isActive(item) || hasActiveChild(item)) && (
                   <div className="docs-sidebar__subnav">
                     {item.children.map((child) => (
                       <Link
