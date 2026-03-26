@@ -9,6 +9,14 @@
       "notes": "Latest development snapshot"
     },
     {
+      "id": "2.3.0",
+      "label": "2.3.0",
+      "wikiRoot": "/content/2.3.0/wiki",
+      "apiBase": "/static/api/2.3.0",
+      "demoBase": "/demo/2.3.0/",
+      "notes": "Release 2.3.0"
+    },
+    {
       "id": "2.2.0",
       "label": "2.2.0",
       "visible": true,
