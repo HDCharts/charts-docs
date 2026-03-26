@@ -1,0 +1,114 @@
+{
+  "name": "charts-docs",
+  "url": "https://github.com/HDCharts/charts-docs",
+  "description": "Documentation website built with Next.js and deployed on Vercel.",
+  "sections": [
+    {
+      "title": "Core Stack",
+      "items": [
+        {
+          "name": "Next.js",
+          "description": "React framework for production-grade web applications.",
+          "url": "https://nextjs.org/",
+          "license": "MIT"
+        },
+        {
+          "name": "React",
+          "description": "JavaScript library for building user interfaces.",
+          "url": "https://react.dev/",
+          "license": "MIT"
+        },
+        {
+          "name": "TypeScript",
+          "description": "Typed superset of JavaScript that compiles to plain JavaScript.",
+          "url": "https://www.typescriptlang.org/",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Content & Libraries",
+      "items": [
+        {
+          "name": "@next/mdx",
+          "description": "Next.js integration for MDX-based content pages and docs rendering.",
+          "url": "https://nextjs.org/docs/app/guides/mdx",
+          "license": "MIT"
+        },
+        {
+          "name": "@mdx-js/react",
+          "description": "React bindings used to render MDX content with custom components.",
+          "url": "https://mdxjs.com/packages/react/",
+          "license": "MIT"
+        },
+        {
+          "name": "@mdx-js/loader",
+          "description": "Webpack loader used by the MDX pipeline for content compilation.",
+          "url": "https://mdxjs.com/packages/loader/",
+          "license": "MIT"
+        },
+        {
+          "name": "gray-matter",
+          "description": "Parses YAML front-matter from markdown and content files.",
+          "url": "https://github.com/jonschlinkert/gray-matter",
+          "license": "MIT"
+        },
+        {
+          "name": "react-syntax-highlighter",
+          "description": "Syntax highlighting component for React with multiple themes.",
+          "url": "https://github.com/react-syntax-highlighter/react-syntax-highlighter",
+          "license": "MIT"
+        },
+        {
+          "name": "remark-gfm",
+          "description": "Plugin to support GitHub Flavored Markdown in remark.",
+          "url": "https://github.com/remarkjs/remark-gfm",
+          "license": "MIT"
+        }
+      ]
+    },
+    {
+      "title": "Services & Infrastructure",
+      "items": [
+        {
+          "name": "Vercel",
+          "description": "Cloud platform for frontend deployment and hosting.",
+          "url": "https://vercel.com/"
+        },
+        {
+          "name": "Microsoft Clarity",
+          "description": "Free user behavior analytics with session recordings and heatmaps.",
+          "url": "https://clarity.microsoft.com/"
+        },
+        {
+          "name": "AWS (S3 + CloudFront)",
+          "description": "Object storage and CDN used to host and distribute documentation assets globally.",
+          "url": "https://aws.amazon.com/"
+        }
+      ]
+    },
+    {
+      "title": "Fonts & Tooling",
+      "items": [
+        {
+          "name": "Inter",
+          "description": "Sans-serif typeface designed for computer screens.",
+          "url": "https://rsms.me/inter/",
+          "license": "OFL-1.1"
+        },
+        {
+          "name": "JetBrains Mono",
+          "description": "Monospaced typeface for developers by JetBrains.",
+          "url": "https://www.jetbrains.com/lp/mono/",
+          "license": "OFL-1.1"
+        },
+        {
+          "name": "ESLint",
+          "description": "Pluggable JavaScript and TypeScript linter.",
+          "url": "https://eslint.org/",
+          "license": "MIT"
+        }
+      ]
+    }
+  ]
+}

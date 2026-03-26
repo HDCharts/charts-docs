@@ -197,6 +197,33 @@ export function PlaygroundIcon(props: IconProps) {
   );
 }
 
+export function ThanksIcon(props: IconProps) {
+  return (
+    <svg {...withDefaults(props)}>
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M12 6v6l4.2 2.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 14.5s1.5 2 4 2 4-2 4-2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <circle cx="9" cy="10" r="1" fill="currentColor" />
+      <circle cx="15" cy="10" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function ExternalLinkIcon(props: IconProps) {
   return (
     <svg {...withDefaults(props)}>

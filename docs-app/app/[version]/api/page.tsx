@@ -25,7 +25,7 @@ export default async function ApiPage({ params }: ApiPageProps) {
   const apiUrl = getVersionApiIndexUrl(version);
 
   return (
-    <div className="docs-content animate-fadeIn" style={{ maxWidth: 'none' }}>
+    <div className="docs-content docs-content--full animate-fadeIn">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
         <h1 style={{ margin: 0 }}>API Reference</h1>
         <a 

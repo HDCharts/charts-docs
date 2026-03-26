@@ -1,5 +1,5 @@
 <div style="text-align: center; margin-bottom: 20px;">
-  <img src="/content/2.1.0/wiki/assets/logo.png" alt="Charts Library Logo" style="max-width: 500px;">
+  <img src="/content/2.1.0/wiki/assets/logo.png" alt="Charts Library Logo" style="width: 100%; max-width: 500px; height: auto;">
 </div>
 
 # Charts 2.1.0

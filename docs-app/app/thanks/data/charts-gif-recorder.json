@@ -1,0 +1,117 @@
+{
+  "name": "charts-gif-recorder",
+  "url": "https://github.com/HDCharts/charts-gif-recorder",
+  "description": "Gradle plugin for recording animated GIFs of Compose UI components.",
+  "sections": [
+    {
+      "title": "Frameworks & SDKs",
+      "items": [
+        {
+          "name": "Kotlin",
+          "description": "Programming language for the JVM and Android.",
+          "url": "https://kotlinlang.org/"
+        },
+        {
+          "name": "Android Compose UI",
+          "description": "Declarative UI toolkit for Android.",
+          "url": "https://developer.android.com/jetpack/compose"
+        },
+        {
+          "name": "Android Gradle Plugin",
+          "description": "Official Gradle plugin for Android builds.",
+          "url": "https://developer.android.com/build"
+        }
+      ]
+    },
+    {
+      "title": "Libraries",
+      "items": [
+        {
+          "name": "AndroidX Core KTX",
+          "description": "Kotlin extensions for Android framework APIs.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/core",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "AndroidX Lifecycle",
+          "description": "Lifecycle-aware components for managing Android lifecycle.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/lifecycle",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KSP (Kotlin Symbol Processing)",
+          "description": "Code generation API for Kotlin by Google.",
+          "url": "https://github.com/google/ksp",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KotlinPoet",
+          "description": "Kotlin API for generating .kt source files by Square.",
+          "url": "https://github.com/square/kotlinpoet",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Build & Publishing Tools",
+      "items": [
+        {
+          "name": "Gradle",
+          "description": "Build automation tool used for compiling and publishing.",
+          "url": "https://gradle.org/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Dokka",
+          "description": "API documentation engine for Kotlin.",
+          "url": "https://github.com/Kotlin/dokka",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Vanniktech Maven Publish",
+          "description": "Gradle plugin to simplify Maven Central publishing.",
+          "url": "https://github.com/vanniktech/gradle-maven-publish-plugin",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "ktlint",
+          "description": "Kotlin linter and formatter with built-in rules.",
+          "url": "https://github.com/pinterest/ktlint",
+          "license": "MIT"
+        }
+      ]
+    },
+    {
+      "title": "Testing",
+      "items": [
+        {
+          "name": "JUnit",
+          "description": "Framework for writing and running repeatable tests.",
+          "url": "https://junit.org/junit4/",
+          "license": "EPL-1.0"
+        },
+        {
+          "name": "AndroidX Test",
+          "description": "Android testing framework with Espresso for UI testing.",
+          "url": "https://developer.android.com/training/testing",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Infrastructure & Services",
+      "items": [
+        {
+          "name": "Maven Central",
+          "description": "Repository for distributing JVM libraries and Gradle plugins.",
+          "url": "https://central.sonatype.com/"
+        },
+        {
+          "name": "foojay.io",
+          "description": "JVM toolchain discovery and provisioning for Gradle builds.",
+          "url": "https://foojay.io/"
+        }
+      ]
+    }
+  ]
+}

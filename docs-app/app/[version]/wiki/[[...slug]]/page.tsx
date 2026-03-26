@@ -38,6 +38,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
   const usesMigrationLayout = pageSlug === 'migration';
   const articleClassName = [
     'docs-content',
+    'docs-content--page',
     'animate-fadeIn',
     usesSplitExamplesLayout ? 'docs-page--snapshot-examples' : '',
     usesMigrationLayout ? 'docs-page--migration' : '',
