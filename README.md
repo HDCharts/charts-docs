@@ -24,8 +24,3 @@ cd docs-app
 npm run build
 npm run start
 ```
-
-## Notes
-
-- `main` contains docs source and app code.
-- Set `DOCS_STATIC_BASE_URL` for local/dev/CI since `/static/*` is always served from CDN.
