@@ -14,6 +14,7 @@ import {
   MigrationIcon,
   OverviewIcon,
   PlaygroundIcon,
+  ThanksIcon,
 } from '@/components/icons/SidebarIcons';
 
 interface SidebarProps {
@@ -62,6 +63,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
   const [mobileNavPath, setMobileNavPath] = useState<string | null>(null);
   const isMobileNavOpen = mobileNavPath === pathname;
   const demoUrl = getVersionDemoUrl(version);
+  const thanksPath = '/thanks';
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -216,6 +218,14 @@ export function Sidebar({ navigation, version }: SidebarProps) {
                 <ExternalLinkIcon className="docs-sidebar__external-icon" />
               </span>
             </a>
+            <Link
+              href={thanksPath}
+              className={`docs-sidebar__link ${pathname === thanksPath ? 'docs-sidebar__link--active' : ''}`}
+              onClick={closeMobileNavigation}
+            >
+              <ThanksIcon />
+              Thanks
+            </Link>
           </nav>
         </div>
       </div>

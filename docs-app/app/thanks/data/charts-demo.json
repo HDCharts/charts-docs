@@ -1,0 +1,85 @@
+{
+  "name": "charts-demo",
+  "url": "https://github.com/HDCharts/charts/tree/main/app",
+  "description": "Multiplatform demo app showcasing Charts across Android, iOS, Desktop, and Web.",
+  "sections": [
+    {
+      "title": "Frameworks & Platforms",
+      "items": [
+        {
+          "name": "Kotlin Multiplatform",
+          "description": "Cross-platform Kotlin compilation targeting Android, iOS, Desktop, and Web.",
+          "url": "https://kotlinlang.org/docs/multiplatform.html"
+        },
+        {
+          "name": "Jetpack Compose",
+          "description": "Declarative UI toolkit for Android.",
+          "url": "https://developer.android.com/jetpack/compose"
+        },
+        {
+          "name": "JetBrains Compose Multiplatform",
+          "description": "Compose UI framework targeting Android, iOS, Desktop, and Web.",
+          "url": "https://www.jetbrains.com/compose-multiplatform/"
+        }
+      ]
+    },
+    {
+      "title": "Libraries",
+      "items": [
+        {
+          "name": "AndroidX Lifecycle Runtime Compose",
+          "description": "Lifecycle-aware APIs for Compose runtime integration.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/lifecycle",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "AndroidX Lifecycle ViewModel Compose",
+          "description": "Compose integration for ViewModel state handling.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/lifecycle",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "AndroidX Navigation Compose",
+          "description": "Navigation framework for Compose applications.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/navigation",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Koin",
+          "description": "Lightweight dependency injection framework for Kotlin.",
+          "url": "https://insert-koin.io/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KotlinX Immutable Collections",
+          "description": "Persistent immutable collection implementations for Kotlin.",
+          "url": "https://github.com/Kotlin/kotlinx.collections.immutable",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KotlinX Coroutines Swing",
+          "description": "Coroutines integration for Swing/desktop dispatchers.",
+          "url": "https://github.com/Kotlin/kotlinx.coroutines",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Build & Tooling",
+      "items": [
+        {
+          "name": "Gradle",
+          "description": "Build automation tool used for compiling and packaging.",
+          "url": "https://gradle.org/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "BuildConfig for Gradle",
+          "description": "Gradle plugin for generating BuildConfig constants.",
+          "url": "https://github.com/gmazzo/gradle-buildconfig-plugin",
+          "license": "Apache-2.0"
+        }
+      ]
+    }
+  ]
+}

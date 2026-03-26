@@ -391,6 +391,15 @@ body {
   margin: 0 auto;
 }
 
+.docs-content--page {
+  max-width: 900px;
+  padding: 3rem 1.5rem;
+}
+
+.docs-content--full {
+  max-width: none;
+}
+
 /* ===========================================
    Version Switcher
    =========================================== */
@@ -539,6 +548,11 @@ body {
 .docs-content a:hover {
   color: var(--color-secondary);
   text-decoration: underline;
+}
+
+.docs-content .thanks__brand-link:hover,
+.docs-content .thanks__brand-link:hover .thanks__brand-name {
+  text-decoration: none;
 }
 
 .docs-content ul,
@@ -1123,6 +1137,111 @@ body {
   
   .docs-content h1 {
     font-size: 2rem;
+  }
+}
+
+/* ===========================================
+   Thanks Page
+   =========================================== */
+
+.thanks__brands {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4) var(--space-6);
+  margin: var(--space-6) 0;
+}
+
+.thanks__brand-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.thanks__brand-link:hover {
+  opacity: 1;
+}
+
+.thanks__brand-link:hover .thanks__brand-name {
+  text-decoration: none;
+}
+
+.thanks__brand-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.thanks__brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.thanks__brand-name {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.thanks__brand-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.thanks__license {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.thanks__list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.thanks__project-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.thanks__project-avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  background: var(--bg-tertiary);
+}
+
+.thanks__item-avatar {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  margin-top: 0.15em;
+  background: var(--bg-tertiary);
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .thanks__brands {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .thanks__brand-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .thanks__brand-name {
+    font-size: 0.78rem;
   }
 }
 

@@ -7,10 +7,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <main
-      className="docs-content"
-      style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}
-    >
+    <main className="docs-content docs-content--page">
       <h1>Privacy Policy</h1>
       <p>
         <strong>Last updated:</strong> February 10, 2026

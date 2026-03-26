@@ -1,0 +1,95 @@
+{
+  "name": "charts",
+  "url": "https://github.com/HDCharts/charts",
+  "description": "The core Kotlin Multiplatform charting library published to Maven Central.",
+  "sections": [
+    {
+      "title": "Languages & Frameworks",
+      "items": [
+        {
+          "name": "Kotlin Multiplatform",
+          "description": "Kotlin framework for sharing code across Android, iOS, Desktop, and Web.",
+          "url": "https://kotlinlang.org/docs/multiplatform.html"
+        },
+        {
+          "name": "JetBrains Compose Multiplatform",
+          "description": "Compose UI framework targeting Android, iOS, Desktop, and Web.",
+          "url": "https://www.jetbrains.com/compose-multiplatform/"
+        }
+      ]
+    },
+    {
+      "title": "Libraries",
+      "items": [
+        {
+          "name": "KotlinX Coroutines",
+          "description": "Library for writing asynchronous code using coroutines.",
+          "url": "https://github.com/Kotlin/kotlinx.coroutines",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KotlinX Immutable Collections",
+          "description": "Persistent immutable collection implementations for Kotlin.",
+          "url": "https://github.com/Kotlin/kotlinx.collections.immutable",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Koin",
+          "description": "Lightweight dependency injection framework for Kotlin.",
+          "url": "https://insert-koin.io/",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Build & Documentation Tools",
+      "items": [
+        {
+          "name": "Gradle",
+          "description": "Build automation tool used for compiling and publishing.",
+          "url": "https://gradle.org/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Dokka",
+          "description": "API documentation engine for Kotlin.",
+          "url": "https://github.com/Kotlin/dokka",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "ktlint",
+          "description": "Kotlin linter and formatter with built-in rules.",
+          "url": "https://github.com/pinterest/ktlint",
+          "license": "MIT"
+        },
+        {
+          "name": "Vanniktech Maven Publish",
+          "description": "Gradle plugin to simplify Maven Central publishing.",
+          "url": "https://github.com/vanniktech/gradle-maven-publish-plugin",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Gradle japicmp Plugin",
+          "description": "Binary/source API compatibility checks used in release and CI workflows.",
+          "url": "https://github.com/melix/japicmp-gradle-plugin",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Infrastructure & Services",
+      "items": [
+        {
+          "name": "Maven Central",
+          "description": "Repository for hosting and distributing JVM libraries.",
+          "url": "https://central.sonatype.com/"
+        },
+        {
+          "name": "foojay.io",
+          "description": "JVM toolchain discovery and provisioning for Gradle builds.",
+          "url": "https://foojay.io/"
+        }
+      ]
+    }
+  ]
+}

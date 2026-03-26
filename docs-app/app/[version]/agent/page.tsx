@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: AgentPromptPageProps): Promis
 export default async function AgentPromptPage({ params }: AgentPromptPageProps) {
   const { version } = await params;
   return (
-    <div className="docs-content">
+    <div className="docs-content docs-content--page">
       <AgentPromptBuilder versionId={version} />
     </div>
   );

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "JetBrains",
+    "url": "https://www.jetbrains.com/",
+    "avatar": "https://avatars.githubusercontent.com/JetBrains?s=96",
+    "role": "Kotlin, Compose, Dokka, Ktor"
+  },
+  {
+    "name": "GitHub",
+    "url": "https://github.com/HDCharts/charts",
+    "avatar": "https://avatars.githubusercontent.com/github?s=96",
+    "role": "Source & CI/CD"
+  },
+  {
+    "name": "Gradle",
+    "url": "https://gradle.org/",
+    "avatar": "https://avatars.githubusercontent.com/gradle?s=96",
+    "role": "Build system"
+  },
+  {
+    "name": "Maven Central",
+    "url": "https://central.sonatype.com/",
+    "avatar": "https://avatars.githubusercontent.com/sonatype?s=96",
+    "role": "Library publishing"
+  },
+  {
+    "name": "AWS",
+    "url": "https://aws.amazon.com/",
+    "avatar": "https://avatars.githubusercontent.com/aws?s=96",
+    "role": "S3, CloudFront"
+  },
+  {
+    "name": "Vercel",
+    "url": "https://vercel.com/",
+    "avatar": "https://avatars.githubusercontent.com/vercel?s=96",
+    "role": "Hosting, Next.js, Analytics"
+  },
+  {
+    "name": "Microsoft",
+    "url": "https://www.microsoft.com/",
+    "avatar": "https://avatars.githubusercontent.com/microsoft?s=96",
+    "role": "TypeScript, Clarity"
+  },
+  {
+    "name": "React",
+    "url": "https://react.dev/",
+    "avatar": "https://avatars.githubusercontent.com/facebook?s=96",
+    "role": "Component runtime"
+  },
+  {
+    "name": "Google",
+    "url": "https://developer.android.com/",
+    "avatar": "https://avatars.githubusercontent.com/google?s=96",
+    "role": "Android, KSP"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "name": "charts-playground",
+  "url": "https://github.com/HDCharts/charts-playground",
+  "description": "Interactive playground for experimenting with Charts in a browser.",
+  "sections": [
+    {
+      "title": "Frameworks",
+      "items": [
+        {
+          "name": "Kotlin Multiplatform",
+          "description": "Cross-platform Kotlin compilation targeting multiple platforms.",
+          "url": "https://kotlinlang.org/docs/multiplatform.html"
+        },
+        {
+          "name": "JetBrains Compose Multiplatform",
+          "description": "Compose UI framework targeting Android, iOS, Desktop, and Web.",
+          "url": "https://www.jetbrains.com/compose-multiplatform/"
+        }
+      ]
+    },
+    {
+      "title": "Libraries",
+      "items": [
+        {
+          "name": "Ktor",
+          "description": "Asynchronous HTTP client and server framework for Kotlin.",
+          "url": "https://ktor.io/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "AndroidX Lifecycle",
+          "description": "Lifecycle-aware components for managing Android lifecycle.",
+          "url": "https://developer.android.com/jetpack/androidx/releases/lifecycle",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KotlinX Serialization",
+          "description": "Kotlin multi-format serialization library.",
+          "url": "https://github.com/Kotlin/kotlinx.serialization",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Build & Quality Tools",
+      "items": [
+        {
+          "name": "Gradle",
+          "description": "Build automation tool used for compiling and publishing.",
+          "url": "https://gradle.org/",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "ktlint",
+          "description": "Kotlin linter and formatter with built-in rules.",
+          "url": "https://github.com/pinterest/ktlint",
+          "license": "MIT"
+        },
+        {
+          "name": "BuildConfig for Gradle",
+          "description": "Gradle plugin for generating BuildConfig constants.",
+          "url": "https://github.com/gmazzo/gradle-buildconfig-plugin",
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "title": "Infrastructure & Services",
+      "items": [
+        {
+          "name": "AWS (S3 + CloudFront)",
+          "description": "Object storage and CDN for hosting and globally serving the playground web app.",
+          "url": "https://aws.amazon.com/"
+        }
+      ]
+    }
+  ]
+}
