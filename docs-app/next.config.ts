@@ -2,12 +2,7 @@ import type { NextConfig } from "next";
 import { getDefaultVersionId } from "./lib/versions";
 
 const defaultDocsVersion = getDefaultVersionId();
-const docsStaticBaseUrl = (process.env.DOCS_STATIC_BASE_URL ?? "")
-  .trim()
-  .replace(/\/+$/, "");
-if (docsStaticBaseUrl.length === 0) {
-  throw new Error("DOCS_STATIC_BASE_URL must be set for docs-app builds and runtime.");
-}
+const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
 
 const nextConfig: NextConfig = {
   // Enable trailing slashes for clean URLs
