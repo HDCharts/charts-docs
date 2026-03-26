@@ -64,15 +64,6 @@ jobs:
         shell: bash
         run: bash scripts/test-docs-release-links-contract.sh
 
-      - name: Build docs app
-        env:
-          DOCS_STATIC_BASE_URL: ${{ vars.DOCS_STATIC_BASE_URL }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm ci --prefix docs-app
-          npm run build --prefix docs-app
-
       - name: Create promotion pull request
         uses: peter-evans/create-pull-request@v7
         with:
