@@ -73,9 +73,8 @@ jobs:
           commit-message: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
           title: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
           add-paths: |
-            content/snapshot/**
-            content/${{ github.event.inputs.release_version }}/**
-            registry/versions.json
+            content
+            registry
           body: |
             Promotes `content/snapshot` to `content/${{ github.event.inputs.release_version }}` and updates `registry/versions.json`.
 
