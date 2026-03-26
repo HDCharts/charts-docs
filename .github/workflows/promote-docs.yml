@@ -67,6 +67,7 @@ jobs:
       - name: Create promotion pull request
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.CHARTS_WORKFLOW_TOKEN }}
           branch: chore/promote-docs-${{ github.event.inputs.release_version }}
           delete-branch: true
           commit-message: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
