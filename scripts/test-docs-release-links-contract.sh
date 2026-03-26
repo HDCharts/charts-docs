@@ -113,8 +113,7 @@ test_registry_release_links() {
 test_clean_link_routes_are_present() {
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo"' "next config redirects /demo to latest release"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/playground"' "next config redirects /playground to snapshot"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'throw new Error("DOCS_STATIC_BASE_URL must be set for docs-app builds and runtime.")' "next config requires DOCS_STATIC_BASE_URL"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'const staticOrigin = `${docsStaticBaseUrl}/static`' "next config resolves static origin from DOCS_STATIC_BASE_URL"
+  assert_file_contains "${NEXT_CONFIG_PATH}" 'const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net"' "next config hardcodes DOCS_STATIC_BASE_URL"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/static/:path*"' "next config rewrites static assets through CDN origin"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo/:version/"' "next config rewrites clean demo entry route"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: `${staticOrigin}/demo/:version/index.html`' "next config maps clean demo entry route"
