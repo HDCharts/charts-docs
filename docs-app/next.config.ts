@@ -18,7 +18,11 @@ const nextConfig: NextConfig = {
     ],
   },
   
-  // Image optimization settings
+  // Image optimization is disabled because static assets are served from CloudFront CDN
+  // (see docsStaticBaseUrl). Next.js built-in image optimization requires a Node.js
+  // server at request time, which is unavailable in this static/CDN deployment model.
+  // To re-enable: remove this flag and configure an image CDN loader (Cloudinary,
+  // imgix, or Vercel), then migrate <img> to next/image throughout the codebase.
   images: {
     unoptimized: true,
   },

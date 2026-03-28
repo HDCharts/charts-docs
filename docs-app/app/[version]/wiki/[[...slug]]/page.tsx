@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { MarkdownRenderer } from '@/components';
 import { getPage, getPageSlugs } from '@/lib/content';
 import { getAllVersions } from '@/lib/versions';
+import { cn } from '@/lib/utils';
 
 export const dynamicParams = false;
 
@@ -36,18 +37,12 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
   const usesSplitExamplesLayout = pageSlug === 'examples';
   const usesMigrationLayout = pageSlug === 'migration';
-  const articleClassName = [
-    'docs-content',
-    'docs-content--page',
-    'animate-fadeIn',
-    usesSplitExamplesLayout ? 'docs-page--snapshot-examples' : '',
-    usesMigrationLayout ? 'docs-page--migration' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
 
   return (
-    <article className={articleClassName}>
+    <article className={cn(
+      "max-w-[900px] mx-auto px-4 animate-fade-in",
+      usesMigrationLayout && "[counter-reset: migration-section]"
+    )}>
       <MarkdownRenderer
         content={page.content}
         layoutVariant={usesSplitExamplesLayout ? 'snapshotExamples' : 'default'}

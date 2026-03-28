@@ -1,14 +1,10 @@
-<div style="text-align: center; margin-bottom: 20px;">
-  <img src="/content/2.0.0/wiki/assets/logo.png" alt="Charts Library Logo" style="width: 100%; max-width: 500px; height: auto;">
-</div>
+![Charts Library Logo](/content/2.0.0/wiki/assets/logo.png)
 
 # Charts 2.0.0
 
 Welcome to the Charts documentation! This library provides a simple way to create beautiful charts in Kotlin Multiplatform applications.
 
-<div style="text-align: center; margin: 2rem 0;">
-  <img src="/content/2.0.0/wiki/assets/demo.gif" alt="Charts Demo" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Charts Demo](/content/2.0.0/wiki/assets/demo.gif)
 
 ## What's New in 2.0.0
 

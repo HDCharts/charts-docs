@@ -14,10 +14,9 @@ private fun AddDefaultPieChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/pie-default.gif" alt="Pie Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Pie Chart with default styling</em></p>
-</div>
+![Pie Chart Animation](/content/2.0.0/wiki/assets/pie-default.gif)
+
+*Pie Chart with default styling*
 
 ### Line Chart
 
@@ -33,10 +32,9 @@ private fun AddDefaultLineChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/line-default.gif" alt="Line Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Line Chart with default styling</em></p>
-</div>
+![Line Chart Animation](/content/2.0.0/wiki/assets/line-default.gif)
+
+*Line Chart with default styling*
 
 ### MultiLine Chart
 
@@ -60,10 +58,9 @@ private fun AddDefaultMultiLineChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/multi-line-default.gif" alt="MultiLine Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>MultiLine Chart with default styling</em></p>
-</div>
+![MultiLine Chart Animation](/content/2.0.0/wiki/assets/multi-line-default.gif)
+
+*MultiLine Chart with default styling*
 
 ### Bar Chart
 
@@ -80,10 +77,9 @@ private fun AddDefaultBarChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/bar-default.gif" alt="Bar Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Bar Chart with default styling</em></p>
-</div>
+![Bar Chart Animation](/content/2.0.0/wiki/assets/bar-default.gif)
+
+*Bar Chart with default styling*
 
 ### Stacked Bar Chart
 
@@ -107,10 +103,9 @@ private fun AddDefaultStackedBarChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/stacked-default.gif" alt="Stacked Bar Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Stacked Bar Chart with default styling</em></p>
-</div>
+![Stacked Bar Chart Animation](/content/2.0.0/wiki/assets/stacked-default.gif)
+
+*Stacked Bar Chart with default styling*
 
 ## Customizing Chart Styles
 
@@ -143,10 +138,9 @@ private fun AddCustomPieChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/pie-custom.gif" alt="Custom Pie Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Pie Chart with custom styling</em></p>
-</div>
+![Custom Pie Chart Animation](/content/2.0.0/wiki/assets/pie-custom.gif)
+
+*Pie Chart with custom styling*
 
 ### Line Chart
 
@@ -174,10 +168,9 @@ private fun AddCustomLineChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/line-custom.gif" alt="Custom Line Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Line Chart with custom styling</em></p>
-</div>
+![Custom Line Chart Animation](/content/2.0.0/wiki/assets/line-custom.gif)
+
+*Line Chart with custom styling*
 
 ### MultiLine Chart
 
@@ -213,10 +206,9 @@ private fun AddCustomMultiLineChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/multi-line-custom.gif" alt="Custom MultiLine Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>MultiLine Chart with custom styling</em></p>
-</div>
+![Custom MultiLine Chart Animation](/content/2.0.0/wiki/assets/multi-line-custom.gif)
+
+*MultiLine Chart with custom styling*
 
 ### Bar Chart
 
@@ -237,10 +229,9 @@ private fun AddCustomBarChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/bar-custom.gif" alt="Custom Bar Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Bar Chart with custom styling</em></p>
-</div>
+![Custom Bar Chart Animation](/content/2.0.0/wiki/assets/bar-custom.gif)
+
+*Bar Chart with custom styling*
 
 ### Stacked Bar Chart
 
@@ -270,7 +261,6 @@ private fun AddCustomStackedBarChart() {
 }
 ```
 
-<div style="text-align: center; margin: 1.5rem 0; width: 200px; margin-left: auto; margin-right: auto;">
-  <img src="/content/2.0.0/wiki/assets/stacked-custom.gif" alt="Custom Stacked Bar Chart Animation" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  <p><em>Stacked Bar Chart with custom styling</em></p>
-</div>
+![Custom Stacked Bar Chart Animation](/content/2.0.0/wiki/assets/stacked-custom.gif)
+
+*Stacked Bar Chart with custom styling*

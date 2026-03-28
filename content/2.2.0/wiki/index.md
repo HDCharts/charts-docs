@@ -1,14 +1,10 @@
-<div style="text-align: center; margin-bottom: 20px;">
-  <img src="/content/2.2.0/wiki/assets/logo.png" alt="Charts Library Logo" style="width: 100%; max-width: 500px; height: auto;">
-</div>
+![Charts Library Logo](/content/2.2.0/wiki/assets/logo.png)
 
 # Charts 2.2.0
 
 This release adds a new chart type, improves chart controls, and introduces modular publishing options.
 
-<div style="text-align: center; margin: 2rem 0;">
-  <img src="/content/2.2.0/wiki/assets/demo.png" alt="Charts Demo" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Charts Demo](/content/2.2.0/wiki/assets/demo.png)
 
 
 ## What's New in 2.2.0

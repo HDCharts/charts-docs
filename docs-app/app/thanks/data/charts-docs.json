@@ -30,21 +30,9 @@
       "title": "Content & Libraries",
       "items": [
         {
-          "name": "@next/mdx",
-          "description": "Next.js integration for MDX-based content pages and docs rendering.",
-          "url": "https://nextjs.org/docs/app/guides/mdx",
-          "license": "MIT"
-        },
-        {
-          "name": "@mdx-js/react",
-          "description": "React bindings used to render MDX content with custom components.",
-          "url": "https://mdxjs.com/packages/react/",
-          "license": "MIT"
-        },
-        {
-          "name": "@mdx-js/loader",
-          "description": "Webpack loader used by the MDX pipeline for content compilation.",
-          "url": "https://mdxjs.com/packages/loader/",
+          "name": "react-markdown",
+          "description": "Markdown component for React used to render documentation content.",
+          "url": "https://github.com/remarkjs/react-markdown",
           "license": "MIT"
         },
         {
@@ -54,15 +42,27 @@
           "license": "MIT"
         },
         {
-          "name": "react-syntax-highlighter",
-          "description": "Syntax highlighting component for React with multiple themes.",
-          "url": "https://github.com/react-syntax-highlighter/react-syntax-highlighter",
+          "name": "shiki",
+          "description": "Syntax highlighter powered by TextMate grammars for accurate code highlighting.",
+          "url": "https://github.com/shikijs/shiki",
           "license": "MIT"
         },
         {
           "name": "remark-gfm",
           "description": "Plugin to support GitHub Flavored Markdown in remark.",
           "url": "https://github.com/remarkjs/remark-gfm",
+          "license": "MIT"
+        },
+        {
+          "name": "clsx",
+          "description": "Utility for conditionally constructing className strings.",
+          "url": "https://github.com/lukeed/clsx",
+          "license": "MIT"
+        },
+        {
+          "name": "tailwind-merge",
+          "description": "Utility to merge Tailwind CSS classes without style conflicts.",
+          "url": "https://github.com/dcastil/tailwind-merge",
           "license": "MIT"
         }
       ]
@@ -91,15 +91,15 @@
       "title": "Fonts & Tooling",
       "items": [
         {
-          "name": "Inter",
-          "description": "Sans-serif typeface designed for computer screens.",
-          "url": "https://rsms.me/inter/",
+          "name": "IBM Plex Sans",
+          "description": "Open-source typeface designed for clarity and readability in technical interfaces.",
+          "url": "https://fonts.google.com/specimen/IBM+Plex+Sans",
           "license": "OFL-1.1"
         },
         {
-          "name": "JetBrains Mono",
-          "description": "Monospaced typeface for developers by JetBrains.",
-          "url": "https://www.jetbrains.com/lp/mono/",
+          "name": "IBM Plex Mono",
+          "description": "Monospaced companion to IBM Plex Sans for code and technical content.",
+          "url": "https://fonts.google.com/specimen/IBM+Plex+Mono",
           "license": "OFL-1.1"
         },
         {

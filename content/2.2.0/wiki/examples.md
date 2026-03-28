@@ -2,9 +2,7 @@
 
 ### Pie
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/pie_default.gif" alt="Pie Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Pie Demo](/content/2.2.0/wiki/assets/pie_default.gif)
 
 ```kotlin
 @Composable
@@ -21,9 +19,7 @@ private fun ShowPie() {
 
 ### Line
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/line_default.gif" alt="Line Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Line Demo](/content/2.2.0/wiki/assets/line_default.gif)
 
 ```kotlin
 @Composable
@@ -39,9 +35,7 @@ private fun ShowLine() {
 
 ### MultiLine
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/multi_line_default.gif" alt="MultiLine Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![MultiLine Demo](/content/2.2.0/wiki/assets/multi_line_default.gif)
 
 ```kotlin
 @Composable
@@ -64,9 +58,7 @@ private fun ShowMultiLine() {
 
 ### Bar
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/bar_default.gif" alt="Bar Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Bar Demo](/content/2.2.0/wiki/assets/bar_default.gif)
 
 ```kotlin
 @Composable
@@ -82,9 +74,7 @@ private fun ShowBar() {
 
 ### Stacked Bar
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/stacked_bar_default.gif" alt="Stacked Bar Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Stacked Bar Demo](/content/2.2.0/wiki/assets/stacked_bar_default.gif)
 
 ```kotlin
 @Composable
@@ -107,9 +97,7 @@ private fun ShowStackedBar() {
 
 ### Stacked Area
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/stacked_area_default.gif" alt="Stacked Area Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Stacked Area Demo](/content/2.2.0/wiki/assets/stacked_area_default.gif)
 
 ```kotlin
 @Composable
@@ -131,9 +119,7 @@ private fun ShowStackedArea() {
 
 ### Radar
 
-<div style="text-align: center; margin: 1rem 0 1.25rem;">
-  <img src="/content/2.2.0/wiki/assets/radar_default.gif" alt="Radar Demo" style="max-width: 360px; width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
+![Radar Demo](/content/2.2.0/wiki/assets/radar_default.gif)
 
 ```kotlin
 @Composable
