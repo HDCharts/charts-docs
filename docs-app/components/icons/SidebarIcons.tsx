@@ -7,6 +7,7 @@ function withDefaults(props: IconProps): IconProps {
     className: 'docs-sidebar__icon',
     viewBox: '0 0 24 24',
     fill: 'none',
+    focusable: 'false',
     'aria-hidden': 'true',
     ...props,
   };

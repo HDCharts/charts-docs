@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function ThanksPage() {
   return (
-    <main className="docs-content docs-content--page">
+    <div className="max-w-[900px] mx-auto px-4">
       <ThanksContent />
-    </main>
+    </div>
   );
 }
