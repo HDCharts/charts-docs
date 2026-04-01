@@ -65,7 +65,7 @@ jobs:
         run: bash scripts/test-docs-release-links-contract.sh
 
       - name: Create promotion pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.CHARTS_WORKFLOW_TOKEN }}
           branch: chore/promote-docs-${{ github.event.inputs.release_version }}
