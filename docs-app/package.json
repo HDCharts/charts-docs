@@ -11,8 +11,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@microsoft/clarity": "^1.0.2",
-    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "next": "16.2.2",

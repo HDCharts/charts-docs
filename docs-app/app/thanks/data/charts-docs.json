@@ -76,11 +76,6 @@
           "url": "https://vercel.com/"
         },
         {
-          "name": "Microsoft Clarity",
-          "description": "Free user behavior analytics with session recordings and heatmaps.",
-          "url": "https://clarity.microsoft.com/"
-        },
-        {
           "name": "AWS (S3 + CloudFront)",
           "description": "Object storage and CDN used to host and distribute documentation assets globally.",
           "url": "https://aws.amazon.com/"

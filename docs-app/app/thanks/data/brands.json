@@ -33,13 +33,13 @@
     "name": "Vercel",
     "url": "https://vercel.com/",
     "avatar": "https://avatars.githubusercontent.com/vercel?s=96",
-    "role": "Hosting, Next.js, Analytics"
+    "role": "Hosting, Next.js"
   },
   {
     "name": "Microsoft",
     "url": "https://www.microsoft.com/",
     "avatar": "https://avatars.githubusercontent.com/microsoft?s=96",
-    "role": "TypeScript, Clarity"
+    "role": "TypeScript"
   },
   {
     "name": "React",
