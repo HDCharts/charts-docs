@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { ClarityInit } from "@/components/ClarityInit";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -51,9 +49,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://d31fy84ku2wzt.cloudfront.net" />
       </head>
       <body style={{ colorScheme: 'dark' }}>
-        <ClarityInit />
         {children}
-        <Analytics />
       </body>
     </html>
   );
