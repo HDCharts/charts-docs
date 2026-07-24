@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 1 || $# -gt 2 ]]; then
-  echo "Usage: $0 <release_version> [release_notes]" >&2
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <release_version>" >&2
   exit 1
 fi
 
 release_version="$1"
-release_notes="${2:-Release ${release_version}}"
+registry_notes="Release ${release_version}"
 
 if [[ ! "${release_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "release_version must be SemVer (major.minor.patch), got: ${release_version}" >&2
@@ -48,7 +48,7 @@ find "${release_dir}" -name ".DS_Store" -type f -delete
 
 tmp_registry="$(mktemp)"
 
-if ! jq --arg release "${release_version}" --arg notes "${release_notes}" '
+if ! jq --arg release "${release_version}" --arg notes "${registry_notes}" '
   .versions as $versions
   | if any($versions[]?; .id == $release) then
       error("release version already exists in registry")

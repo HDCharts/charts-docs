@@ -9,7 +9,10 @@ import { getVersion } from './versions';
  * Base path to wiki content
  */
 const CONTENT_BASE = path.join(process.cwd(), '..', 'content');
+const RELEASE_NOTES_BASE = path.join(process.cwd(), '..', 'release-notes');
+const CURRENT_RELEASE_NOTES_VERSION_PATH = path.join(RELEASE_NOTES_BASE, 'current-version.txt');
 const CHANGESETS_DIR_NAME = 'changes';
+const MIGRATIONS_DIR_NAME = 'migrations';
 
 /**
  * Get the wiki content directory for a version
@@ -18,12 +21,33 @@ function getWikiPath(versionId: string): string {
   return path.join(CONTENT_BASE, versionId, 'wiki');
 }
 
-function getBreakingChangesPath(versionId: string): string {
-  return path.join(CONTENT_BASE, versionId, 'breaking-changes.md');
+function getVersionedReleaseNotesPath(versionId: string): string | null {
+  let releaseNotesVersion = versionId;
+
+  if (versionId === 'snapshot') {
+    try {
+      releaseNotesVersion = fs.readFileSync(CURRENT_RELEASE_NOTES_VERSION_PATH, 'utf-8').trim();
+    } catch {
+      return null;
+    }
+
+    if (
+      !/^\d+\.\d+\.\d+$/.test(releaseNotesVersion) ||
+      getVersion(releaseNotesVersion)
+    ) {
+      return null;
+    }
+  }
+
+  const releaseNotesPath = path.join(RELEASE_NOTES_BASE, releaseNotesVersion);
+  return fs.existsSync(releaseNotesPath) ? releaseNotesPath : null;
 }
 
-function getChangesetsPath(versionId: string): string {
-  return path.join(CONTENT_BASE, versionId, CHANGESETS_DIR_NAME);
+function getChangesetsPath(versionId: string): string | null {
+  const versionedReleaseNotesPath = getVersionedReleaseNotesPath(versionId);
+  return versionedReleaseNotesPath
+    ? path.join(versionedReleaseNotesPath, CHANGESETS_DIR_NAME)
+    : null;
 }
 
 interface VersionChangeset {
@@ -83,7 +107,7 @@ function parseChangesetFile(filePath: string): VersionChangeset | null {
 
 function getVersionChangesets(versionId: string): VersionChangeset[] {
   const changesetsPath = getChangesetsPath(versionId);
-  if (!fs.existsSync(changesetsPath)) {
+  if (!changesetsPath || !fs.existsSync(changesetsPath)) {
     return [];
   }
 
@@ -154,25 +178,23 @@ function renderChangesetsMarkdown(changesets: VersionChangeset[]): string {
 }
 
 function getVersionBreakingChangesMarkdown(versionId: string): string {
-  const breakingChangesPath = getBreakingChangesPath(versionId);
-  if (!fs.existsSync(breakingChangesPath)) {
+  const versionedReleaseNotesPath = getVersionedReleaseNotesPath(versionId);
+  if (!versionedReleaseNotesPath) {
     return '';
   }
 
-  const raw = fs.readFileSync(breakingChangesPath, 'utf-8').trim();
-  if (!raw) {
+  const migrationsPath = path.join(versionedReleaseNotesPath, MIGRATIONS_DIR_NAME);
+  if (!fs.existsSync(migrationsPath)) {
     return '';
   }
 
-  const lines = raw.split('\n');
-  if (/^#\s+breaking change/i.test(lines[0].trim())) {
-    lines.shift();
-    while (lines.length > 0 && lines[0].trim() === '') {
-      lines.shift();
-    }
-  }
-
-  return lines.join('\n').trim();
+  return fs
+    .readdirSync(migrationsPath)
+    .filter((file) => /\.mdx?$/.test(file))
+    .sort((a, b) => a.localeCompare(b))
+    .map((file) => fs.readFileSync(path.join(migrationsPath, file), 'utf-8').trim())
+    .filter(Boolean)
+    .join('\n\n');
 }
 
 function getDefaultMigrationPageMarkdown(): string {
