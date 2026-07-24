@@ -1,5 +1,8 @@
+# Workflow: mirror release notes from charts into charts-docs.
+# It is triggered by a repository dispatch from the charts repo.
+#
+# This keeps the docs repo aligned with the source release notes.
 name: Sync Release Notes
-
 on:
   repository_dispatch:
     types: [sync-release-notes]
