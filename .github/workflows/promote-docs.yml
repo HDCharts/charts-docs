@@ -1,28 +1,8 @@
 name: Promote Docs
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: "Release version to promote from snapshot (e.g. 2.3.0)"
-        required: true
-        type: string
-      release_notes:
-        description: "Optional registry notes for the new release entry"
-        required: false
-        type: string
-      source_repository:
-        description: "Source repository that triggered this promotion"
-        required: false
-        type: string
-      source_sha:
-        description: "Source SHA used to compute release version"
-        required: false
-        type: string
-      source_run_url:
-        description: "Source workflow run URL"
-        required: false
-        type: string
+  repository_dispatch:
+    types: [promote-docs]
 
 permissions:
   contents: write
@@ -36,7 +16,9 @@ jobs:
   promote-docs:
     name: Promote snapshot docs to release
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'HDCharts' }}
+    if: >
+      github.repository_owner == 'HDCharts' &&
+      github.event.client_payload.source_repository == 'HDCharts/charts'
     steps:
       - name: Checkout charts-docs
         uses: actions/checkout@v7
@@ -46,19 +28,10 @@ jobs:
       - name: Promote snapshot content and update registry
         shell: bash
         env:
-          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
-          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+          RELEASE_VERSION: ${{ github.event.client_payload.release_version }}
         run: |
           set -euo pipefail
-          if [[ -n "${RELEASE_NOTES:-}" ]]; then
-            bash scripts/promote-snapshot-to-release.sh "${RELEASE_VERSION}" "${RELEASE_NOTES}"
-          else
-            bash scripts/promote-snapshot-to-release.sh "${RELEASE_VERSION}"
-          fi
-
-      - name: Reset snapshot baseline
-        shell: bash
-        run: bash scripts/reset-snapshot-content.sh
+          bash scripts/promote-snapshot-to-release.sh "${RELEASE_VERSION}"
 
       - name: Validate docs release link contract
         shell: bash
@@ -68,20 +41,20 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.CHARTS_WORKFLOW_TOKEN }}
-          branch: chore/promote-docs-${{ github.event.inputs.release_version }}
+          branch: chore/promote-docs-${{ github.event.client_payload.release_version }}
           delete-branch: true
-          commit-message: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
-          title: "chore(docs): promote snapshot to ${{ github.event.inputs.release_version }}"
+          commit-message: "chore(docs): promote snapshot to ${{ github.event.client_payload.release_version }}"
+          title: "chore(docs): promote snapshot to ${{ github.event.client_payload.release_version }}"
           add-paths: |
             content
             registry
           body: |
-            Promotes `content/snapshot` to `content/${{ github.event.inputs.release_version }}` and updates `registry/versions.json`.
+            Promotes `content/snapshot` to `content/${{ github.event.client_payload.release_version }}` and updates `registry/versions.json`.
 
             Source context:
-            - source_repository: `${{ github.event.inputs.source_repository || 'n/a' }}`
-            - source_sha: `${{ github.event.inputs.source_sha || 'n/a' }}`
-            - source_run_url: `${{ github.event.inputs.source_run_url || 'n/a' }}`
+            - source_repository: `${{ github.event.client_payload.source_repository }}`
+            - source_sha: `${{ github.event.client_payload.source_sha }}`
+            - source_run_url: `${{ github.event.client_payload.source_run_url }}`
           labels: |
             docs
             automation
