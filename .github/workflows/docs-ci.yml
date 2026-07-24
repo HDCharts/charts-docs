@@ -1,5 +1,8 @@
+# Workflow: build the docs app and run docs-specific checks.
+# It runs on pull requests, pushes to main, and manual dispatch.
+#
+# This is the main CI gate for charts-docs.
 name: Docs CI
-
 on:
   pull_request:
     branches: [main]

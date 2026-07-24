@@ -1,5 +1,8 @@
+# Workflow: promote snapshot docs to a release version.
+# It is triggered by a repository dispatch from the charts repo.
+#
+# This creates the release promotion pull request in charts-docs.
 name: Promote Docs
-
 on:
   repository_dispatch:
     types: [promote-docs]
