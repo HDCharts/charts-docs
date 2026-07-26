@@ -13,6 +13,7 @@ import {
   ExternalLinkIcon,
   GettingStartedIcon,
   MigrationIcon,
+  MetadataIcon,
   OverviewIcon,
   PlaygroundIcon,
   ThanksIcon,
@@ -295,6 +296,26 @@ export function Sidebar({ navigation, version }: SidebarProps) {
                 <ThanksIcon />
               </span>
               <span className="flex items-center gap-2">Thanks</span>
+            </Link>
+          </nav>
+        </div>
+
+        <div className="mb-6 lg:mb-5 last:mb-0">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Metadata</h2>
+          <nav className="flex flex-col gap-1" aria-label="Metadata">
+            <Link
+              href={`/${version.id}/metadata`}
+              className={cn(
+                "flex min-h-11 items-center gap-2 border-l-2 border-transparent px-3 py-2 text-sm text-[var(--text-secondary)] no-underline transition-colors",
+                "hover:bg-transparent hover:text-[var(--text-primary)]",
+                pathname.includes('/metadata') && "border-l-[var(--color-primary)] bg-transparent text-[var(--text-primary)] font-medium"
+              )}
+              onClick={closeMobileNavigation}
+            >
+              <span className="h-4 w-4 shrink-0 opacity-90 [&>svg]:h-4 [&>svg]:w-4">
+                <MetadataIcon />
+              </span>
+              <span className="flex items-center gap-2">Build and release metadata</span>
             </Link>
           </nav>
         </div>

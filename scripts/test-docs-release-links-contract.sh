@@ -13,6 +13,7 @@ REGISTRY_PATH="${REPO_ROOT}/registry/versions.json"
 NEXT_CONFIG_PATH="${REPO_ROOT}/docs-app/next.config.ts"
 SIDEBAR_PATH="${REPO_ROOT}/docs-app/components/Sidebar.tsx"
 API_PAGE_PATH="${REPO_ROOT}/docs-app/app/[version]/api/page.tsx"
+METADATA_PAGE_PATH="${REPO_ROOT}/docs-app/app/[version]/metadata/page.tsx"
 
 failures=0
 
@@ -126,6 +127,8 @@ test_user_facing_links_use_clean_paths() {
   assert_file_contains "${SIDEBAR_PATH}" 'const demoUrl = getVersionDemoUrl(version);' "sidebar uses version demoBase helper"
   assert_file_contains "${SIDEBAR_PATH}" 'href="/playground"' "sidebar playground link uses clean URL"
   assert_file_contains "${API_PAGE_PATH}" 'const apiUrl = getVersionApiIndexUrl(version);' "api page uses version apiBase helper"
+  assert_file_exists "${METADATA_PAGE_PATH}" "metadata page exists"
+  assert_file_contains "${SIDEBAR_PATH}" 'href={`/${version.id}/metadata`}' "sidebar metadata link uses version path"
 }
 
 main() {
