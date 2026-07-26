@@ -225,6 +225,22 @@ export function ThanksIcon(props: IconProps) {
   );
 }
 
+export function MetadataIcon(props: IconProps) {
+  return (
+    <svg {...withDefaults(props)}>
+      <path
+        d="M5 5.5h14M5 12h14M5 18.5h9"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <circle cx="3.5" cy="5.5" r="1" fill="currentColor" />
+      <circle cx="3.5" cy="12" r="1" fill="currentColor" />
+      <circle cx="3.5" cy="18.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function ExternalLinkIcon(props: IconProps) {
   return (
     <svg {...withDefaults(props)}>
