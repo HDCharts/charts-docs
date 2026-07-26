@@ -35,6 +35,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // The charts release workflow polls this file to confirm that the
+        // public deployment serves the exact promoted docs commit.
+        source: "/release-manifest.json",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0",
+          },
+        ],
+      },
+      {
         source: "/playground/snapshot/:path*",
         headers: [
           {
