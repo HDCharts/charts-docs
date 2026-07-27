@@ -8,6 +8,9 @@ import { slugifyHeading } from '@/lib/anchors';
 import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
 
+// Markdown may contain arbitrary local or remote image URLs, so next/image cannot validate them.
+/* eslint-disable @next/next/no-img-element */
+
 let highlighterPromise: Promise<Highlighter> | null = null;
 
 function getHighlighter(): Promise<Highlighter> {

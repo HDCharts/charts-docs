@@ -1,10 +1,30 @@
 import type { NextConfig } from "next";
-import { getDefaultVersionId } from "./lib/versions";
+import path from "node:path";
+import versionsRegistry from "../registry/versions.json";
 
-const defaultDocsVersion = getDefaultVersionId();
+const defaultDocsVersion =
+  versionsRegistry.versions.find((version) => version.visible !== false && version.id !== "snapshot")?.id ??
+  versionsRegistry.versions.find((version) => version.visible !== false)?.id ??
+  versionsRegistry.versions[0]?.id ??
+  "snapshot";
 const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
+const repositoryRoot = path.join(__dirname, "..");
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: repositoryRoot,
+  outputFileTracingIncludes: {
+    "/thanks": [
+      "../registry/versions.json",
+      "../content/*/wiki/*.md",
+      "../content/*/wiki/*.mdx",
+      "../release-notes/current-version.txt",
+      "../release-notes/*/changes/*.md",
+      "../release-notes/*/changes/*.mdx",
+      "../release-notes/*/migrations/*.md",
+      "../release-notes/*/migrations/*.mdx",
+    ],
+  },
+
   // Enable trailing slashes for clean URLs
   trailingSlash: false,
   // Allow explicit trailing-slash URLs where static index files rely on relative assets.
@@ -15,6 +35,9 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     '*': [
       './public/content/**/*',
+    ],
+    '/thanks': [
+      '../content/*/wiki/assets/**/*',
     ],
   },
   

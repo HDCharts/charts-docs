@@ -14,6 +14,18 @@ const CURRENT_RELEASE_NOTES_VERSION_PATH = path.join(RELEASE_NOTES_BASE, 'curren
 const CHANGESETS_DIR_NAME = 'changes';
 const MIGRATIONS_DIR_NAME = 'migrations';
 
+function pathExists(filePath: string): boolean {
+  return fs.existsSync(/* turbopackIgnore: true */ filePath);
+}
+
+function readDirectory(directoryPath: string): string[] {
+  return fs.readdirSync(/* turbopackIgnore: true */ directoryPath);
+}
+
+function readTextFile(filePath: string): string {
+  return fs.readFileSync(/* turbopackIgnore: true */ filePath, 'utf-8');
+}
+
 /**
  * Get the wiki content directory for a version
  */
@@ -26,7 +38,7 @@ function getVersionedReleaseNotesPath(versionId: string): string | null {
 
   if (versionId === 'snapshot') {
     try {
-      releaseNotesVersion = fs.readFileSync(CURRENT_RELEASE_NOTES_VERSION_PATH, 'utf-8').trim();
+      releaseNotesVersion = readTextFile(CURRENT_RELEASE_NOTES_VERSION_PATH).trim();
     } catch {
       return null;
     }
@@ -40,7 +52,7 @@ function getVersionedReleaseNotesPath(versionId: string): string | null {
   }
 
   const releaseNotesPath = path.join(RELEASE_NOTES_BASE, releaseNotesVersion);
-  return fs.existsSync(releaseNotesPath) ? releaseNotesPath : null;
+  return pathExists(releaseNotesPath) ? releaseNotesPath : null;
 }
 
 function getChangesetsPath(versionId: string): string | null {
@@ -76,7 +88,7 @@ function normalizeChangesetValue(value: string): string {
 
 function parseChangesetFile(filePath: string): VersionChangeset | null {
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const content = readTextFile(filePath);
     const record: Record<string, string> = {};
 
     for (const line of content.split('\n')) {
@@ -107,12 +119,11 @@ function parseChangesetFile(filePath: string): VersionChangeset | null {
 
 function getVersionChangesets(versionId: string): VersionChangeset[] {
   const changesetsPath = getChangesetsPath(versionId);
-  if (!changesetsPath || !fs.existsSync(changesetsPath)) {
+  if (!changesetsPath || !pathExists(changesetsPath)) {
     return [];
   }
 
-  return fs
-    .readdirSync(changesetsPath)
+  return readDirectory(changesetsPath)
     .filter((file) => /\.mdx?$/.test(file))
     .sort((a, b) => a.localeCompare(b))
     .map((file) => parseChangesetFile(path.join(changesetsPath, file)))
@@ -184,15 +195,14 @@ function getVersionBreakingChangesMarkdown(versionId: string): string {
   }
 
   const migrationsPath = path.join(versionedReleaseNotesPath, MIGRATIONS_DIR_NAME);
-  if (!fs.existsSync(migrationsPath)) {
+  if (!pathExists(migrationsPath)) {
     return '';
   }
 
-  return fs
-    .readdirSync(migrationsPath)
+  return readDirectory(migrationsPath)
     .filter((file) => /\.mdx?$/.test(file))
     .sort((a, b) => a.localeCompare(b))
-    .map((file) => fs.readFileSync(path.join(migrationsPath, file), 'utf-8').trim())
+    .map((file) => readTextFile(path.join(migrationsPath, file)).trim())
     .filter(Boolean)
     .join('\n\n');
 }
@@ -295,7 +305,7 @@ function filenameToTitle(filename: string): string {
  * Get all markdown files in a directory
  */
 function getMarkdownFiles(dir: string): string[] {
-  if (!fs.existsSync(dir)) {
+  if (!pathExists(dir)) {
     return [];
   }
   
@@ -304,7 +314,7 @@ function getMarkdownFiles(dir: string): string[] {
     'getting-started': 1,
   };
 
-  return fs.readdirSync(dir)
+  return readDirectory(dir)
     .filter(file => /\.mdx?$/.test(file))
     .sort((a, b) => {
       const aSlug = a.replace(/\.mdx?$/, '');
@@ -358,7 +368,7 @@ export function getNavigation(versionId: string): NavItem[] {
       let title = filenameToTitle(file);
       let markdownContent = '';
       try {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const fileContent = readTextFile(filePath);
         const { data, content } = matter(fileContent);
         if (data.title) {
           title = data.title;
@@ -521,11 +531,11 @@ export function getPage(versionId: string, slug: string): DocPage | null {
   
   // Try .md first, then .mdx
   let actualPath = filePath;
-  if (!fs.existsSync(actualPath)) {
+  if (!pathExists(actualPath)) {
     actualPath = filePath.replace(/\.md$/, '.mdx');
   }
   
-  if (!fs.existsSync(actualPath)) {
+  if (!pathExists(actualPath)) {
     if (slug === 'migration') {
       const breakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
       const migrationGuideCount = countMigrationGuides(breakingChangesMarkdown);
@@ -543,7 +553,7 @@ export function getPage(versionId: string, slug: string): DocPage | null {
   }
   
   try {
-    const fileContent = fs.readFileSync(actualPath, 'utf-8');
+    const fileContent = readTextFile(actualPath);
     const { data, content } = matter(fileContent);
     
     const frontmatter = data as PageFrontmatter;

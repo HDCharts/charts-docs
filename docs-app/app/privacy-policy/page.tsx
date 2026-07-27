@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Charts',
-  description: 'Privacy Policy for Charts app and demo applications.',
+  description: 'Privacy Policy for the Charts project and its related services.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -14,37 +14,45 @@ export default function PrivacyPolicyPage() {
       </nav>
       <h1 className="mb-4 [font-family:var(--font-display)] text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Privacy Policy</h1>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        <strong className="text-[var(--text-primary)] font-semibold">Last updated:</strong> February 10, 2026
+        <strong className="text-[var(--text-primary)] font-semibold">Last updated:</strong> July 27, 2026
       </p>
 
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        This app is a demo for the Charts library. This page explains how the
-        demo app handles data.
+        This policy explains how the Charts project handles information through
+        its official websites, documentation, demos, applications, and related
+        services.
       </p>
 
-      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">What We Collect</h2>
+      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Information We Collect</h2>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        We do not collect personal information (such as name, email, phone
-        number, or account data).
-      </p>
-      <p className="mb-4 text-base text-[var(--text-secondary)]">
-        Any chart data you use in the demo stays on your device and is used
-        only to render charts.
-      </p>
-
-      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Third-Party Platforms</h2>
-      <p className="mb-4 text-base text-[var(--text-secondary)]">
-        App stores and platform providers (such as Google Play or APKPure) may
-        collect technical data under their own privacy policies.
+        The Charts library itself does not collect, transmit, or store personal
+        information. When you use project websites or related services,
+        necessary technical information such as IP addresses, browser details,
+        and request logs may be processed by hosting and content-delivery
+        providers to deliver and secure those services.
       </p>
 
-      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Data Sharing</h2>
-      <p className="mb-4 text-base text-[var(--text-secondary)]">We do not sell or share personal information.</p>
+      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Third-Party Services</h2>
+      <p className="mb-4 text-base text-[var(--text-secondary)]">
+        Project pages and applications may link to or load resources from
+        third-party services such as hosting providers, content-delivery
+        networks, GitHub, analytics services, and app stores. Those providers
+        process information under their own privacy policies.
+      </p>
+
+      <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Sharing</h2>
+      <p className="mb-4 text-base text-[var(--text-secondary)]">
+        We do not sell personal information. Technical information may be
+        processed by service providers only as needed to operate, deliver, and
+        secure project services.
+      </p>
 
       <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Data Retention</h2>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        We do not store personal data on our servers because we do not collect
-        it.
+        The Charts library does not retain personal information. Retention of
+        technical information processed by third-party providers is governed by
+        the project&apos;s service configuration and those providers&apos;
+        policies.
       </p>
 
       <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Changes to This Policy</h2>

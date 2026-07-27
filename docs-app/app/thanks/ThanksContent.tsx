@@ -1,5 +1,8 @@
 import { thanksData } from './data';
 
+/* These avatars come from user/configured URLs and cannot use Next's static image optimizer. */
+/* eslint-disable @next/next/no-img-element */
+
 interface Brand {
   name: string;
   url: string;
@@ -60,19 +63,30 @@ const DOMAIN_AVATAR_MAP: Record<string, string> = {
   'mdxjs.com': 'mdx-js',
 };
 
+function getGitHubAvatarUrl(account: string, size: number): string {
+  return `https://github.com/${encodeURIComponent(account)}.png?size=${size}`;
+}
+
+function normalizeAvatarUrl(avatar: string): string {
+  const match = avatar.match(/^https?:\/\/avatars\.githubusercontent\.com\/([^/?#]+)(?:\?s=(\d+))?/i);
+  if (!match) return avatar;
+
+  return getGitHubAvatarUrl(match[1], Number(match[2]) || 48);
+}
+
 function getItemAvatar(item: AvatarSource): string | undefined {
-  if (item.avatar) return item.avatar;
+  if (item.avatar) return normalizeAvatarUrl(item.avatar);
 
   const ghMatch = item.url.match(/^https?:\/\/github\.com\/([^/]+)/i);
   if (ghMatch) {
-    return `https://avatars.githubusercontent.com/${ghMatch[1]}?s=48`;
+    return getGitHubAvatarUrl(ghMatch[1], 48);
   }
 
   try {
     const host = new URL(item.url).hostname;
     const org = DOMAIN_AVATAR_MAP[host];
     if (org) {
-      return `https://avatars.githubusercontent.com/${org}?s=48`;
+      return getGitHubAvatarUrl(org, 48);
     }
   } catch {
     return undefined;
@@ -99,7 +113,7 @@ export function ThanksContent() {
             className="flex items-center gap-3 no-underline opacity-80 transition-opacity hover:opacity-100"
           >
             <img
-              src={brand.avatar}
+              src={normalizeAvatarUrl(brand.avatar)}
               alt={brand.name}
               className="h-8 w-8 shrink-0 rounded-md bg-[var(--bg-tertiary)] object-contain"
               loading="lazy"
