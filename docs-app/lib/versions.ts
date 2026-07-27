@@ -25,7 +25,7 @@ export function getVersionRegistry(): VersionRegistry {
   }
   
   try {
-    const content = fs.readFileSync(REGISTRY_PATH, 'utf-8');
+    const content = fs.readFileSync(/* turbopackIgnore: true */ REGISTRY_PATH, 'utf-8');
     registryCache = JSON.parse(content) as VersionRegistry;
     return registryCache;
   } catch (error) {
@@ -72,9 +72,6 @@ export function getDefaultVersionId(): string {
   return current?.id ?? getAllVersions()[0]?.id ?? 'snapshot';
 }
 
-/**
- * Check if a version has playground enabled
- */
 /**
  * Clear the registry cache (useful for development)
  */

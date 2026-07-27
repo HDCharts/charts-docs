@@ -1,4 +1,4 @@
-import { Header, Sidebar } from '@/components';
+import { Footer, Header, Sidebar } from '@/components';
 import { getCurrentVersion, getVersions } from '@/lib/versions';
 import { getNavigation } from '@/lib/content';
 import { headers } from 'next/headers';
@@ -40,6 +40,7 @@ export default async function ThanksLayout({
         </a>
         <main id="main-content" className="flex-1 px-4 py-6 lg:px-8 lg:py-10">
           {children}
+          <Footer />
         </main>
       </>
     );
@@ -56,6 +57,7 @@ export default async function ThanksLayout({
       <Sidebar navigation={navigation} version={defaultVersion} />
       <main id="main-content" className="flex-1 px-4 py-6 lg:ml-[var(--sidebar-width)] lg:mt-[var(--header-height)] lg:py-10 lg:px-8">
         {children}
+        <Footer />
       </main>
     </div>
   );

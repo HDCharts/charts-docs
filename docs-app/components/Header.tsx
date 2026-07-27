@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { VersionSwitcher } from './VersionSwitcher';
 import { DocVersion } from '@/lib/types';
@@ -42,7 +43,7 @@ export function Header({ versions, currentVersion }: HeaderProps) {
         href={`/${currentVersion.id}/wiki`} 
         className="flex items-center gap-3 [font-family:var(--font-display)] text-xl font-bold tracking-tight text-[var(--text-primary)] no-underline"
       >
-        <img
+        <Image
           src="/charts-logo.png"
           alt=""
           className="h-[30px] w-[30px] shrink-0 rounded-md border border-[var(--brand-image-border)] bg-[var(--brand-image-bg)] object-contain shadow-[var(--brand-image-shadow)]"
