@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DocVersion, NavItem } from '@/lib/types';
+import type { GoldenScreenshotResult } from '@/lib/golden-screenshot-types';
 import { getVersionDemoUrl } from '@/lib/version-links';
 import { cn } from '@/lib/utils';
 import {
@@ -16,6 +17,7 @@ import {
   MetadataIcon,
   OverviewIcon,
   PlaygroundIcon,
+  ScreenshotsIcon,
   ThanksIcon,
 } from '@/components/icons/SidebarIcons';
 
@@ -64,6 +66,8 @@ function getDocumentationIcon(slug: string) {
       return <ExamplesIcon />;
     case 'migration':
       return <MigrationIcon />;
+    case 'screenshots':
+      return <ScreenshotsIcon />;
     default:
       return null;
   }
@@ -73,6 +77,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
   const pathname = usePathname();
   const [hash, setHash] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [screenshotSubmenu, setScreenshotSubmenu] = useState<NavItem[]>([]);
   const demoUrl = getVersionDemoUrl(version);
   const thanksPath = '/thanks';
 
@@ -86,6 +91,52 @@ export function Sidebar({ navigation, version }: SidebarProps) {
     window.addEventListener('hashchange', syncHash);
     return () => window.removeEventListener('hashchange', syncHash);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!pathname.includes('/wiki/screenshots')) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadScreenshotSubmenu() {
+      try {
+        const response = await fetch('/api/golden-screenshots', { cache: 'no-store' });
+        if (!response.ok) {
+          return;
+        }
+
+        const result = (await response.json()) as GoldenScreenshotResult;
+        const groups = new Map<string, number>();
+        for (const screenshot of result.screenshots) {
+          groups.set(screenshot.chart, (groups.get(screenshot.chart) ?? 0) + 1);
+        }
+
+        if (!cancelled) {
+          setScreenshotSubmenu(
+            Array.from(groups, ([chart, count]) => ({
+              title: `${chart} (${count})`,
+              slug: chart,
+              path: `/${version.id}/wiki/screenshots#golden-${chart}`,
+            })),
+          );
+        }
+      } catch {
+        // The main Screenshots page displays the API error state.
+      }
+    }
+
+    void loadScreenshotSubmenu();
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, version.id]);
+
+  const displayedNavigation = navigation.map((item) =>
+    item.slug === 'screenshots' && screenshotSubmenu.length > 0
+      ? { ...item, children: screenshotSubmenu }
+      : item,
+  );
 
   const isActive = useCallback((item: NavItem): boolean => {
     const itemPath = item.path.replace(/\/$/, '');
@@ -175,7 +226,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
         <div className="mb-6 lg:mb-5">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Documentation</h2>
           <nav className="flex flex-col gap-1" aria-label="Documentation">
-            {navigation.map((item) => {
+            {displayedNavigation.map((item) => {
               const isCurrentItemSectionActive = isActive(item) || hasActiveChild(item);
 
               return (
