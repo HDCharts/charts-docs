@@ -435,10 +435,7 @@ export function getNavigation(versionId: string): NavItem[] {
   const files = getMarkdownFiles(wikiPath);
   const migrationReleases = getMigrationReleases(versionId);
   const hasMigrationFile = files.some((file) => /^migration\.mdx?$/.test(file));
-  const navigationFiles = [...files];
-  if (!hasMigrationFile && migrationReleases.length > 0) {
-    navigationFiles.push('migration.md');
-  }
+  const navigationFiles = hasMigrationFile ? files : [...files, 'migration.md'];
 
   const navigation = navigationFiles.map((file) => {
     const slug = file.replace(/\.mdx?$/, '');
@@ -599,10 +596,7 @@ export function getPageSlugs(versionId: string): string[] {
   const wikiPath = getWikiPath(versionId);
   const files = getMarkdownFiles(wikiPath);
   const hasMigrationFile = files.some((file) => /^migration\.mdx?$/.test(file));
-  const pageFiles = [...files];
-  if (!hasMigrationFile && getMigrationReleases(versionId).length > 0) {
-    pageFiles.push('migration.md');
-  }
+  const pageFiles = hasMigrationFile ? files : [...files, 'migration.md'];
   
   return pageFiles
     .map(file => file.replace(/\.mdx?$/, ''))
@@ -625,11 +619,7 @@ export function getPage(versionId: string, slug: string): DocPage | null {
   
   if (!pathExists(actualPath)) {
     if (slug === 'migration') {
-      const cumulativeMigrationMarkdown = renderCumulativeMigrationMarkdown(versionId);
-      if (getMigrationReleases(versionId).length === 0) {
-        return null;
-      }
-      const pageContent = `${getDefaultMigrationPageMarkdown().trimEnd()}\n\n${cumulativeMigrationMarkdown}\n`;
+      const pageContent = `${getDefaultMigrationPageMarkdown().trimEnd()}\n\n${renderCumulativeMigrationMarkdown(versionId)}\n`;
       return {
         slug,
         title: 'Migration',
