@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { DocPage, NavItem, PageFrontmatter } from './types';
+import { DocPage, DocVersion, NavItem, PageFrontmatter } from './types';
 import { createHeadingSlugger } from './anchors';
-import { getVersion } from './versions';
+import { getAllVersions, getVersion } from './versions';
 
 /**
  * Base path to wiki content
@@ -34,25 +34,32 @@ function getWikiPath(versionId: string): string {
 }
 
 function getVersionedReleaseNotesPath(versionId: string): string | null {
-  let releaseNotesVersion = versionId;
+  const releaseNotesVersion = getReleaseNotesVersion(versionId);
+  if (!releaseNotesVersion) {
+    return null;
+  }
 
-  if (versionId === 'snapshot') {
-    try {
-      releaseNotesVersion = readTextFile(CURRENT_RELEASE_NOTES_VERSION_PATH).trim();
-    } catch {
-      return null;
-    }
+  const releaseNotesPath = path.join(RELEASE_NOTES_BASE, releaseNotesVersion);
+  return pathExists(releaseNotesPath) ? releaseNotesPath : null;
+}
 
+function getReleaseNotesVersion(versionId: string): string | null {
+  if (versionId !== 'snapshot') {
+    return versionId;
+  }
+
+  try {
+    const releaseNotesVersion = readTextFile(CURRENT_RELEASE_NOTES_VERSION_PATH).trim();
     if (
       !/^\d+\.\d+\.\d+$/.test(releaseNotesVersion) ||
       getVersion(releaseNotesVersion)
     ) {
       return null;
     }
+    return releaseNotesVersion;
+  } catch {
+    return null;
   }
-
-  const releaseNotesPath = path.join(RELEASE_NOTES_BASE, releaseNotesVersion);
-  return pathExists(releaseNotesPath) ? releaseNotesPath : null;
 }
 
 function getChangesetsPath(versionId: string): string | null {
@@ -207,10 +214,91 @@ function getVersionBreakingChangesMarkdown(versionId: string): string {
     .join('\n\n');
 }
 
+interface MigrationRelease {
+  label: string;
+  previousLabel?: string;
+  markdown: string;
+}
+
+function getStableVersions(): DocVersion[] {
+  return getAllVersions().filter((version) =>
+    version.id !== 'snapshot' && /^\d+\.\d+\.\d+$/.test(version.id),
+  );
+}
+
+/**
+ * Get migration-bearing releases up to the selected documentation version.
+ * The registry is ordered newest first, so the next stable entry is the
+ * previous release used in the generated guidance text.
+ */
+function getMigrationReleases(versionId: string): MigrationRelease[] {
+  const stableVersions = getStableVersions();
+  const currentSnapshotVersion = getReleaseNotesVersion(versionId);
+  let targetVersions = stableVersions;
+
+  if (versionId !== 'snapshot') {
+    const targetIndex = stableVersions.findIndex((version) => version.id === versionId);
+    if (targetIndex < 0) {
+      return [];
+    }
+    targetVersions = stableVersions.slice(targetIndex);
+  } else if (currentSnapshotVersion) {
+    targetVersions = [
+      {
+        id: currentSnapshotVersion,
+        label: currentSnapshotVersion,
+        wikiRoot: '',
+        apiBase: '',
+      },
+      ...stableVersions,
+    ];
+  }
+
+  return targetVersions.flatMap((version, index) => {
+    const markdown = getVersionBreakingChangesMarkdown(version.id);
+    const guideCount = countMigrationGuides(markdown);
+    if (guideCount === 0) {
+      return [];
+    }
+
+    return [{
+      label: version.label,
+      previousLabel: targetVersions[index + 1]?.label,
+      markdown,
+    }];
+  });
+}
+
+function demoteMigrationHeadings(markdown: string): string {
+  return markdown.replace(/^(#{2,5})\s+/gm, (_, hashes: string) => `${hashes}# `);
+}
+
+function renderCumulativeMigrationMarkdown(versionId: string): string {
+  const migrationReleases = getMigrationReleases(versionId);
+  if (migrationReleases.length === 0) {
+    return 'No breaking changes have been recorded for this release or earlier supported releases.';
+  }
+
+  const lines: string[] = [];
+  for (const migrationRelease of [...migrationReleases].reverse()) {
+    lines.push(`## ${migrationRelease.label}`, '');
+    lines.push(
+      migrationRelease.previousLabel
+        ? `> **Upgrade note:** If upgrading from ${migrationRelease.previousLabel} or earlier, read these migration notes.`
+        : '> **Upgrade note:** If upgrading from an earlier release, read these migration notes.',
+      '',
+      demoteMigrationHeadings(migrationRelease.markdown),
+      '',
+    );
+  }
+
+  return lines.join('\n').trimEnd();
+}
+
 function getDefaultMigrationPageMarkdown(): string {
   return `# Migration Guide
 
-This page summarizes breaking changes and how to migrate call sites safely. Use the module sections below to jump directly to impacted APIs.`;
+Migration notes are grouped by release. If you are upgrading, read every section newer than your current version.`;
 }
 
 function countMigrationGuides(markdown: string): number {
@@ -345,84 +433,76 @@ function getMarkdownFiles(dir: string): string[] {
 export function getNavigation(versionId: string): NavItem[] {
   const wikiPath = getWikiPath(versionId);
   const files = getMarkdownFiles(wikiPath);
-  const versionBreakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
-  const migrationGuideCount = countMigrationGuides(versionBreakingChangesMarkdown);
-  const hasBreakingChanges = migrationGuideCount > 0;
+  const migrationReleases = getMigrationReleases(versionId);
   const hasMigrationFile = files.some((file) => /^migration\.mdx?$/.test(file));
-  const navigationFiles = hasBreakingChanges && !hasMigrationFile ? [...files, 'migration.md'] : files;
+  const navigationFiles = [...files];
+  if (!hasMigrationFile && migrationReleases.length > 0) {
+    navigationFiles.push('migration.md');
+  }
 
-  const navigation = navigationFiles
-    .filter((file) => {
-      const slug = file.replace(/\.mdx?$/, '');
-      if (slug === 'migration' && !hasBreakingChanges) {
-        return false;
+  const navigation = navigationFiles.map((file) => {
+    const slug = file.replace(/\.mdx?$/, '');
+    const filePath = path.join(wikiPath, file);
+    const pagePath = `/${versionId}/wiki/${slug === 'index' ? '' : slug}`;
+
+    // Read frontmatter to get custom title if available
+    let title = filenameToTitle(file);
+    let markdownContent = '';
+    try {
+      const fileContent = readTextFile(filePath);
+      const { data, content } = matter(fileContent);
+      if (data.title) {
+        title = data.title;
       }
-      return true;
-    })
-    .map((file) => {
-      const slug = file.replace(/\.mdx?$/, '');
-      const filePath = path.join(wikiPath, file);
-      const pagePath = `/${versionId}/wiki/${slug === 'index' ? '' : slug}`;
+      markdownContent = content;
+    } catch {
+      // Use default title
+    }
 
-      // Read frontmatter to get custom title if available
-      let title = filenameToTitle(file);
-      let markdownContent = '';
-      try {
-        const fileContent = readTextFile(filePath);
-        const { data, content } = matter(fileContent);
-        if (data.title) {
-          title = data.title;
-        }
-        markdownContent = content;
-      } catch {
-        // Use default title
+    const navItem: NavItem = {
+      title,
+      slug: slug === 'index' ? '' : slug,
+      path: pagePath,
+      badgeCount:
+        slug === 'migration' && migrationReleases.length > 0
+          ? migrationReleases.length
+          : undefined,
+    };
+
+    if (slug === 'examples' && markdownContent) {
+      const children = extractExamplesChildren(markdownContent, pagePath);
+      if (children.length > 0) {
+        navItem.children = children;
       }
+    }
 
-      const navItem: NavItem = {
-        title,
-        slug: slug === 'index' ? '' : slug,
-        path: pagePath,
-        badgeCount:
-          slug === 'migration' && hasBreakingChanges
-            ? migrationGuideCount
-            : undefined,
-      };
+    if (slug === 'getting-started') {
+      navItem.children = [
+        {
+          title: 'Manual',
+          slug: 'manual',
+          path: pagePath,
+        },
+        {
+          title: 'Agent',
+          slug: 'agent',
+          path: `/${versionId}/agent`,
+        },
+      ];
+    }
 
-      if (slug === 'examples' && markdownContent) {
-        const children = extractExamplesChildren(markdownContent, pagePath);
-        if (children.length > 0) {
-          navItem.children = children;
-        }
+    if (slug === 'migration') {
+      const baseMigrationMarkdown = markdownContent || getDefaultMigrationPageMarkdown();
+      const cumulativeMigrationMarkdown = renderCumulativeMigrationMarkdown(versionId);
+      const markdownWithBreakingChanges = `${baseMigrationMarkdown.trimEnd()}\n\n${cumulativeMigrationMarkdown}\n`;
+      const children = extractMigrationChildren(markdownWithBreakingChanges, pagePath);
+      if (children.length > 0) {
+        navItem.children = children;
       }
+    }
 
-      if (slug === 'getting-started') {
-        navItem.children = [
-          {
-            title: 'Manual',
-            slug: 'manual',
-            path: pagePath,
-          },
-          {
-            title: 'Agent',
-            slug: 'agent',
-            path: `/${versionId}/agent`,
-          },
-        ];
-      }
-
-      if (slug === 'migration' && (markdownContent || hasBreakingChanges)) {
-        const baseMigrationMarkdown = markdownContent || getDefaultMigrationPageMarkdown();
-        const markdownWithBreakingChanges = versionBreakingChangesMarkdown
-          ? `${baseMigrationMarkdown.trimEnd()}\n\n${versionBreakingChangesMarkdown}\n`
-          : baseMigrationMarkdown;
-        const children = extractMigrationChildren(markdownWithBreakingChanges, pagePath);
-        if (children.length > 0) {
-          navItem.children = children;
-        }
-      }
-
-      return navItem;
-    });
+    return navItem;
+  });
 
   navigation.push({
     title: 'Screenshots',
@@ -518,14 +598,14 @@ function extractMigrationChildren(content: string, pagePath: string): NavItem[] 
 export function getPageSlugs(versionId: string): string[] {
   const wikiPath = getWikiPath(versionId);
   const files = getMarkdownFiles(wikiPath);
-  const versionBreakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
-  const hasBreakingChanges = countMigrationGuides(versionBreakingChangesMarkdown) > 0;
   const hasMigrationFile = files.some((file) => /^migration\.mdx?$/.test(file));
-  const pageFiles = hasBreakingChanges && !hasMigrationFile ? [...files, 'migration.md'] : files;
+  const pageFiles = [...files];
+  if (!hasMigrationFile && getMigrationReleases(versionId).length > 0) {
+    pageFiles.push('migration.md');
+  }
   
   return pageFiles
     .map(file => file.replace(/\.mdx?$/, ''))
-    .filter((slug) => !(slug === 'migration' && !hasBreakingChanges))
     .map((slug) => (slug === 'index' ? '' : slug));
 }
 
@@ -545,17 +625,17 @@ export function getPage(versionId: string, slug: string): DocPage | null {
   
   if (!pathExists(actualPath)) {
     if (slug === 'migration') {
-      const breakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
-      const migrationGuideCount = countMigrationGuides(breakingChangesMarkdown);
-      if (migrationGuideCount > 0) {
-        const pageContent = `${getDefaultMigrationPageMarkdown().trimEnd()}\n\n${breakingChangesMarkdown}\n`;
-        return {
-          slug,
-          title: 'Migration',
-          content: pageContent,
-          frontmatter: {},
-        };
+      const cumulativeMigrationMarkdown = renderCumulativeMigrationMarkdown(versionId);
+      if (getMigrationReleases(versionId).length === 0) {
+        return null;
       }
+      const pageContent = `${getDefaultMigrationPageMarkdown().trimEnd()}\n\n${cumulativeMigrationMarkdown}\n`;
+      return {
+        slug,
+        title: 'Migration',
+        content: pageContent,
+        frontmatter: {},
+      };
     }
     return null;
   }
@@ -587,14 +667,7 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     }
 
     if (slug === 'migration') {
-      const breakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
-      const migrationGuideCount = countMigrationGuides(breakingChangesMarkdown);
-      if (migrationGuideCount === 0) {
-        return null;
-      }
-      if (breakingChangesMarkdown) {
-        pageContent = `${pageContent.trimEnd()}\n\n${breakingChangesMarkdown}\n`;
-      }
+      pageContent = `${pageContent.trimEnd()}\n\n${renderCumulativeMigrationMarkdown(versionId)}\n`;
     }
     
     return {

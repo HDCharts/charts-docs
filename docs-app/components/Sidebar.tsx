@@ -248,7 +248,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
                       {typeof item.badgeCount === 'number' && item.badgeCount > 0 ? (
                         <span
                           className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--color-warning)_30%,var(--bg-secondary))] px-1 text-xs font-semibold text-[var(--text-primary)]"
-                          aria-label={`${item.badgeCount} migration guides`}
+                          aria-label={`${item.badgeCount} release version${item.badgeCount === 1 ? '' : 's'} with migration notes`}
                         >
                           {item.badgeCount}
                         </span>
