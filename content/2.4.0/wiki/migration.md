@@ -1,3 +1,3 @@
 # Migration Guide
 
-This page summarizes snapshot breaking changes and how to migrate call sites safely. Use the module sections below to jump directly to impacted APIs.
+Migration notes are grouped by release. If you are upgrading, read every section newer than your current version.
