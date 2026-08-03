@@ -81,6 +81,30 @@ export function ExamplesIcon(props: IconProps) {
   );
 }
 
+export function ScreenshotsIcon(props: IconProps) {
+  return (
+    <svg {...withDefaults(props)}>
+      <rect
+        x="4"
+        y="5"
+        width="16"
+        height="14"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <circle cx="8.5" cy="9.5" r="1.2" fill="currentColor" />
+      <path
+        d="M5.5 17l4.2-4.2 2.8 2.8 2.1-2.1 3.9 3.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function MigrationIcon(props: IconProps) {
   return (
     <svg {...withDefaults(props)}>

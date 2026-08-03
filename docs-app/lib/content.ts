@@ -351,7 +351,7 @@ export function getNavigation(versionId: string): NavItem[] {
   const hasMigrationFile = files.some((file) => /^migration\.mdx?$/.test(file));
   const navigationFiles = hasBreakingChanges && !hasMigrationFile ? [...files, 'migration.md'] : files;
 
-  return navigationFiles
+  const navigation = navigationFiles
     .filter((file) => {
       const slug = file.replace(/\.mdx?$/, '');
       if (slug === 'migration' && !hasBreakingChanges) {
@@ -423,6 +423,14 @@ export function getNavigation(versionId: string): NavItem[] {
 
       return navItem;
     });
+
+  navigation.push({
+    title: 'Screenshots',
+    slug: 'screenshots',
+    path: `/${versionId}/wiki/screenshots`,
+  });
+
+  return navigation;
 }
 
 /**
