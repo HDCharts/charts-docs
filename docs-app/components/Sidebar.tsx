@@ -176,7 +176,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
   return (
     <aside 
       className={cn(
-        "sticky top-[var(--header-height)] z-40 mt-[var(--header-height)] w-full border-b border-[var(--border-color)] bg-[var(--bg-secondary)] p-3 lg:fixed lg:top-[var(--header-height)] lg:bottom-0 lg:left-0 lg:z-40 lg:mt-0 lg:w-[var(--sidebar-width)] lg:border-b-0 lg:border-r lg:p-5",
+        "sticky top-[var(--header-height)] z-40 mt-[var(--header-height)] w-full border-b border-[var(--border-color)] bg-[var(--bg-secondary)] p-3 lg:fixed lg:top-[var(--header-height)] lg:bottom-0 lg:left-0 lg:z-40 lg:mt-0 lg:flex lg:w-[var(--sidebar-width)] lg:flex-col lg:border-b-0 lg:border-r lg:p-5",
         mobileNavOpen && "lg:z-50"
       )} 
       aria-label="Sidebar navigation"
@@ -218,7 +218,7 @@ export function Sidebar({ navigation, version }: SidebarProps) {
         id="docs-sidebar-content" 
         className={cn(
           "mt-3 overflow-y-auto lg:mt-0",
-          "max-h-[calc(100vh-var(--header-height)-var(--header-height)-2rem)] lg:max-h-none lg:overflow-y-auto",
+          "max-h-[calc(100vh-var(--header-height)-var(--header-height)-2rem)] lg:min-h-0 lg:flex-1 lg:overflow-y-auto",
           "scrollbar-thin scrollbar-thumb-[var(--scrollbar-thumb)] scrollbar-track-[var(--scrollbar-track)]",
           mobileNavOpen ? "block lg:block" : "hidden lg:block"
         )}
