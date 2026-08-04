@@ -23,6 +23,12 @@
           "description": "Typed superset of JavaScript that compiles to plain JavaScript.",
           "url": "https://www.typescriptlang.org/",
           "license": "Apache-2.0"
+        },
+        {
+          "name": "Tailwind CSS",
+          "description": "Utility-first CSS framework used for styling the documentation site.",
+          "url": "https://github.com/tailwindlabs/tailwindcss",
+          "license": "MIT"
         }
       ]
     },

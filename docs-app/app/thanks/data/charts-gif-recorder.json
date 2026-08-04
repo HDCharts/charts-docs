@@ -78,6 +78,12 @@
           "description": "Kotlin linter and formatter with built-in rules.",
           "url": "https://github.com/pinterest/ktlint",
           "license": "MIT"
+        },
+        {
+          "name": "Axion Release",
+          "description": "Gradle plugin that derives project versions from Git tags.",
+          "url": "https://github.com/allegro/axion-release-plugin",
+          "license": "Apache-2.0"
         }
       ]
     },
