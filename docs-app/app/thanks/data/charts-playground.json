@@ -22,21 +22,21 @@
       "title": "Libraries",
       "items": [
         {
-          "name": "Ktor",
-          "description": "Asynchronous HTTP client and server framework for Kotlin.",
-          "url": "https://ktor.io/",
-          "license": "Apache-2.0"
-        },
-        {
           "name": "AndroidX Lifecycle",
           "description": "Lifecycle-aware components for managing Android lifecycle.",
           "url": "https://developer.android.com/jetpack/androidx/releases/lifecycle",
           "license": "Apache-2.0"
         },
         {
-          "name": "KotlinX Serialization",
-          "description": "Kotlin multi-format serialization library.",
-          "url": "https://github.com/Kotlin/kotlinx.serialization",
+          "name": "KotlinX DateTime",
+          "description": "Multiplatform date and time library for Kotlin.",
+          "url": "https://github.com/Kotlin/kotlinx-datetime",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Kotlin Compiler (Embeddable)",
+          "description": "Embeddable Kotlin compiler used to compile and run playground code snippets.",
+          "url": "https://github.com/JetBrains/kotlin",
           "license": "Apache-2.0"
         }
       ]

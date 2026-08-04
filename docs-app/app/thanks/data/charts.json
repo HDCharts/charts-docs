@@ -22,21 +22,9 @@
       "title": "Libraries",
       "items": [
         {
-          "name": "KotlinX Coroutines",
-          "description": "Library for writing asynchronous code using coroutines.",
-          "url": "https://github.com/Kotlin/kotlinx.coroutines",
-          "license": "Apache-2.0"
-        },
-        {
           "name": "KotlinX Immutable Collections",
           "description": "Persistent immutable collection implementations for Kotlin.",
           "url": "https://github.com/Kotlin/kotlinx.collections.immutable",
-          "license": "Apache-2.0"
-        },
-        {
-          "name": "Koin",
-          "description": "Lightweight dependency injection framework for Kotlin.",
-          "url": "https://insert-koin.io/",
           "license": "Apache-2.0"
         }
       ]
@@ -72,6 +60,18 @@
           "name": "Gradle japicmp Plugin",
           "description": "Binary/source API compatibility checks used in release and CI workflows.",
           "url": "https://github.com/melix/japicmp-gradle-plugin",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "KSP (Kotlin Symbol Processing)",
+          "description": "Kotlin code-generation API used by build tooling and annotation processors.",
+          "url": "https://github.com/google/ksp",
+          "license": "Apache-2.0"
+        },
+        {
+          "name": "Axion Release",
+          "description": "Gradle plugin that derives project versions from Git tags.",
+          "url": "https://github.com/allegro/axion-release-plugin",
           "license": "Apache-2.0"
         }
       ]
