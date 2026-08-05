@@ -23,11 +23,11 @@ const ibmPlexMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://charts.bretgordon.com"),
+  metadataBase: new URL("https://charts.hdcode.dev"),
   title: "Charts Documentation",
   description: "API reference, setup guides, and migration docs for Charts — a Kotlin Multiplatform charting library built on Compose.",
   keywords: ["charts", "kotlin", "compose", "multiplatform", "visualization", "data"],
-  authors: [{ name: "Charts Team" }],
+  authors: [{ name: "hdcode.dev" }],
   openGraph: {
     title: "Charts Documentation",
     description: "API reference and integration guides for Charts, a Compose Multiplatform charting library.",
