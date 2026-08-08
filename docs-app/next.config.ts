@@ -120,6 +120,59 @@ const nextConfig: NextConfig = {
   // Redirects for convenience
   async redirects() {
     return [
+      // Legacy static-content URLs previously exposed the Markdown source.
+      {
+        source: "/content/:version/wiki",
+        destination: "/:version/wiki",
+        permanent: true,
+      },
+      {
+        source: "/content/:version/wiki/",
+        destination: "/:version/wiki",
+        permanent: true,
+      },
+      // Legacy API directory URLs previously exposed a forbidden static directory.
+      {
+        source: "/static/api/:version",
+        destination: "/:version/api",
+        permanent: true,
+      },
+      {
+        source: "/static/api/:version/",
+        destination: "/:version/api",
+        permanent: true,
+      },
+      // Legacy docs-prefixed URLs from the previous Charts deployment.
+      {
+        source: "/docs/content/:version/wiki",
+        destination: "/:version/wiki",
+        permanent: true,
+      },
+      {
+        source: "/docs/content/:version/wiki/",
+        destination: "/:version/wiki",
+        permanent: true,
+      },
+      {
+        source: "/docs/static/api/:version",
+        destination: "/:version/api",
+        permanent: true,
+      },
+      {
+        source: "/docs/static/api/:version/",
+        destination: "/:version/api",
+        permanent: true,
+      },
+      {
+        source: "/docs/static/demo/:version",
+        destination: "/demo/:version/",
+        permanent: true,
+      },
+      {
+        source: "/docs/static/demo/:version/",
+        destination: "/demo/:version/",
+        permanent: true,
+      },
       {
         source: "/demo",
         destination: `/demo/${defaultDocsVersion}/`,
