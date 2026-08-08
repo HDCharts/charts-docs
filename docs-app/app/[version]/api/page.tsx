@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getAllVersions, getVersion } from '@/lib/versions';
 import { getVersionApiIndexUrl } from '@/lib/version-links';
+import { getCanonicalUrl } from '@/lib/seo';
 
 interface ApiPageProps {
   params: Promise<{ version: string }>;
@@ -12,6 +13,9 @@ export async function generateMetadata({ params }: ApiPageProps): Promise<Metada
   return {
     title: `API Reference | Charts ${version}`,
     description: `Complete API documentation for Charts ${version}`,
+    alternates: {
+      canonical: getCanonicalUrl(`/${version}/api`),
+    },
   };
 }
 

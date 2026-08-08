@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { MarkdownRenderer } from '@/components';
 import { getPage, getPageSlugs } from '@/lib/content';
 import { getAllVersions } from '@/lib/versions';
+import { getCanonicalUrl } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 
 export const dynamicParams = false;
@@ -23,6 +24,9 @@ export async function generateMetadata({ params }: WikiPageProps): Promise<Metad
   return {
     title: `${page.title} | Charts ${version}`,
     description: page.frontmatter.description || `${page.title} - Charts documentation`,
+    alternates: {
+      canonical: getCanonicalUrl(`/${version}/wiki${pageSlug ? `/${pageSlug}` : ''}`),
+    },
   };
 }
 

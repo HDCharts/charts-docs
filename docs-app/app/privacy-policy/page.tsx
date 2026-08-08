@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Charts',
   description: 'Privacy Policy for the Charts project and its related services.',
+  alternates: {
+    canonical: getCanonicalUrl('/privacy-policy'),
+  },
 };
 
 export default function PrivacyPolicyPage() {
