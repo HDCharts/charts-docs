@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getAllVersions } from '@/lib/versions';
 import { AgentPromptBuilder } from '@/components/AgentPromptBuilder';
+import { getCanonicalUrl } from '@/lib/seo';
 
 interface AgentPromptPageProps {
   params: Promise<{ version: string }>;
@@ -11,6 +12,9 @@ export async function generateMetadata({ params }: AgentPromptPageProps): Promis
   return {
     title: `Agent Prompt Builder | Charts ${version}`,
     description: `Generate guided AI prompts for integrating Charts ${version}`,
+    alternates: {
+      canonical: getCanonicalUrl(`/${version}/agent`),
+    },
   };
 }
 

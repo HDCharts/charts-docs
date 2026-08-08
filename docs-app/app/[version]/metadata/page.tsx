@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MetadataPanel } from '@/components/MetadataPanel';
 import { getAllVersions, getVersion } from '@/lib/versions';
+import { getCanonicalUrl } from '@/lib/seo';
 
 interface MetadataPageProps {
   params: Promise<{ version: string }>;
@@ -12,6 +13,9 @@ export async function generateMetadata({ params }: MetadataPageProps): Promise<M
   return {
     title: `Metadata | Charts ${version}`,
     description: `Build and publication metadata for Charts ${version}`,
+    alternates: {
+      canonical: getCanonicalUrl(`/${version}/metadata`),
+    },
   };
 }
 
