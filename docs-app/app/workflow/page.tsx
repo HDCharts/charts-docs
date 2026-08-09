@@ -353,8 +353,6 @@ export default function WorkflowPage() {
         >
           <div className="workflow-chart-titlebar"><strong>Release</strong><span>manual dispatch</span></div>
           <div className="workflow-chart-stack">
-            <WorkflowNode label="START" title="Release workflow dispatched" detail="A manual production release starts the flow." />
-            <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
             <WorkflowNode label="PREPARE" title="Resolve and validate the release" detail="Axion resolves the SemVer and release readiness is checked before publishing." tone="success" />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
             <div className="workflow-branch-grid workflow-branch-grid-three">
