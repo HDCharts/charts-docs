@@ -17,10 +17,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const screenshotUrl = {
     url: getCanonicalUrl(`/${getDefaultVersionId()}/wiki/screenshots`),
   };
+  const workflowUrl = {
+    url: getCanonicalUrl('/workflow'),
+  };
 
   return [
     { url: `${siteUrl}/privacy-policy` },
     { url: `${siteUrl}/built-with` },
+    workflowUrl,
     ...wikiUrls,
     ...apiUrls,
     screenshotUrl,

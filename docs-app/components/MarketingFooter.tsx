@@ -15,6 +15,7 @@ export function MarketingFooter({ versionId }: MarketingFooterProps) {
         {versionId ? <Link href={`/${versionId}/wiki`}>Documentation</Link> : null}
         {versionId ? <Link href={`/${versionId}/metadata`}>Build metadata</Link> : null}
         {versionId ? <Link href={`/${versionId}/wiki/screenshots`}>Screenshots</Link> : null}
+        <Link href="/workflow">Workflow</Link>
         <Link href="/built-with">Built with</Link>
         <Link href="/privacy-policy">Privacy</Link>
         <a href="https://github.com/HDCharts/charts" target="_blank" rel="noopener noreferrer">GitHub</a>

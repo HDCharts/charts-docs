@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChartHeroVisual, MarketingFooter, MarketingHeader } from '@/components';
+import { ChartHeroVisual, CiStatsSection, MarketingFooter, MarketingHeader } from '@/components';
 import { getDefaultVersionId } from '@/lib/versions';
 
 export default function HomePage() {
@@ -74,6 +74,8 @@ private fun ShowLine() {
 }`}</code></pre>
           </div>
         </section>
+
+        <CiStatsSection />
 
         <section className="marketing-cta-section" aria-labelledby="cta-title">
           <div>
