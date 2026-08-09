@@ -315,7 +315,7 @@ export default function WorkflowPage() {
           title="Snapshot publishing"
           description="Snapshots keep the latest development build available. Scheduled runs publish only when relevant changes are present."
         >
-          <div className="workflow-chart-titlebar"><strong>Snapshot workflow</strong><span>scheduled every day · manual dispatch available</span></div>
+          <div className="workflow-chart-titlebar"><strong>Snapshot workflow</strong><span>scheduled every day</span></div>
           <div className="workflow-chart-stack">
             <WorkflowNode label="START" title="Snapshot workflow starts" detail="The nightly scheduler calls the reusable snapshot workflow. A manual run bypasses the time-window check." />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
