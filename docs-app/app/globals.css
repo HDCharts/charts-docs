@@ -1387,10 +1387,6 @@
   gap: 0.65rem;
 }
 
-.workflow-lane .workflow-branch-grid-three {
-  grid-template-columns: 1fr;
-}
-
 .workflow-chart-callout {
   margin-top: 1rem;
   padding: 0.8rem 1rem;

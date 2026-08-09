@@ -175,7 +175,7 @@ export default function WorkflowPage() {
         <section className="marketing-section workflow-ecosystem-section" aria-label="HDCharts ecosystem">
           <div className="ecosystem-map">
             <EcosystemCard
-              label="SOURCE OF TRUTH"
+              label="CORE LIBRARY"
               title="HDCharts · charts"
               detail="Kotlin Multiplatform library, demos, tests, and release orchestration."
               href="https://github.com/HDCharts/charts"
@@ -224,7 +224,7 @@ export default function WorkflowPage() {
           id="pull-request"
           number="01"
           title="Pull request validation"
-          description="Every pull request targeting main is classified first. The required core checks stay visible even when a documentation-only change does not need expensive work."
+          description="Every pull request first checks whether it needs the full validation path. Documentation-only changes keep their required checks without running expensive work."
         >
           <div className="workflow-chart-titlebar"><strong>Pull Request</strong><span>opened · synchronized · reopened</span></div>
           <div className="workflow-chart-stack">
@@ -248,21 +248,25 @@ export default function WorkflowPage() {
           <div className="workflow-lane-grid">
             <div className="workflow-lane">
               <WorkflowNode label="API POLICY" title="Check the public API" detail="The lane runs for code changes and breaking-change label events." tone="decision" />
-              <div className="workflow-branch-grid workflow-branch-grid-three">
+              <div className="workflow-branch-grid">
                 <WorkflowBranch label="NO" tone="optional">
                   <WorkflowNode label="SKIP" title="API compatibility not requested" tone="optional" />
                 </WorkflowBranch>
                 <WorkflowBranch label="YES · compatible" tone="success">
                   <WorkflowNode label="PASS" title="Public API is compatible" tone="success" />
                 </WorkflowBranch>
-                <WorkflowBranch label="BREAK DETECTED" tone="warning">
+              </div>
+              <div className="workflow-branch-grid">
+                <WorkflowBranch label="BREAK DETECTED + LABEL" tone="warning">
                   <WorkflowNode
-                    label="LABEL PRESENT + BREAK DETECTED"
+                    label="ACKNOWLEDGED"
                     title="Document and acknowledge the break"
-                    detail={<>Keep the breaking-change label when the API checker flags an intentional public API incompatibility, update release notes and affected docs, then review the API baseline PR created after merge. See the <a href="https://github.com/HDCharts/charts/tree/main/release-notes/2.3.0/migrations" target="_blank" rel="noopener noreferrer">release migration notes</a> for examples of the required call-site changes.</>}
+                    detail={<>Keep the breaking-change label when the API checker flags an intentional public API incompatibility, update release notes and affected docs, then review the API baseline PR created after merge. See the <a href="https://github.com/HDCharts/charts/tree/main/release-notes" target="_blank" rel="noopener noreferrer">release migration notes</a> for examples of the required call-site changes.</>}
                     tone="warning"
                   />
-                  <WorkflowNode label="POLICY MISMATCH" title="Fix the API policy mismatch" detail="Add the label for an intentional break, remove a stale label, or fix the compatibility task error before merging." tone="failure" />
+                </WorkflowBranch>
+                <WorkflowBranch label="POLICY MISMATCH" tone="failure">
+                  <WorkflowNode label="STOP" title="Fix the API policy mismatch" detail="Add the label for an intentional break, remove a stale label, or fix the compatibility task error before merging." tone="failure" />
                 </WorkflowBranch>
               </div>
             </div>
@@ -274,8 +278,14 @@ export default function WorkflowPage() {
                 </WorkflowBranch>
                 <WorkflowBranch label="YES" tone="success">
                   <WorkflowNode label="ANDROID EMULATOR" title="Record and compare GIF baselines" detail="The job stays outside the required core gate, but its report and generated GIFs are uploaded for review." tone="success" />
-                  <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
-                  <WorkflowNode label="MISMATCH" title="Fix the visual change or update the baseline" detail={<>Download the validation artifacts. Fix unintended output; for an intentional change, update the matching file in <a href="https://github.com/HDCharts/charts/tree/main/gif-baselines" target="_blank" rel="noopener noreferrer">gif-baselines/</a> and rerun validation.</>} tone="warning" />
+                  <div className="workflow-branch-grid">
+                    <WorkflowBranch label="MATCH" tone="success">
+                      <WorkflowNode label="PASS" title="GIF baseline matches" tone="success" />
+                    </WorkflowBranch>
+                    <WorkflowBranch label="MISMATCH" tone="warning">
+                      <WorkflowNode label="REVIEW" title="Fix the visual change or update the baseline" detail={<>Download the validation artifacts. Fix unintended output; for an intentional change, update the matching file in <a href="https://github.com/HDCharts/charts/tree/main/gif-baselines" target="_blank" rel="noopener noreferrer">gif-baselines/</a> and rerun validation.</>} tone="warning" />
+                    </WorkflowBranch>
+                  </div>
                 </WorkflowBranch>
               </div>
             </div>
@@ -303,9 +313,9 @@ export default function WorkflowPage() {
           id="snapshot"
           number="02"
           title="Snapshot publishing"
-          description="Snapshots keep the latest meaningful development build available without pretending that every nightly run needs to publish a new version."
+          description="Snapshots keep the latest development build available. Scheduled runs publish only when relevant changes are present."
         >
-          <div className="workflow-chart-titlebar"><strong>Nightly Workflows</strong><span>scheduled every day · manual dispatch available</span></div>
+          <div className="workflow-chart-titlebar"><strong>Snapshot workflow</strong><span>scheduled every day · manual dispatch available</span></div>
           <div className="workflow-chart-stack">
             <WorkflowNode label="START" title="Snapshot workflow starts" detail="The nightly scheduler calls the reusable snapshot workflow. A manual run bypasses the time-window check." />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
@@ -315,11 +325,9 @@ export default function WorkflowPage() {
                 <WorkflowNode label="STOP CLEANLY" title="No snapshot published" detail="No recent changes, or only ignored paths, ends the run without publishing." tone="optional" />
               </WorkflowBranch>
               <WorkflowBranch label="YES · or manual run" tone="success">
-                <WorkflowNode label="CONTINUE" title="Prepare the snapshot" detail="Resolve the development version with Axion and prepare publication." tone="success" />
+                <WorkflowNode label="CONTINUE" title="Prepare the snapshot" detail="Axion resolves the version. If the current version is not a snapshot, publication ends here." tone="success" />
               </WorkflowBranch>
             </div>
-            <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
-            <WorkflowNode label="PREPARE" title="Resolve a snapshot version" detail="Axion owns the version. If the current version is not a snapshot, publication ends here." tone="success" />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
             <WorkflowNode label="SOURCE + DOCS" title="Sync snapshot context" detail="Mirror release notes and GIF baselines into charts-docs, write snapshot-manifest.json, and push only when content changed." />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
@@ -341,13 +349,13 @@ export default function WorkflowPage() {
           id="release"
           number="03"
           title="Stable release"
-          description="A stable release is a manual, approval-gated promotion from main. It validates that the code, snapshot, artifacts, and documentation all describe the same source."
+          description="A stable release is a manual, approval-gated promotion of a tested snapshot. It validates the code, artifacts, and documentation before publishing."
         >
-          <div className="workflow-chart-titlebar"><strong>Release</strong><span>manual dispatch · main only · no concurrent release</span></div>
+          <div className="workflow-chart-titlebar"><strong>Release</strong><span>manual dispatch</span></div>
           <div className="workflow-chart-stack">
-            <WorkflowNode label="START" title="Release workflow dispatched" detail="A manual production release begins on main." />
+            <WorkflowNode label="START" title="Release workflow dispatched" detail="A manual production release starts the flow." />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
-            <WorkflowNode label="PREPARE · MAIN" title="Resolve and validate the release" detail="Axion resolves the SemVer and release readiness is checked before publishing." tone="success" />
+            <WorkflowNode label="PREPARE" title="Resolve and validate the release" detail="Axion resolves the SemVer and release readiness is checked before publishing." tone="success" />
             <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
             <div className="workflow-branch-grid workflow-branch-grid-three">
               <WorkflowBranch label="VERSION / TAG" tone="failure">
