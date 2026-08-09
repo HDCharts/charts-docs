@@ -1,14 +1,14 @@
-# Charts 2.0.0
+# HDCharts 2.0.0
 
-Welcome to the Charts documentation! This library provides a simple way to create beautiful charts in Kotlin Multiplatform applications.
+Welcome to the HDCharts documentation! This library provides a simple way to create beautiful charts in Kotlin Multiplatform applications.
 
-![Charts Demo](/content/2.0.0/wiki/assets/demo.gif)
+![HDCharts Demo](/content/2.0.0/wiki/assets/demo.gif)
 
 ## What's New in 2.0.0
 
 ### 🎉 Initial 2.0 Release
 
-This is the initial release of Charts 2.0, featuring:
+This is the initial release of HDCharts 2.0, featuring:
 
 - **Kotlin Multiplatform Support** - Works on Android, iOS, Desktop, and Web
 - **Compose UI** - Modern declarative UI framework
@@ -18,7 +18,7 @@ This is the initial release of Charts 2.0, featuring:
 
 ## Getting Started
 
-New to Charts? Check out our [Getting Started Guide](getting-started) to learn how to integrate the library into your project and create your first charts in minutes.
+New to HDCharts? Check out our [Getting Started Guide](getting-started) to learn how to integrate the library into your project and create your first charts in minutes.
 
 ## Documentation
 

@@ -1,5 +1,5 @@
 /**
- * Types for the Charts Documentation V2 system
+ * Types for the HDCharts Documentation V2 system
  */
 
 /**

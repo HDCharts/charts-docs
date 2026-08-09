@@ -11,8 +11,8 @@ interface ApiPageProps {
 export async function generateMetadata({ params }: ApiPageProps): Promise<Metadata> {
   const { version } = await params;
   return {
-    title: `API Reference | Charts ${version}`,
-    description: `Complete API documentation for Charts ${version}`,
+    title: `API Reference | HDCharts ${version}`,
+    description: `Complete API documentation for HDCharts ${version}`,
     alternates: {
       canonical: getCanonicalUrl(`/${version}/api`),
     },
@@ -35,7 +35,7 @@ export default async function ApiPage({ params }: ApiPageProps) {
         <iframe
           src={apiUrl}
           className="h-[calc(100vh-var(--header-height)-2rem)] w-full rounded-lg border-0 bg-[var(--bg-secondary)]"
-          title={`API Documentation for Charts ${version.label}`}
+          title={`API Documentation for HDCharts ${version.label}`}
           loading="lazy"
         >
           <p className="flex min-h-[300px] items-center justify-center p-8 text-center text-sm text-[var(--text-secondary)]">

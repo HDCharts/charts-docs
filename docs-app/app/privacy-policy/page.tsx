@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Charts',
-  description: 'Privacy Policy for the Charts project and its related services.',
+  title: 'Privacy Policy | HDCharts',
+  description: 'Privacy Policy for the HDCharts project and its related services.',
   alternates: {
     canonical: getCanonicalUrl('/privacy-policy'),
   },
@@ -22,14 +22,14 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        This policy explains how the Charts project handles information through
+        This policy explains how the HDCharts project handles information through
         its official websites, documentation, demos, applications, and related
         services.
       </p>
 
       <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Information We Collect</h2>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        The Charts library itself does not collect, transmit, or store personal
+        The HDCharts library itself does not collect, transmit, or store personal
         information. When you use project websites or related services,
         necessary technical information such as IP addresses, browser details,
         and request logs may be processed by hosting and content-delivery
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
 
       <h2 className="mt-8 mb-4 text-2xl font-semibold text-[var(--text-primary)]">Data Retention</h2>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
-        The Charts library does not retain personal information. Retention of
+        The HDCharts library does not retain personal information. Retention of
         technical information processed by third-party providers is governed by
         the project&apos;s service configuration and those providers&apos;
         policies.

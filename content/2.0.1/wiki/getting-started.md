@@ -4,7 +4,7 @@ title: Setup
 
 # Manual Setup
 
-This guide will help you integrate the Charts library into your Kotlin Multiplatform project.
+This guide will help you integrate the HDCharts library into your Kotlin Multiplatform project.
 
 ## Installation
 

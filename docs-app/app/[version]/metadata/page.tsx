@@ -11,8 +11,8 @@ interface MetadataPageProps {
 export async function generateMetadata({ params }: MetadataPageProps): Promise<Metadata> {
   const { version } = await params;
   return {
-    title: `Metadata | Charts ${version}`,
-    description: `Build and publication metadata for Charts ${version}`,
+    title: `Metadata | HDCharts ${version}`,
+    description: `Build and publication metadata for HDCharts ${version}`,
     alternates: {
       canonical: getCanonicalUrl(`/${version}/metadata`),
     },

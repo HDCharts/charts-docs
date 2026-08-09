@@ -1,7 +1,7 @@
 {
   "name": "charts-demo",
   "url": "https://github.com/HDCharts/charts/tree/main/app",
-  "description": "Multiplatform demo app showcasing Charts across Android, iOS, Desktop, and Web.",
+  "description": "Multiplatform demo app showcasing HDCharts across Android, iOS, Desktop, and Web.",
   "sections": [
     {
       "title": "Frameworks & Platforms",

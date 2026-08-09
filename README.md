@@ -1,6 +1,6 @@
 # charts-docs
 
-Documentation repository for Charts.
+Documentation repository for HDCharts.
 
 <img width="1000" alt="Screenshot 2026-08-09 at 08 14 23" src="https://github.com/user-attachments/assets/4b6f197f-8284-489b-b6a8-b05a79e6c369" />
 

@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export function ChartHeroVisual() {
   return (
-    <div className="marketing-hero-visual" aria-label="A sample chart rendered with Charts" role="img">
+    <div className="marketing-hero-visual" aria-label="A sample chart rendered with HDCharts" role="img">
       <div className="marketing-visual-toolbar">
         <span className="marketing-visual-status" />
         <span>Sample dataset</span>
@@ -13,7 +13,7 @@ export function ChartHeroVisual() {
       <Image
         className="marketing-hero-image"
         src="/charts-hero-chart.png"
-        alt="A line chart rendered with Charts"
+        alt="A line chart rendered with HDCharts"
         width={800}
         height={440}
         priority

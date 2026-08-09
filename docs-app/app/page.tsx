@@ -13,7 +13,7 @@ export default function HomePage() {
         <section className="marketing-hero" aria-labelledby="hero-title">
           <div className="marketing-hero-copy">
             <p className="marketing-eyebrow"><span /> Compose Multiplatform · Kotlin · Open source</p>
-            <h1 id="hero-title">Charts that feel at home on every screen.</h1>
+            <h1 id="hero-title">HDCharts that feel at home on every screen.</h1>
             <p className="marketing-hero-lead">
               Build clear, customizable data visualizations for Android, iOS, desktop, and web with one Compose-first library.
             </p>
@@ -30,7 +30,7 @@ export default function HomePage() {
           <div className="marketing-section-heading">
             <p className="marketing-eyebrow"><span /></p>
             <h2 id="capabilities-title">One charting toolkit, many surfaces.</h2>
-            <p>Charts keeps the API familiar while giving each platform the room to render beautifully.</p>
+            <p>HDCharts keeps the API familiar while giving each platform the room to render beautifully.</p>
           </div>
           <div className="marketing-feature-grid">
             <article className="marketing-feature-card">

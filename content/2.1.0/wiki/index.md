@@ -1,6 +1,6 @@
-# Charts 2.1.0
+# HDCharts 2.1.0
 
-Charts 2.1.0 focuses on better chart capabilities, more predictable interactions, and a cleaner docs/demo experience for day-to-day development.
+HDCharts 2.1.0 focuses on better chart capabilities, more predictable interactions, and a cleaner docs/demo experience for day-to-day development.
 
 ## What's New in 2.1.0
 
@@ -57,7 +57,7 @@ RadarChart(
 
 ## Getting Started
 
-New to Charts? Check out our [Getting Started Guide](/2.1.0/wiki/getting-started) to learn how to integrate the library into your project and create your first charts in minutes.
+New to HDCharts? Check out our [Getting Started Guide](/2.1.0/wiki/getting-started) to learn how to integrate the library into your project and create your first charts in minutes.
 
 ## Documentation
 
