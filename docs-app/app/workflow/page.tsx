@@ -317,8 +317,6 @@ export default function WorkflowPage() {
         >
           <div className="workflow-chart-titlebar"><strong>Snapshot workflow</strong><span>scheduled every day</span></div>
           <div className="workflow-chart-stack">
-            <WorkflowNode label="START" title="Snapshot workflow starts" detail="The nightly scheduler calls the reusable snapshot workflow. A manual run bypasses the time-window check." />
-            <div className="workflow-chart-arrow" aria-hidden="true">↓</div>
             <WorkflowNode label="DECISION" title="Relevant changes in the last 24 hours?" detail="Docs and Markdown-only changes are ignored, while release notes remain relevant." tone="decision" />
             <div className="workflow-branch-grid">
               <WorkflowBranch label="NO · scheduled run" tone="optional">
