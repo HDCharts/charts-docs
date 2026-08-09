@@ -21,7 +21,7 @@ export default function HomePage() {
               <Link href={`/${defaultVersion}/wiki`} className="marketing-button marketing-button-primary">Read the docs</Link>
               <a href="/playground" target="_blank" rel="noopener noreferrer" className="marketing-button marketing-button-secondary">Open playground <span aria-hidden="true">↗</span></a>
             </div>
-            <p className="marketing-hero-note">Line, bar, pie, radar, histogram, and more — with room to make them yours.</p>
+            <p className="marketing-hero-note">Line, bar, pie, radar, and histogram charts, with flexible styling and interaction.</p>
           </div>
           <ChartHeroVisual />
         </section>
