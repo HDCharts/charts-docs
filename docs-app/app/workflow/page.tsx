@@ -401,7 +401,6 @@ export default function WorkflowPage() {
                 <WorkflowNode label="FINISH" title="Publish the GitHub release" detail="Release-note highlights are published and the commit receives documentation and Maven links." tone="success" />
               </WorkflowBranch>
             </div>
-            <div className="workflow-chart-callout workflow-chart-callout-failure">Any publication, signing, Android build, docs promotion, or public verification failure blocks its dependent jobs and prevents the final announcement.</div>
           </div>
         </WorkflowChart>
 
