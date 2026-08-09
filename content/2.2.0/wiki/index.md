@@ -26,7 +26,6 @@ implementation("io.github.dautovicharis:charts:<version>")
 Use modular artifacts (pick what you need):
 
 ```kotlin
-implementation("io.github.dautovicharis:charts-core:<version>")
 implementation("io.github.dautovicharis:charts-line:<version>")
 implementation("io.github.dautovicharis:charts-pie:<version>")
 implementation("io.github.dautovicharis:charts-bar:<version>")
@@ -39,7 +38,6 @@ Use BOM for aligned versions (where Gradle platforms are supported):
 
 ```kotlin
 implementation(platform("io.github.dautovicharis:charts-bom:<version>"))
-implementation("io.github.dautovicharis:charts-core")
 implementation("io.github.dautovicharis:charts-line")
 implementation("io.github.dautovicharis:charts-pie")
 implementation("io.github.dautovicharis:charts-bar")
