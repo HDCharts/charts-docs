@@ -7,6 +7,7 @@ import { createHighlighter, type Highlighter } from 'shiki';
 import { slugifyHeading } from '@/lib/anchors';
 import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
+import { StickySectionNav, type StickySectionNavItem } from './StickySectionNav';
 
 // Markdown may contain arbitrary local or remote image URLs, so next/image cannot validate them.
 /* eslint-disable @next/next/no-img-element */
@@ -16,7 +17,7 @@ let highlighterPromise: Promise<Highlighter> | null = null;
 function getHighlighter(): Promise<Highlighter> {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighter({
-      themes: ['github-dark'],
+      themes: ['github-light'],
       langs: ['kotlin', 'text'],
     });
   }
@@ -54,7 +55,7 @@ function useHighlighterContext() {
 
 interface MarkdownRendererProps {
   content: string;
-  layoutVariant?: 'default' | 'snapshotExamples';
+  layoutVariant?: 'default' | 'snapshotExamples' | 'migration';
 }
 
 export function MarkdownRenderer({
@@ -72,12 +73,17 @@ function MarkdownContent({
   content,
   layoutVariant,
 }: MarkdownRendererProps) {
-  const components = useMemo(() => createMarkdownComponents(), []);
+  const components = useMemo(
+    () => createMarkdownComponents({ wrapCodeLines: layoutVariant === 'snapshotExamples' || layoutVariant === 'migration' }),
+    [layoutVariant],
+  );
 
   return (
-    <div className="mx-auto max-w-[1120px]">
+    <div className="mx-auto min-w-0 max-w-[1120px]">
       {layoutVariant === 'snapshotExamples'
-        ? renderSnapshotExamples(content, components)
+        ? <SnapshotExamplesLayout content={content} components={components} />
+        : layoutVariant === 'migration'
+          ? <MigrationLayout content={content} components={components} />
         : (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -90,12 +96,38 @@ function MarkdownContent({
   );
 }
 
+function MigrationLayout({
+  content,
+  components,
+}: {
+  content: string;
+  components: Components;
+}): React.ReactNode {
+  const navigationItems = useMemo(() => parseHeadingNavigationItems(content, 2), [content]);
+
+  return (
+    <div className="grid min-w-0 gap-8 lg:grid-cols-[9rem_minmax(0,1fr)] lg:items-start">
+      <StickySectionNav items={navigationItems} label="Migration" ariaLabel="Migration navigation" />
+      <div>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={components}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
+}
+
 interface CodeBlockProps {
   code: string;
   language: string;
+  wrapLines?: boolean;
+  className?: string;
 }
 
-function CodeBlock({ code, language }: CodeBlockProps) {
+function CodeBlock({ code, language, wrapLines = false, className }: CodeBlockProps) {
   const { highlighter, ready } = useHighlighterContext();
   const [copied, setCopied] = useState(false);
 
@@ -106,7 +138,7 @@ function CodeBlock({ code, language }: CodeBlockProps) {
     try {
       return highlighter.codeToHtml(code, {
         lang: resolvedLanguage,
-        theme: 'github-dark',
+        theme: 'github-light',
       });
     } catch {
       return `<pre><code>${escapeHtml(code)}</code></pre>`;
@@ -122,13 +154,16 @@ function CodeBlock({ code, language }: CodeBlockProps) {
   }, [code]);
 
   return (
-    <div className="relative mb-4 rounded-lg border border-[var(--border-color)] bg-[var(--code-bg)] pt-12 overflow-hidden">
+    <div className={cn(
+      'relative mb-4 overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--code-bg)] pt-12',
+      className,
+    )}>
       <button
         className={cn(
-          "absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-md border border-[var(--border-color)] bg-[var(--surface-overlay)] px-2 py-1 text-xs font-semibold text-[var(--text-secondary)] transition-colors min-h-11 min-w-11",
-          "hover:bg-[var(--surface-overlay-hover)] hover:text-[var(--text-primary)] hover:border-[var(--color-secondary)]",
+          'absolute right-3 top-3 z-10 inline-flex min-h-11 min-w-11 items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold transition-colors',
+          'border-[var(--border-color)] bg-[var(--surface-overlay)] text-[var(--text-secondary)] hover:border-[var(--color-secondary)] hover:bg-[var(--surface-overlay-hover)] hover:text-[var(--text-primary)]',
           "active:translate-y-px",
-          copied && "border-[var(--color-success)] text-[var(--color-success)]"
+          copied && 'border-[var(--color-success)] text-[var(--color-success)]',
         )}
         type="button"
         onClick={handleCopy}
@@ -147,7 +182,12 @@ function CodeBlock({ code, language }: CodeBlockProps) {
         <span>{copied ? 'Copied' : 'Copy'}</span>
       </button>
       <div
-        className="overflow-x-auto p-4 [&_pre]:!m-0 [&_pre]:!rounded-none [&_pre]:!border-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!bg-transparent [&_code]:!p-0"
+        className={cn(
+          'p-4 [&_pre]:!m-0 [&_pre]:!rounded-none [&_pre]:!border-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!bg-transparent [&_code]:!p-0',
+          wrapLines
+            ? 'overflow-x-hidden [&_pre]:!overflow-visible [&_pre]:!whitespace-pre-wrap [&_code]:!whitespace-pre-wrap [&_code]:break-words'
+            : 'overflow-x-auto',
+        )}
         tabIndex={0}
         role="region"
         aria-label={`Code snippet${language !== 'text' ? ` in ${language}` : ''}`}
@@ -155,7 +195,10 @@ function CodeBlock({ code, language }: CodeBlockProps) {
         {highlightedHtml ? (
           <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
         ) : (
-          <pre className="m-0 font-mono text-sm text-[var(--text-primary)] whitespace-pre">
+          <pre className={cn(
+            'm-0 whitespace-pre font-mono text-sm',
+            'text-[var(--text-primary)]',
+          )}>
             <code>{code}</code>
           </pre>
         )}
@@ -251,46 +294,83 @@ function parseCodeBlockAt(lines: string[], startIndex: number): CodeBlockParseRe
   };
 }
 
-function renderSnapshotExamples(
-  content: string,
-  components: Components,
-): React.ReactNode {
-  const blocks = splitSnapshotBlocks(content);
+function SnapshotExamplesLayout({
+  content,
+  components,
+}: {
+  content: string;
+  components: Components;
+}): React.ReactNode {
+  const blocks = useMemo(() => splitSnapshotBlocks(content), [content]);
+  const examples = useMemo(
+    () => blocks.filter((block): block is SnapshotExampleBlock => block.type === 'example'),
+    [blocks],
+  );
+  const navigationItems = useMemo(
+    () => [
+      ...examples.map((example) => ({
+        id: slugifyHeading(example.title) || 'section',
+        title: example.title,
+      })),
+      { id: 'style-customization', title: 'Style Customization' },
+    ],
+    [examples],
+  );
+  return (
+    <div className="grid gap-8 lg:grid-cols-[9rem_minmax(0,1fr)] lg:items-start">
+      <StickySectionNav items={navigationItems} label="Examples" ariaLabel="Examples navigation" />
 
-  return blocks.map((block, index) => {
-    if (block.type === 'markdown') {
-      return (
-        <ReactMarkdown
-          key={`snapshot-markdown-${index}`}
-          remarkPlugins={[remarkGfm]}
-          components={components}
-        >
-          {block.content}
-        </ReactMarkdown>
-      );
-    }
+      <div>
+        {blocks.map((block, index) => {
+          if (block.type === 'markdown') {
+            return (
+              <ReactMarkdown
+                key={`snapshot-markdown-${index}`}
+                remarkPlugins={[remarkGfm]}
+                components={components}
+              >
+                {block.content}
+              </ReactMarkdown>
+            );
+          }
 
-    const id = slugifyHeading(block.title) || 'section';
-    return (
-      <React.Fragment key={`snapshot-example-${index}`}>
-        <h3 id={id} className="mt-6 mb-4 text-2xl font-semibold text-[var(--text-primary)] lg:text-xl">
-          {block.title}
-        </h3>
-        <div className="mb-8 flex items-center gap-6 max-lg:flex-col max-lg:gap-4 max-lg:mb-6">
-          <div className="flex-1 max-lg:flex-none max-lg:w-full">
-            <SafeImage 
-              src={block.imageSrc} 
-              alt={block.imageAlt} 
-              className="mx-auto max-w-[360px] rounded-lg shadow-[0_4px_8px_color-mix(in_oklch,var(--color-gray-950)_22%,transparent)]" 
-            />
-          </div>
-          <div className="min-w-0 flex-1 max-lg:flex-none max-lg:w-full">
-            <CodeBlock code={block.code} language={block.language} />
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  });
+          const id = slugifyHeading(block.title) || 'section';
+          return (
+            <React.Fragment key={`snapshot-example-${index}`}>
+              <h3 id={id} className="mt-6 mb-4 scroll-mt-24 text-2xl font-semibold text-[var(--text-primary)] lg:text-xl">
+                {block.title}
+              </h3>
+              <div className="mb-14">
+                <div className="mb-8 flex justify-center">
+                  <SafeImage
+                    src={block.imageSrc}
+                    alt={block.imageAlt}
+                    className="h-auto w-[320px] max-w-full rounded-xl object-contain shadow-[0_20px_45px_-30px_rgb(31_41_51_/_0.7)]"
+                  />
+                </div>
+                <div className="mx-auto min-w-0 max-w-[1000px]">
+                  <CodeBlock code={block.code} language={block.language} wrapLines className="mb-0" />
+                </div>
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function parseHeadingNavigationItems(content: string, level: number): StickySectionNavItem[] {
+  const headingPattern = new RegExp(`^${'#'.repeat(level)}\\s+(.+?)\\s*#*\\s*$`);
+
+  return content
+    .split('\n')
+    .map((line) => line.match(headingPattern)?.[1]?.trim())
+    .filter((title): title is string => Boolean(title))
+    .map((title) => ({
+      id: slugifyHeading(title) || 'section',
+      title,
+    }));
 }
 
 function splitSnapshotBlocks(content: string): SnapshotBlock[] {
@@ -354,7 +434,7 @@ function splitSnapshotBlocks(content: string): SnapshotBlock[] {
   return blocks;
 }
 
-function createMarkdownComponents(): Components {
+function createMarkdownComponents({ wrapCodeLines = false }: { wrapCodeLines?: boolean } = {}): Components {
   const createHeading = (tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') => {
     const HeadingComponent = ({ children }: { children?: React.ReactNode }) => {
       const headingText = flattenText(children).trim();
@@ -376,10 +456,10 @@ function createMarkdownComponents(): Components {
       const languageMatch = /language-([\w-]+)/.exec(className || '');
       if (languageMatch) {
         const code = flattenText(children).replace(/\n$/, '');
-        return <CodeBlock code={code} language={languageMatch[1]} />;
+        return <CodeBlock code={code} language={languageMatch[1]} wrapLines={wrapCodeLines} />;
       }
 
-      return <code className={cn("rounded-sm bg-[var(--code-bg)] px-[0.2em] py-[0.2em] font-mono text-sm text-[var(--syn-inline-code)]", className)}>{children}</code>;
+      return <code className={cn("rounded-sm bg-[var(--code-bg)] px-[0.2em] py-[0.2em] font-mono text-sm text-[var(--syn-inline-code)] [overflow-wrap:anywhere]", className)}>{children}</code>;
     },
     pre: ({ children }) => <>{children}</>,
     img: ({ src, alt, width, height }) => (
@@ -387,8 +467,7 @@ function createMarkdownComponents(): Components {
         src={src}
         alt={alt}
         className={cn(
-          "max-w-full rounded-lg object-contain",
-          typeof src === 'string' && src.includes('/assets/logo.png') && "mx-auto max-w-[min(500px,100%)] bg-[var(--brand-image-bg)] p-2 border border-[var(--brand-image-border)] shadow-[var(--brand-image-shadow)]"
+          "max-w-full rounded-lg object-contain"
         )}
         width={typeof width === 'number' ? width : undefined}
         height={typeof height === 'number' ? height : undefined}
@@ -414,20 +493,6 @@ interface SafeImageProps {
   height?: number;
 }
 
-const KNOWN_IMAGE_DIMENSIONS: Record<string, { width: number; height: number }> = {
-  '/assets/logo.png': { width: 1500, height: 393 },
-  '/assets/demo.png': { width: 2678, height: 1568 },
-};
-
-function getKnownDimensions(src: string): { width?: number; height?: number } {
-  for (const [suffix, dims] of Object.entries(KNOWN_IMAGE_DIMENSIONS)) {
-    if (src.endsWith(suffix)) {
-      return dims;
-    }
-  }
-  return {};
-}
-
 function SafeImage({ src, alt, className, width, height }: SafeImageProps) {
   const [hasError, setHasError] = useState(false);
   const resolvedSrc = typeof src === 'string' ? src : undefined;
@@ -436,10 +501,6 @@ function SafeImage({ src, alt, className, width, height }: SafeImageProps) {
     return null;
   }
 
-  const knownDims = width && height ? {} : getKnownDimensions(resolvedSrc);
-  const imgWidth = width ?? knownDims.width;
-  const imgHeight = height ?? knownDims.height;
-
   return (
     <img
       src={resolvedSrc}
@@ -447,8 +508,8 @@ function SafeImage({ src, alt, className, width, height }: SafeImageProps) {
       loading="lazy"
       className={className}
       onError={() => setHasError(true)}
-      width={imgWidth}
-      height={imgHeight}
+      width={width}
+      height={height}
     />
   );
 }

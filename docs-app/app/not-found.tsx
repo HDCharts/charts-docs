@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getDefaultVersionId, getVersions } from '@/lib/versions';
 import { getNavigation } from '@/lib/content';
-import { Header, Sidebar } from '@/components';
+import { Header, MarketingFooter } from '@/components';
 
 export default function NotFound() {
   const defaultVersion = getDefaultVersionId();
@@ -10,13 +10,12 @@ export default function NotFound() {
   const navigation = getNavigation(version.id);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden lg:flex-row">
+    <div className="flex min-h-screen flex-col overflow-x-clip">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-1 focus:top-0 focus:z-[9999] focus:rounded-b-md bg-[var(--color-primary)] px-6 py-2 text-sm font-semibold text-[var(--text-on-primary)] no-underline transition-[colors,opacity]">
         Skip to content
       </a>
-      <Header versions={versions} currentVersion={version} />
-      <Sidebar navigation={navigation} version={version} />
-      <main id="main-content" className="flex-1 px-4 py-6 lg:ml-[var(--sidebar-width)] lg:mt-[var(--header-height)] lg:py-10 lg:px-8">
+      <Header versions={versions} currentVersion={version} navigation={navigation} />
+      <main id="main-content" className="mt-[var(--header-height)] w-full flex-1 px-4 py-8 lg:py-10 lg:px-8">
         <div className="mx-auto max-w-[900px]">
           <h1 className="mb-4 [font-family:var(--font-display)] text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Page not found</h1>
           <p className="mb-6 text-base text-[var(--text-secondary)]">
@@ -29,6 +28,7 @@ export default function NotFound() {
             Go to documentation
           </Link>
         </div>
+        <MarketingFooter versionId={version.id} />
       </main>
     </div>
   );

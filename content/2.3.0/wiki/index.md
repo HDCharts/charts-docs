@@ -1,9 +1,4 @@
-![Charts Library Logo](/content/{{version}}/wiki/assets/logo.png)
-
 # Charts {{versionLabel}}
-
-
-![Charts Demo](/content/{{version}}/wiki/assets/demo.png)
 
 
 ## What's New in {{versionLabel}}

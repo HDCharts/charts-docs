@@ -24,13 +24,13 @@ const ibmPlexMono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://charts.hdcode.dev"),
-  title: "Charts Documentation",
-  description: "API reference, setup guides, and migration docs for Charts — a Kotlin Multiplatform charting library built on Compose.",
+  title: "Charts — Compose Multiplatform charting",
+  description: "Composable charts for Android, iOS, desktop, and web with a Compose-first Kotlin Multiplatform library.",
   keywords: ["charts", "kotlin", "compose", "multiplatform", "visualization", "data"],
   authors: [{ name: "hdcode.dev" }],
   openGraph: {
-    title: "Charts Documentation",
-    description: "API reference and integration guides for Charts, a Compose Multiplatform charting library.",
+    title: "Charts — Compose Multiplatform charting",
+    description: "Composable charts for Android, iOS, desktop, and web with a Compose-first Kotlin Multiplatform library.",
     type: "website",
     images: [
       {
@@ -49,12 +49,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning className={`${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
+    <html lang="en" data-theme="light" suppressHydrationWarning className={`${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://d31fy84ku2wzt.cloudfront.net" />
       </head>
-      <body style={{ colorScheme: 'dark' }}>
+      <body style={{ colorScheme: 'light' }}>
         {children}
       </body>
     </html>

@@ -51,11 +51,3 @@ export interface DocPage {
   content: string;
   frontmatter: PageFrontmatter;
 }
-
-/**
- * Sidebar section configuration
- */
-export interface SidebarSection {
-  title: string;
-  items: NavItem[];
-}

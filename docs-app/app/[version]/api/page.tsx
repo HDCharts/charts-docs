@@ -31,17 +31,6 @@ export default async function ApiPage({ params }: ApiPageProps) {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-2">
-        <h1 className="m-0 [font-family:var(--font-display)] text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">API Reference</h1>
-      </div>
-      <p className="mb-4 text-[var(--text-secondary)]">
-        Dokka reference for Charts {version.label}.{' '}
-        <a href={apiUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--link-color)] underline decoration-[0.08em] underline-offset-[0.12em] transition-colors hover:text-[var(--link-color-hover)]">
-          Open full page
-        </a>
-        .
-      </p>
-
       <div className="overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]">
         <iframe
           src={apiUrl}

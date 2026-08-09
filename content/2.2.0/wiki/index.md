@@ -1,11 +1,6 @@
-![Charts Library Logo](/content/2.2.0/wiki/assets/logo.png)
-
 # Charts 2.2.0
 
 This release adds a new chart type, improves chart controls, and introduces modular publishing options.
-
-![Charts Demo](/content/2.2.0/wiki/assets/demo.png)
-
 
 ## What's New in 2.2.0
 

@@ -13,7 +13,7 @@ const repositoryRoot = path.join(__dirname, "..");
 const nextConfig: NextConfig = {
   outputFileTracingRoot: repositoryRoot,
   outputFileTracingIncludes: {
-    "/thanks": [
+    "/built-with": [
       "../registry/versions.json",
       "../content/*/wiki/*.md",
       "../content/*/wiki/*.mdx",
@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
     '*': [
       './public/content/**/*',
     ],
-    '/thanks': [
+    '/built-with': [
       '../content/*/wiki/assets/**/*',
     ],
   },
@@ -182,6 +182,16 @@ const nextConfig: NextConfig = {
         source: "/playground",
         destination: "/playground/snapshot/",
         permanent: false,
+      },
+      {
+        source: "/thanks",
+        destination: "/built-with",
+        permanent: true,
+      },
+      {
+        source: "/thanks/",
+        destination: "/built-with",
+        permanent: true,
       },
       {
         source: "/demo/:version/index.html",

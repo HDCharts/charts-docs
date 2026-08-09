@@ -170,7 +170,7 @@ export function ThanksContent() {
                         />
                       ) : null}
 
-                      <span className="text-sm">
+                      <span className="min-w-0 text-sm [overflow-wrap:anywhere]">
                         <a
                           href={item.url}
                           target="_blank"

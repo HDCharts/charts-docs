@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: `${siteUrl}/privacy-policy` },
+    { url: `${siteUrl}/built-with` },
     ...wikiUrls,
     ...apiUrls,
     screenshotUrl,

@@ -44,12 +44,19 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
   return (
     <article className={cn(
-      "max-w-[900px] mx-auto px-4 animate-fade-in",
+      "mx-auto min-w-0 px-4 animate-fade-in",
+      usesSplitExamplesLayout ? "max-w-[1400px]" : "max-w-[900px]",
       usesMigrationLayout && "[counter-reset: migration-section]"
     )}>
       <MarkdownRenderer
         content={page.content}
-        layoutVariant={usesSplitExamplesLayout ? 'snapshotExamples' : 'default'}
+        layoutVariant={
+          usesSplitExamplesLayout
+            ? 'snapshotExamples'
+            : usesMigrationLayout
+              ? 'migration'
+              : 'default'
+        }
       />
     </article>
   );
