@@ -1,5 +1,3 @@
-![Charts Library Logo](/content/2.0.1/wiki/assets/logo.png)
-
 # Charts 2.0.1
 
 Welcome to the Charts documentation! This library provides a simple way to create beautiful charts in Kotlin Multiplatform applications.

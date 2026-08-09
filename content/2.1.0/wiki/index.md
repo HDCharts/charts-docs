@@ -1,11 +1,6 @@
-![Charts Library Logo](/content/2.1.0/wiki/assets/logo.png)
-
 # Charts 2.1.0
 
 Charts 2.1.0 focuses on better chart capabilities, more predictable interactions, and a cleaner docs/demo experience for day-to-day development.
-
-![Charts Demo](/content/2.1.0/wiki/assets/demo.png)
-
 
 ## What's New in 2.1.0
 

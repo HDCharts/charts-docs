@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="160" viewBox="0 0 620 160" role="img" aria-labelledby="title desc">
+  <title id="title">HDCharts wordmark</title>
+  <desc id="desc">The HDCharts mark followed by the HDCharts wordmark.</desc>
+
+  <g transform="translate(0 16) scale(0.8)">
+    <rect width="160" height="160" rx="38" fill="#39777A"/>
+    <path d="M34 65V45c0-9.4 7.6-17 17-17h45M126 98v17c0 9.4-7.6 17-17 17H92" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+    <path d="M29 105c13-8 22-27 35-24 12 3 17 14 29 8 13-6 24-27 38-43" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#C7892F" opacity="0.86">
+      <circle cx="29" cy="105" r="4.5"/>
+      <circle cx="64" cy="81" r="4.5"/>
+      <circle cx="93" cy="89" r="4.5"/>
+      <circle cx="131" cy="46" r="4.5"/>
+    </g>
+  </g>
+
+  <text x="154" y="101" fill="#1F2933" font-family="IBM Plex Sans, Inter, Arial, sans-serif" font-size="62" font-weight="700" letter-spacing="-2.5">
+    HD<tspan fill="#39777A">Charts</tspan>
+  </text>
+</svg>
