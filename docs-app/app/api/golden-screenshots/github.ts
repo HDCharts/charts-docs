@@ -102,7 +102,7 @@ export async function getGoldenScreenshots(): Promise<GoldenScreenshotResult> {
 
     return { screenshots };
   } catch (error) {
-    console.error('Unable to load Charts golden screenshots:', error);
+    console.error('Unable to load HDCharts golden screenshots:', error);
     return {
       screenshots: [],
       error: 'Screenshots are temporarily unavailable.',

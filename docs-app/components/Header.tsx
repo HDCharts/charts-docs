@@ -163,7 +163,7 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
             className="no-underline transition-colors hover:text-[var(--text-primary)]"
             target="_blank"
             rel="noopener noreferrer"
-            title={`Charts build ${publication.charts_version}`}
+            title={`HDCharts build ${publication.charts_version}`}
             >
               Build {publication.charts_version} / {publication.source_sha.slice(0, 7)}
             </a>

@@ -6,7 +6,7 @@ import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
 
 type PlatformOption = 'KMP + Compose' | 'Android Compose' | 'Compose Multiplatform';
-type ScopeOption = 'Selected chart module' | 'Charts umbrella (all modules)';
+type ScopeOption = 'Selected chart module' | 'HDCharts umbrella (all modules)';
 
 const CHART_OPTIONS = [
   'Line Chart',
@@ -26,7 +26,7 @@ const PLATFORM_OPTIONS: PlatformOption[] = [
 ];
 const SCOPE_OPTIONS: ScopeOption[] = [
   'Selected chart module',
-  'Charts umbrella (all modules)',
+  'HDCharts umbrella (all modules)',
 ];
 const CHARTS_REPO_URL = 'https://github.com/HDCharts/charts';
 
@@ -60,7 +60,7 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
   const [copyAnnouncement, setCopyAnnouncement] = useState('');
   const siteOrigin = useSiteOrigin();
   const promptPreRef = useRef<HTMLPreElement>(null);
-  const isUmbrellaScope = scope === 'Charts umbrella (all modules)';
+  const isUmbrellaScope = scope === 'HDCharts umbrella (all modules)';
   const prevIsUmbrellaScope = useRef(isUmbrellaScope);
 
   useLayoutEffect(() => {
@@ -219,7 +219,7 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
 
             <div className="mb-4 flex flex-col gap-2">
               <span id="chart-chips-label" className="text-sm font-semibold text-[var(--text-secondary)]">
-                Charts to include
+                Chart types to include
               </span>
               <div className="flex flex-wrap gap-2" role="group" aria-labelledby="chart-chips-label">
                 {CHART_OPTIONS.map((chart) => {
@@ -387,10 +387,10 @@ function buildAgentPrompt(inputs: PromptInputs): string {
   const apiPath = buildDocsUrl(`/${versionId}/api`);
 
   return [
-    'You are a Charts integration agent.',
+    'You are an HDCharts integration agent.',
     '',
     'Goal:',
-    '- Help integrate Charts into an app based on the constraints below.',
+    '- Help integrate HDCharts into an app based on the constraints below.',
     '',
     'Context:',
     `- Platform: ${platform}`,

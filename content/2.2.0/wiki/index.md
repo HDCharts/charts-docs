@@ -1,4 +1,4 @@
-# Charts 2.2.0
+# HDCharts 2.2.0
 
 This release adds a new chart type, improves chart controls, and introduces modular publishing options.
 
@@ -55,4 +55,4 @@ implementation("io.github.dautovicharis:charts-radar")
 
 ## Getting Started
 
-New to Charts? Check out our [Getting Started Guide](/2.2.0/wiki/getting-started) to learn how to integrate the library into your project and create your first charts in minutes.
+New to HDCharts? Check out our [Getting Started Guide](/2.2.0/wiki/getting-started) to learn how to integrate the library into your project and create your first charts in minutes.

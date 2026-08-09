@@ -4,7 +4,7 @@ import { ThanksContent } from '../thanks/ThanksContent';
 export const metadata: Metadata = {
   title: 'Built with | HDCharts',
   description:
-    'Third-party services, libraries, and tools used across the Charts project.',
+    'Third-party services, libraries, and tools used across the HDCharts project.',
   alternates: {
     canonical: '/built-with',
   },

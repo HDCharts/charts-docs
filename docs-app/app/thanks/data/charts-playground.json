@@ -1,7 +1,7 @@
 {
   "name": "charts-playground",
   "url": "https://github.com/HDCharts/charts-playground",
-  "description": "Interactive playground for experimenting with Charts in a browser.",
+  "description": "Interactive playground for experimenting with HDCharts in a browser.",
   "sections": [
     {
       "title": "Frameworks",

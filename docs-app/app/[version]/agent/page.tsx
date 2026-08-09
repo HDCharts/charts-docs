@@ -10,8 +10,8 @@ interface AgentPromptPageProps {
 export async function generateMetadata({ params }: AgentPromptPageProps): Promise<Metadata> {
   const { version } = await params;
   return {
-    title: `Agent Prompt Builder | Charts ${version}`,
-    description: `Generate guided AI prompts for integrating Charts ${version}`,
+    title: `Agent Prompt Builder | HDCharts ${version}`,
+    description: `Generate guided AI prompts for integrating HDCharts ${version}`,
     alternates: {
       canonical: getCanonicalUrl(`/${version}/agent`),
     },

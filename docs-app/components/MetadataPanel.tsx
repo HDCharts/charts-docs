@@ -54,7 +54,7 @@ export function MetadataPanel({ version }: MetadataPanelProps) {
     <div className="mx-auto max-w-[1000px] px-4 animate-fade-in">
       <h1>Metadata</h1>
       <p className="mb-8 max-w-[760px] text-[var(--text-secondary)]">
-        Build, publication, and artifact information for the selected Charts version, the latest snapshot, and the web playground.
+        Build, publication, and artifact information for the selected HDCharts version, the latest snapshot, and the web playground.
       </p>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -80,7 +80,7 @@ function ReleaseMetadataCard({
 }) {
   return (
     <ChannelMetadataCard
-      title={`Charts ${version.label}`}
+      title={`HDCharts ${version.label}`}
       metadata={metadata}
       unavailableLabel="Publication metadata unavailable for this version."
       apiUrl={getVersionApiIndexUrl(version)}
@@ -168,7 +168,7 @@ function PlaygroundDetails({ metadata }: { metadata: PublicationMetadata | null 
       <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Playground</h3>
       <div className="space-y-2 text-sm">
         <MetadataRow label="App">Snapshot playground</MetadataRow>
-        <MetadataRow label="Charts build">{metadata?.charts_version ?? 'Unavailable'}</MetadataRow>
+        <MetadataRow label="HDCharts build">{metadata?.charts_version ?? 'Unavailable'}</MetadataRow>
         <MetadataRow label="Published">{formatPublishedAt(metadata?.published_at)}</MetadataRow>
         <MetadataLinks>
           <MetadataLink href="/playground/snapshot/">Playground</MetadataLink>
@@ -195,7 +195,7 @@ function PublicationDetails({ metadata, unavailableLabel }: { metadata: Publicat
 
   return (
     <>
-      <MetadataRow label="Charts version">{metadata.charts_version}</MetadataRow>
+      <MetadataRow label="HDCharts version">{metadata.charts_version}</MetadataRow>
       <MetadataRow label="Published">{formatPublishedAt(metadata.published_at)}</MetadataRow>
       <MetadataRow label="Source">
         <a href={`${CHARTS_REPO_URL}/commit/${metadata.source_sha}`} target="_blank" rel="noopener noreferrer" className="font-mono text-[var(--link-color)] hover:text-[var(--link-color-hover)]">

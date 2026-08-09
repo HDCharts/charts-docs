@@ -142,7 +142,7 @@ const nextConfig: NextConfig = {
         destination: "/:version/api",
         permanent: true,
       },
-      // Legacy docs-prefixed URLs from the previous Charts deployment.
+      // Legacy docs-prefixed URLs from the previous HDCharts deployment.
       {
         source: "/docs/content/:version/wiki",
         destination: "/:version/wiki",
