@@ -2,8 +2,7 @@
 
 Documentation repository for Charts.
 
-<img width="900" alt="Screenshot 2026-03-26 at 16 07 36" src="https://github.com/user-attachments/assets/be705db8-5c55-42d8-8dd8-57745c44e06e" />
-
+<img width="1000" alt="Screenshot 2026-08-09 at 08 14 23" src="https://github.com/user-attachments/assets/4b6f197f-8284-489b-b6a8-b05a79e6c369" />
 
 ## Repo Layout
 
