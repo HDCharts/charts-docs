@@ -277,7 +277,7 @@ export default function WorkflowPage() {
                   <WorkflowNode label="SKIP" title="No GIF job requested" detail="This is informational and not a required branch-protection check." tone="optional" />
                 </WorkflowBranch>
                 <WorkflowBranch label="YES" tone="success">
-                  <WorkflowNode label="ANDROID EMULATOR" title="Record and compare GIF baselines" detail="The job stays outside the required core gate, but its report and generated GIFs are uploaded for review." tone="success" />
+                  <WorkflowNode label="ANDROID EMULATOR" title="Record and compare GIF baselines" detail={<>The job stays outside the required core gate, but its report and generated GIFs are uploaded for review. See the <Link href={`/${defaultVersion}/wiki/examples`}>chart examples</Link>.</>} tone="success" />
                   <div className="workflow-branch-grid">
                     <WorkflowBranch label="MATCH" tone="success">
                       <WorkflowNode label="PASS" title="GIF baseline matches" tone="success" />
