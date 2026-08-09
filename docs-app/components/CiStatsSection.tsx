@@ -69,7 +69,7 @@ export function CiStatsSection() {
       <div className="marketing-stats-grid">
         <div className="marketing-stat-card">
           <strong>{!stats ? <LoadingStat label="validation hours" /> : validationHours}</strong>
-          <span>validation hours<br />last 30 days</span>
+          <span>validation hours<br />this year</span>
         </div>
         <div className="marketing-stat-card">
           <strong>4</strong>
@@ -77,7 +77,7 @@ export function CiStatsSection() {
         </div>
         <div className="marketing-stat-card">
           <strong>{!stats ? <LoadingStat label="completed runs" /> : runs}</strong>
-          <span>completed runs<br />last 30 days</span>
+          <span>completed runs<br />this year</span>
         </div>
       </div>
     </section>
