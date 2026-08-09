@@ -335,7 +335,6 @@ export default function WorkflowPage() {
               </WorkflowBranch>
             </div>
           </div>
-          <div className="workflow-chart-callout workflow-chart-callout-failure">A failed sync, asset publication, Maven publication, Android build, or announcement remains visible as a failed workflow outcome; later jobs only run when their dependencies succeed.</div>
         </WorkflowChart>
 
         <WorkflowChart
