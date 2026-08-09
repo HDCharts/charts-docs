@@ -1392,20 +1392,6 @@
   grid-template-columns: 1fr;
 }
 
-.workflow-chart-callout {
-  margin-top: 1rem;
-  padding: 0.8rem 1rem;
-  border-left: 3px solid;
-  color: var(--marketing-copy);
-  font-size: 0.82rem;
-  line-height: 1.45;
-}
-
-.workflow-chart-callout-failure {
-  border-color: #c37b70;
-  background: #fff8f6;
-}
-
 .workflow-chart-subheading {
   display: flex;
   align-items: baseline;

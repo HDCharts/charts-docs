@@ -241,7 +241,6 @@ export default function WorkflowPage() {
                 <WorkflowNode label="CONTINUE" title="PR Core Checks" detail="The final gate rejects any failed, cancelled, or skipped required result." tone="success" />
               </WorkflowBranch>
             </div>
-            <div className="workflow-chart-callout workflow-chart-callout-failure">Any required core check failure stops the required PR gate.</div>
           </div>
 
           <div className="workflow-chart-subheading"><span>Alongside core checks</span><strong>Independent policy lanes</strong></div>
