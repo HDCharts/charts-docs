@@ -582,6 +582,8 @@
 
 .marketing-hero,
 .marketing-section,
+.marketing-stats-section,
+.workflow-detail-section,
 .marketing-cta-section,
 .marketing-footer {
   width: min(1120px, calc(100% - 2rem));
@@ -940,6 +942,616 @@
 .marketing-code-card .code-property { color: #f4b56a; }
 .marketing-code-card .code-value { color: #b9aaff; }
 
+.workflow-hero {
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.workflow-hero-panel {
+  position: relative;
+  min-height: 23rem;
+  overflow: hidden;
+  padding: 1rem 1.2rem 1.25rem;
+  border: 1px solid rgba(33, 75, 65, 0.8);
+  border-radius: 1.5rem;
+  background: #162422;
+  box-shadow: 0 2rem 4rem -3rem rgba(20, 48, 42, 0.75);
+  transform: rotate(1.5deg);
+}
+
+.workflow-hero-panel::after {
+  position: absolute;
+  right: -10rem;
+  bottom: -12rem;
+  width: 28rem;
+  height: 28rem;
+  border: 1px solid rgba(88, 224, 208, 0.2);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.workflow-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #9bb4ab;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.workflow-panel-state {
+  margin-left: auto;
+  color: #58e0d0;
+}
+
+.workflow-flow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 5.5rem;
+}
+
+.workflow-flow > i {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(88, 224, 208, 0.7), rgba(157, 140, 255, 0.7));
+}
+
+.workflow-flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 4.7rem;
+  height: 4.7rem;
+  flex: 0 0 4.7rem;
+  border: 1px solid rgba(215, 235, 227, 0.18);
+  border-radius: 50%;
+  background: #203b35;
+  box-shadow: 0 0 0 0.4rem rgba(88, 224, 208, 0.05);
+}
+
+.workflow-flow-node strong {
+  color: #d7ebe3;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.workflow-flow-node span {
+  margin-top: 0.3rem;
+  color: #9bb4ab;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  text-transform: uppercase;
+}
+
+.workflow-flow-node-final {
+  border-color: rgba(88, 224, 208, 0.7);
+  background: #214d45;
+}
+
+.workflow-panel-note {
+  position: relative;
+  z-index: 1;
+  max-width: 18rem;
+  margin: 5rem 0 0;
+  color: #d7ebe3 !important;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.workflow-principles {
+  padding-top: 2rem;
+}
+
+.workflow-principle-card {
+  min-height: 13rem;
+}
+
+.workflow-principle-card h3 {
+  margin-top: 2.25rem;
+}
+
+.workflow-ecosystem-section {
+  padding-top: 3rem;
+}
+
+.ecosystem-map {
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+.ecosystem-card {
+  position: relative;
+  display: flex;
+  min-height: 10rem;
+  flex-direction: column;
+  padding: 1.35rem;
+  border: 1px solid var(--marketing-border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--marketing-ink);
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.ecosystem-card:hover {
+  border-color: #87bdb0;
+  background: #fff;
+  color: var(--marketing-ink);
+  transform: translateY(-2px);
+}
+
+.ecosystem-card > span {
+  color: var(--marketing-aqua);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ecosystem-card strong {
+  margin-top: 1.5rem;
+  color: var(--marketing-ink);
+  font-size: 1.18rem;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+.ecosystem-card p {
+  max-width: 27rem;
+  margin: 0.65rem 0 0;
+  color: var(--marketing-copy) !important;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.ecosystem-card b {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: var(--marketing-aqua);
+  font-size: 1rem;
+}
+
+.ecosystem-card-core {
+  max-width: 38rem;
+  margin-inline: auto;
+  border-color: #94cdbd;
+  background: var(--marketing-aqua-soft);
+  text-align: center;
+}
+
+.ecosystem-card-core p { margin-inline: auto; }
+
+.ecosystem-card-output {
+  min-height: 8.5rem;
+  background: rgba(247, 250, 248, 0.9);
+}
+
+.ecosystem-arrow {
+  height: 3rem;
+  color: var(--marketing-aqua);
+  font-size: 1.4rem;
+  line-height: 3rem;
+  text-align: center;
+}
+
+.ecosystem-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ecosystem-output-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ecosystem-foundation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem 1rem;
+  margin: 2rem auto 0;
+  padding: 1rem 1.2rem;
+  border: 1px dashed #cbd8d2;
+  border-radius: 0.8rem;
+  color: var(--marketing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.ecosystem-foundation span {
+  color: var(--marketing-aqua);
+}
+
+.ecosystem-foundation strong {
+  color: var(--marketing-copy);
+  font-weight: 500;
+}
+
+.workflow-detail-section {
+  padding: 4.5rem 0;
+  border-top: 1px solid var(--marketing-border);
+}
+
+.workflow-detail-heading {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 2rem;
+}
+
+.workflow-detail-number {
+  color: var(--marketing-aqua);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.workflow-detail-heading .marketing-eyebrow {
+  margin-bottom: 1rem;
+}
+
+.workflow-detail-heading h2 {
+  max-width: none;
+  margin-bottom: 1rem;
+}
+
+.workflow-detail-heading > div > p:last-child {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--marketing-copy) !important;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.workflow-chart {
+  overflow: hidden;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--marketing-border);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.workflow-chart-titlebar,
+.workflow-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--marketing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.workflow-chart-titlebar strong {
+  color: var(--marketing-ink);
+  font-weight: 600;
+}
+
+.workflow-chart-titlebar span {
+  margin-left: auto;
+  text-align: right;
+}
+
+.workflow-chart-stack {
+  max-width: 56rem;
+  margin: 1.5rem auto 0;
+}
+
+.workflow-detail-node {
+  display: flex;
+  min-width: 0;
+  min-height: 5.2rem;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 1.15rem;
+  border: 1px solid #c9d8d2;
+  border-radius: 0.8rem;
+  background: #fff;
+}
+
+.workflow-detail-node > span {
+  overflow-wrap: anywhere;
+  margin-bottom: 0.35rem;
+  color: var(--marketing-aqua);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workflow-detail-node strong {
+  color: var(--marketing-ink);
+  font-size: 1rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.workflow-detail-node p {
+  max-width: 48rem;
+  margin: 0.45rem 0 0;
+  color: var(--marketing-copy) !important;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.workflow-detail-node-decision {
+  border-color: #dfc48e;
+  background: #fffaf0;
+}
+
+.workflow-detail-node-decision > span,
+.workflow-branch-warning .workflow-detail-node > span {
+  color: #a8751c;
+}
+
+.workflow-detail-node-success {
+  border-color: #b4ddd0;
+  background: #f2fbf7;
+}
+
+.workflow-detail-node-optional {
+  border-style: dashed;
+  border-color: #c7c8de;
+  background: #fafaff;
+}
+
+.workflow-detail-node-optional > span {
+  color: #6d65a6;
+}
+
+.workflow-detail-node-warning {
+  border-color: #e5c78f;
+  background: #fffaf0;
+}
+
+.workflow-detail-node-warning > span {
+  color: #a8751c;
+}
+
+.workflow-detail-node-failure {
+  border-color: #e0b4ad;
+  background: #fff7f5;
+}
+
+.workflow-detail-node-failure > span {
+  color: #a34d42;
+}
+
+.workflow-chart-arrow {
+  height: 2rem;
+  color: var(--marketing-aqua);
+  font-size: 1.3rem;
+  line-height: 2rem;
+  text-align: center;
+}
+
+.workflow-branch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.workflow-branch-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workflow-branch {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--marketing-border);
+  border-radius: 0.9rem;
+  background: rgba(247, 251, 249, 0.76);
+}
+
+.workflow-branch-success { border-color: #c2e2d7; }
+.workflow-branch-warning { border-color: #e6d0a3; background: #fffdf7; }
+.workflow-branch-failure { border-color: #e3c0ba; background: #fffaf8; }
+.workflow-branch-optional { border-color: #d8d7e8; background: #fcfcff; }
+
+.workflow-branch-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--marketing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.workflow-branch-success .workflow-branch-label { color: #287f69; }
+.workflow-branch-warning .workflow-branch-label { color: #a8751c; }
+.workflow-branch-failure .workflow-branch-label { color: #a34d42; }
+.workflow-branch-optional .workflow-branch-label { color: #6d65a6; }
+
+.workflow-branch-content {
+  display: grid;
+  min-width: 0;
+  gap: 0.65rem;
+}
+
+.workflow-lane .workflow-branch-grid-three {
+  grid-template-columns: 1fr;
+}
+
+.workflow-chart-callout {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid;
+  color: var(--marketing-copy);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.workflow-chart-callout-failure {
+  border-color: #c37b70;
+  background: #fff8f6;
+}
+
+.workflow-chart-subheading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 3rem auto 1rem;
+  color: var(--marketing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.workflow-chart-subheading strong {
+  color: var(--marketing-ink);
+  font-weight: 600;
+}
+
+.workflow-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.workflow-lane {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--marketing-border);
+  border-radius: 0.9rem;
+  background: rgba(247, 251, 249, 0.76);
+}
+
+.workflow-test-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.workflow-test-card {
+  min-height: 13rem;
+  padding: 1.35rem;
+  border: 1px solid var(--marketing-border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.workflow-test-card > span {
+  color: var(--marketing-aqua);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workflow-test-card h3 {
+  margin: 2rem 0 0.75rem;
+  color: var(--marketing-ink);
+  font-size: 1.08rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.workflow-test-card p {
+  margin: 0;
+  color: var(--marketing-copy) !important;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.workflow-matrix-section {
+  padding-top: 2rem;
+}
+
+.marketing-stats-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 3rem;
+  align-items: end;
+  padding: 5rem 0;
+  border-top: 1px solid var(--marketing-border);
+}
+
+.marketing-stats-copy h2 {
+  max-width: 11ch;
+  margin-bottom: 1.25rem;
+}
+
+.marketing-stats-copy > p:not(.marketing-eyebrow) {
+  max-width: 28rem;
+  margin: 0;
+  color: var(--marketing-copy) !important;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.marketing-stats-copy .marketing-text-link {
+  margin-top: 1.25rem;
+}
+
+.marketing-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.marketing-stat-card {
+  min-height: 9rem;
+  padding: 1.2rem;
+  border: 1px solid var(--marketing-border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.marketing-stat-card strong {
+  display: block;
+  color: var(--marketing-aqua);
+  font-size: clamp(1.9rem, 3vw, 3rem);
+  letter-spacing: -0.07em;
+  line-height: 1;
+}
+
+.marketing-stat-card span {
+  display: block;
+  margin-top: 1rem;
+  color: var(--marketing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.marketing-stat-card strong .marketing-stat-loader {
+  display: inline-block;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: 0;
+  border: 2px solid rgba(57, 119, 122, 0.2);
+  border-top-color: var(--marketing-aqua);
+  border-radius: 50%;
+  animation: marketing-stat-spin 0.8s linear infinite;
+  vertical-align: 0.15em;
+}
+
+@keyframes marketing-stat-spin {
+  to { transform: rotate(360deg); }
+}
+
 .marketing-cta-section {
   display: flex;
   align-items: end;
@@ -1000,6 +1612,13 @@
   .marketing-hero-visual { max-width: 42rem; width: 100%; margin-inline: auto; }
   .marketing-section-heading,
   .marketing-code-section { grid-template-columns: 1fr; gap: 1.5rem; }
+
+  .marketing-stats-section { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0; }
+  .marketing-stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .workflow-hero-panel { transform: none; }
+  .workflow-lane-grid,
+  .workflow-test-matrix { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ecosystem-output-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
@@ -1009,11 +1628,22 @@
   .marketing-brand { font-size: 1.1rem; }
   .marketing-hero,
   .marketing-section,
+  .workflow-detail-section,
   .marketing-cta-section,
   .marketing-footer { width: min(100% - 3.3rem, 1120px); }
   .marketing-hero { padding: 3.5rem 0 4rem; }
   .marketing-page h1 { font-size: clamp(2.75rem, 13vw, 4.5rem); }
   .marketing-feature-grid { grid-template-columns: 1fr; }
+  .workflow-detail-heading { grid-template-columns: 1fr; gap: 0.75rem; }
+  .workflow-chart-titlebar { align-items: start; flex-direction: column; gap: 0.35rem; }
+  .workflow-chart-titlebar span { margin-left: 0; text-align: left; }
+  .workflow-branch-grid,
+  .workflow-branch-grid-three,
+  .workflow-lane-grid,
+  .workflow-test-matrix { grid-template-columns: 1fr; }
+  .ecosystem-card-grid,
+  .ecosystem-output-grid { grid-template-columns: 1fr; }
+  .workflow-detail-section { padding: 3.5rem 0; }
   .marketing-feature-card { min-height: 13.5rem; }
   .marketing-feature-card h3 { margin-top: 2.5rem; }
   .marketing-feature-line {
@@ -1022,5 +1652,9 @@
     transform: none;
   }
   .marketing-cta-section { align-items: start; flex-direction: column; margin-bottom: 3rem; padding: 1.5rem; }
+  .workflow-flow { gap: 0.25rem; margin-top: 4rem; }
+  .workflow-flow-node { width: 3.8rem; height: 3.8rem; flex-basis: 3.8rem; }
+  .workflow-flow-node strong { font-size: 0.65rem; }
+  .workflow-panel-note { margin-top: 4rem; }
   .marketing-footer { align-items: start; flex-direction: column; }
 }
