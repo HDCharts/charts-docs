@@ -7,13 +7,18 @@
 ```kotlin
 @Composable
 private fun ShowPie() {
-    val dataSet = listOf(32f, 21f, 24f, 14f, 9f).toChartDataSet(
-        title = "Household Energy",
-        postfix = "%",
-        labels = listOf("Heating", "Cooling", "Appliances", "Water Heating", "Lighting")
+    val slices = listOf(
+        PieSlice(label = "Heating", value = 32f),
+        PieSlice(label = "Cooling", value = 21f),
+        PieSlice(label = "Appliances", value = 24f),
+        PieSlice(label = "Water Heating", value = 14f),
+        PieSlice(label = "Lighting", value = 9f),
     )
 
-    PieChart(dataSet)
+    PieChart(
+        data = slices,
+        title = "Household Energy",
+    )
 }
 ```
 
