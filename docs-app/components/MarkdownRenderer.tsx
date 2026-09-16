@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState, createContext, useContext, type ReactNode } from 'react';
-import ReactMarkdown, { Components } from 'react-markdown';
+import React, { useEffect, useMemo, useState, createContext, useContext, type ReactNode } from 'react';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { createHeadingSlugger, slugifyHeading } from '@/lib/anchors';
-import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
 import { StickySectionNav, type StickySectionNavItem } from './StickySectionNav';
+import { CodeBlockContainer, createSharedMarkdownComponents, flattenText } from './shared-markdown';
 
 // Markdown may contain arbitrary local or remote image URLs, so next/image cannot validate them.
 /* eslint-disable @next/next/no-img-element */
@@ -132,11 +132,10 @@ interface CodeBlockProps {
 
 function CodeBlock({ code, language, wrapLines = false, className }: CodeBlockProps) {
   const { highlighter, ready } = useHighlighterContext();
-  const [copied, setCopied] = useState(false);
 
   const highlightedHtml = useMemo(() => {
     if (!ready || !highlighter) return null;
-    
+
     const resolvedLanguage = language === 'kotlin' || language === 'text' ? 'kotlin' : 'text';
     try {
       return highlighter.codeToHtml(code, {
@@ -148,65 +147,19 @@ function CodeBlock({ code, language, wrapLines = false, className }: CodeBlockPr
     }
   }, [highlighter, ready, code, language]);
 
-  const handleCopy = useCallback(async () => {
-    const success = await copyToClipboard(code);
-    if (success) {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    }
-  }, [code]);
-
   return (
-    <div className={cn(
-      'relative mb-4 overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--code-bg)] pt-12',
-      className,
-    )}>
-      <button
-        className={cn(
-          'absolute right-3 top-3 z-10 inline-flex min-h-11 min-w-11 items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold transition-colors',
-          'border-[var(--border-color)] bg-[var(--surface-overlay)] text-[var(--text-secondary)] hover:border-[var(--color-secondary)] hover:bg-[var(--surface-overlay-hover)] hover:text-[var(--text-primary)]',
-          "active:translate-y-px",
-          copied && 'border-[var(--color-success)] text-[var(--color-success)]',
-        )}
-        type="button"
-        onClick={handleCopy}
-        aria-label={copied ? 'Copied to clipboard' : 'Copy code'}
-      >
-        {copied ? (
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M3 11V3.5A1.5 1.5 0 0 1 4.5 2H11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        )}
-        <span>{copied ? 'Copied' : 'Copy'}</span>
-      </button>
-      <div
-        className={cn(
-          'p-4 [&_pre]:!m-0 [&_pre]:!rounded-none [&_pre]:!border-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!bg-transparent [&_code]:!p-0',
-          wrapLines
-            ? 'overflow-x-hidden [&_pre]:!overflow-visible [&_pre]:!whitespace-pre-wrap [&_code]:!whitespace-pre-wrap [&_code]:break-words'
-            : 'overflow-x-auto',
-        )}
-        tabIndex={0}
-        role="region"
-        aria-label={`Code snippet${language !== 'text' ? ` in ${language}` : ''}`}
-      >
-        {highlightedHtml ? (
-          <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
-        ) : (
-          <pre className={cn(
-            'm-0 whitespace-pre font-mono text-sm',
-            'text-[var(--text-primary)]',
-          )}>
-            <code>{code}</code>
-          </pre>
-        )}
-      </div>
-    </div>
+    <CodeBlockContainer code={code} language={language} wrapLines={wrapLines} className={className}>
+      {highlightedHtml ? (
+        <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+      ) : (
+        <pre className={cn(
+          'm-0 whitespace-pre font-mono text-sm',
+          'text-[var(--text-primary)]',
+        )}>
+          <code>{code}</code>
+        </pre>
+      )}
+    </CodeBlockContainer>
   );
 }
 
@@ -474,53 +427,33 @@ function splitSnapshotBlocks(content: string): SnapshotBlock[] {
 }
 
 function createMarkdownComponents({ wrapCodeLines = false }: { wrapCodeLines?: boolean } = {}): Components {
-  const createHeading = (tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') => {
-    const HeadingComponent = ({ children }: { children?: React.ReactNode }) => {
-      const headingText = flattenText(children).trim();
-      const id = headingText === '' ? undefined : (slugifyHeading(headingText) || 'section');
-      return React.createElement(tag, { id }, children);
-    };
-    HeadingComponent.displayName = `Markdown${tag.toUpperCase()}Heading`;
-    return HeadingComponent;
-  };
+  const shared = createSharedMarkdownComponents(slugifyHeading, ({ code, language }) => (
+    <CodeBlock code={code} language={language} wrapLines={wrapCodeLines} />
+  ));
 
   return {
-    h1: createHeading('h1'),
-    h2: createHeading('h2'),
-    h3: createHeading('h3'),
-    h4: createHeading('h4'),
-    h5: createHeading('h5'),
-    h6: createHeading('h6'),
-    code: ({ className, children }) => {
+    ...shared,
+    code: ({ className, children }: { className?: string; children?: React.ReactNode }) => {
       const languageMatch = /language-([\w-]+)/.exec(className || '');
       if (languageMatch) {
         const code = flattenText(children).replace(/\n$/, '');
         return <CodeBlock code={code} language={languageMatch[1]} wrapLines={wrapCodeLines} />;
       }
-
-      return <code className={cn("rounded-sm bg-[var(--code-bg)] px-[0.2em] py-[0.2em] font-mono text-sm text-[var(--syn-inline-code)] [overflow-wrap:anywhere]", className)}>{children}</code>;
+      return (
+        <code className={cn("rounded-sm bg-[var(--code-bg)] px-[0.2em] py-[0.2em] font-mono text-sm text-[var(--syn-inline-code)] [overflow-wrap:anywhere]", className)}>
+          {children}
+        </code>
+      );
     },
-    pre: ({ children }) => <>{children}</>,
-    img: ({ src, alt, width, height }) => (
+    img: ({ src, alt, width, height }: { src?: string | Blob; alt?: string; width?: string | number; height?: string | number }) => (
       <SafeImage
         src={src}
         alt={alt}
-        className={cn(
-          "max-w-full rounded-lg object-contain"
-        )}
+        className={cn("max-w-full rounded-lg object-contain")}
         width={typeof width === 'number' ? width : undefined}
         height={typeof height === 'number' ? height : undefined}
       />
     ),
-    a: ({ href, children }) => {
-      const target = href?.startsWith('http') ? '_blank' : undefined;
-      const rel = target ? 'noopener noreferrer' : undefined;
-      return (
-        <a href={href} target={target} rel={rel} className="text-[var(--link-color)] underline decoration-[0.08em] underline-offset-[0.12em] transition-colors hover:text-[var(--link-color-hover)]">
-          {children}
-        </a>
-      );
-    },
   };
 }
 
@@ -551,24 +484,4 @@ function SafeImage({ src, alt, className, width, height }: SafeImageProps) {
       height={height}
     />
   );
-}
-
-function flattenText(node: React.ReactNode): string {
-  if (node === null || node === undefined || typeof node === 'boolean') {
-    return '';
-  }
-
-  if (typeof node === 'string' || typeof node === 'number') {
-    return String(node);
-  }
-
-  if (Array.isArray(node)) {
-    return node.map(flattenText).join('');
-  }
-
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return flattenText(node.props.children);
-  }
-
-  return '';
 }

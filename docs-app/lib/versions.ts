@@ -104,6 +104,18 @@ export function isVersionAtLeast(versionId: string, targetId: string): boolean {
 }
 
 /**
+ * Returns true when `versionId` uses the legacy wiki/examples markdown
+ * format (heading → code → optional image, no inline images before code).
+ * Snapshot always uses the modern layout, so it returns false.
+ */
+export function isLegacyExamplesVersion(versionId: string): boolean {
+  if (versionId === 'snapshot') {
+    return false;
+  }
+  return !isVersionAtLeast(versionId, '2.2.0');
+}
+
+/**
  * Clear the registry cache (useful for development)
  */
 export function clearRegistryCache(): void {
