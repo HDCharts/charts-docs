@@ -80,7 +80,7 @@ private fun ShowLine() {
         <section className="marketing-cta-section" aria-labelledby="cta-title">
           <div>
             <p className="marketing-eyebrow"><span /> Keep exploring</p>
-            <h2 id="cta-title">Your data has a shape. Give it a good one.</h2>
+            <h2 id="cta-title">Choose the shape that fits your data.</h2>
           </div>
           <div className="marketing-actions">
             <Link href={`/${defaultVersion}/wiki`} className="marketing-button marketing-button-primary">Get started</Link>
