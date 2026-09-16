@@ -143,7 +143,7 @@ export default function WorkflowPage() {
         <section className="marketing-hero workflow-hero" aria-labelledby="workflow-title">
           <div className="marketing-hero-copy">
             <p className="marketing-eyebrow"><span /> Development · release · transparency</p>
-            <h1 id="workflow-title">A clear path from change to chart.</h1>
+            <h1 id="workflow-title">From pull request to published release.</h1>
             <p className="marketing-hero-lead">
               HDCharts moves from a focused pull request to a tested snapshot and a verified public release, with the important checkpoints kept visible.
             </p>
