@@ -73,6 +73,37 @@ export function getDefaultVersionId(): string {
 }
 
 /**
+ * Parse a version id like "3.0.0" into [major, minor, patch].
+ * Returns null for non-numeric ids such as "snapshot".
+ */
+export function parseVersion(versionId: string): [number, number, number] | null {
+  const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(versionId.trim());
+  if (!match) {
+    return null;
+  }
+  return [Number(match[1]), Number(match[2]), Number(match[3])];
+}
+
+/**
+ * Returns true when `versionId` is greater than or equal to `targetId`.
+ * Non-numeric ids (e.g. "snapshot") are treated as less than any numeric target.
+ */
+export function isVersionAtLeast(versionId: string, targetId: string): boolean {
+  const version = parseVersion(versionId);
+  const target = parseVersion(targetId);
+  if (!version || !target) {
+    return false;
+  }
+  if (version[0] !== target[0]) {
+    return version[0] > target[0];
+  }
+  if (version[1] !== target[1]) {
+    return version[1] > target[1];
+  }
+  return version[2] >= target[2];
+}
+
+/**
  * Clear the registry cache (useful for development)
  */
 export function clearRegistryCache(): void {
