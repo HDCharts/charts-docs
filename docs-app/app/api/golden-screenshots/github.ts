@@ -3,7 +3,7 @@ import type { GoldenScreenshot, GoldenScreenshotResult } from '@/lib/golden-scre
 const GITHUB_OWNER = 'HDCharts';
 const GITHUB_REPOSITORY = 'charts';
 const GITHUB_REF = 'main';
-const GOLDEN_SCREENSHOTS_ROOT = 'androidApp/src/screenshotTestDebug/reference/';
+const GOLDEN_SCREENSHOTS_ROOT = 'sample/androidApp/src/screenshotTestDebug/reference/';
 const SCREENSHOT_THEME = 'Light';
 const GITHUB_TREE_URL =
   `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/git/trees/${GITHUB_REF}?recursive=1`;
