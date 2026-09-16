@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState, createContext, useCon
 import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
-import { slugifyHeading } from '@/lib/anchors';
+import { createHeadingSlugger, slugifyHeading } from '@/lib/anchors';
 import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
 import { StickySectionNav, type StickySectionNavItem } from './StickySectionNav';
@@ -252,6 +252,23 @@ function skipBlankLines(lines: string[], startIndex: number): number {
   return index;
 }
 
+function extractSnapshotStyleSections(blocks: SnapshotBlock[]): StickySectionNavItem[] {
+  const trailingMarkdown = blocks
+    .filter((block): block is SnapshotMarkdownBlock => block.type === 'markdown')
+    .map((block) => block.content)
+    .join('\n\n');
+
+  const slugHeading = createHeadingSlugger();
+  const headingRegex = /^##\s+(.+?)\s*#*\s*$/gm;
+  const headings: StickySectionNavItem[] = [];
+
+  for (const match of trailingMarkdown.matchAll(headingRegex)) {
+    headings.push({ id: slugHeading(match[1].trim()), title: match[1].trim() });
+  }
+
+  return headings;
+}
+
 function parseMarkdownImageAt(lines: string[], startIndex: number): MarkdownImageParseResult | null {
   if (startIndex >= lines.length) {
     return null;
@@ -307,18 +324,32 @@ function SnapshotExamplesLayout({
     [blocks],
   );
   const navigationItems = useMemo(
-    () => [
-      ...examples.map((example) => ({
+    () =>
+      examples.map((example) => ({
         id: slugifyHeading(example.title) || 'section',
         title: example.title,
       })),
-      { id: 'style-customization', title: 'Style Customization' },
-    ],
     [examples],
+  );
+  const styleCustomizationItems = useMemo(
+    () => extractSnapshotStyleSections(blocks),
+    [blocks],
+  );
+  const navigationGroups = useMemo(
+    () =>
+      styleCustomizationItems.length > 0
+        ? [{ label: 'Style Customization', items: styleCustomizationItems }]
+        : [],
+    [styleCustomizationItems],
   );
   return (
     <div className="grid gap-8 lg:grid-cols-[9rem_minmax(0,1fr)] lg:items-start">
-      <StickySectionNav items={navigationItems} label="Examples" ariaLabel="Examples navigation" />
+      <StickySectionNav
+        items={navigationItems}
+        label="Examples"
+        ariaLabel="Examples navigation"
+        groups={navigationGroups}
+      />
 
       <div>
         {blocks.map((block, index) => {
