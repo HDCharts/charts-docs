@@ -56,15 +56,17 @@ function useHighlighterContext() {
 interface MarkdownRendererProps {
   content: string;
   layoutVariant?: 'default' | 'snapshotExamples' | 'migration';
+  usesLargeExamplesGif?: boolean;
 }
 
 export function MarkdownRenderer({
   content,
   layoutVariant = 'default',
+  usesLargeExamplesGif = false,
 }: MarkdownRendererProps) {
   return (
     <HighlighterProvider>
-      <MarkdownContent content={content} layoutVariant={layoutVariant} />
+      <MarkdownContent content={content} layoutVariant={layoutVariant} usesLargeExamplesGif={usesLargeExamplesGif} />
     </HighlighterProvider>
   );
 }
@@ -72,6 +74,7 @@ export function MarkdownRenderer({
 function MarkdownContent({
   content,
   layoutVariant,
+  usesLargeExamplesGif,
 }: MarkdownRendererProps) {
   const components = useMemo(
     () => createMarkdownComponents({ wrapCodeLines: layoutVariant === 'snapshotExamples' || layoutVariant === 'migration' }),
@@ -81,7 +84,7 @@ function MarkdownContent({
   return (
     <div className="mx-auto min-w-0 max-w-[1120px]">
       {layoutVariant === 'snapshotExamples'
-        ? <SnapshotExamplesLayout content={content} components={components} />
+        ? <SnapshotExamplesLayout content={content} components={components} usesLargeExamplesGif={usesLargeExamplesGif} />
         : layoutVariant === 'migration'
           ? <MigrationLayout content={content} components={components} />
         : (
@@ -314,9 +317,11 @@ function parseCodeBlockAt(lines: string[], startIndex: number): CodeBlockParseRe
 function SnapshotExamplesLayout({
   content,
   components,
+  usesLargeExamplesGif = false,
 }: {
   content: string;
   components: Components;
+  usesLargeExamplesGif?: boolean;
 }): React.ReactNode {
   const blocks = useMemo(() => splitSnapshotBlocks(content), [content]);
   const examples = useMemo(
@@ -376,7 +381,10 @@ function SnapshotExamplesLayout({
                   <SafeImage
                     src={block.imageSrc}
                     alt={block.imageAlt}
-                    className="h-auto w-[320px] max-w-full rounded-xl object-contain shadow-[0_20px_45px_-30px_rgb(31_41_51_/_0.7)]"
+                    className={cn(
+                      'h-auto max-w-full rounded-xl object-contain shadow-[0_20px_45px_-30px_rgb(31_41_51_/_0.7)]',
+                      usesLargeExamplesGif ? 'w-[640px]' : 'w-[320px]',
+                    )}
                   />
                 </div>
                 <div className="mx-auto min-w-0 max-w-[1000px]">

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { MarkdownRenderer } from '@/components';
 import { getPage, getPageSlugs } from '@/lib/content';
-import { getAllVersions } from '@/lib/versions';
+import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 
@@ -41,6 +41,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
   const usesSplitExamplesLayout = pageSlug === 'examples';
   const usesMigrationLayout = pageSlug === 'migration';
+  const usesLargeExamplesGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
 
   return (
     <article className={cn(
@@ -50,6 +51,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
     )}>
       <MarkdownRenderer
         content={page.content}
+        usesLargeExamplesGif={usesLargeExamplesGif}
         layoutVariant={
           usesSplitExamplesLayout
             ? 'snapshotExamples'
