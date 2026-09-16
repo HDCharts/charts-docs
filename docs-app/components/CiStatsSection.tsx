@@ -54,7 +54,7 @@ export function CiStatsSection() {
     <section className="marketing-stats-section" aria-labelledby="stats-title" aria-busy={!stats}>
       <div className="marketing-stats-copy">
         <p className="marketing-eyebrow"><span /> Open development</p>
-        <h2 id="stats-title">Open development, cross-platform tests.</h2>
+        <h2 id="stats-title">Open source, tested everywhere.</h2>
         <p>
           HDCharts runs its core checks across Android, iOS, JVM, and Web as the project evolves.
         </p>
