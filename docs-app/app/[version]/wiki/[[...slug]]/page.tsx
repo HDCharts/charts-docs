@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { MarkdownRenderer } from '@/components';
+import { MarkdownRenderer, OldVersionMarkdownRenderer } from '@/components';
 import { getPage, getPageSlugs } from '@/lib/content';
-import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
+import { getAllVersions, isLegacyExamplesVersion, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 
@@ -39,27 +39,31 @@ export default async function WikiPage({ params }: WikiPageProps) {
     notFound();
   }
 
-  const usesSplitExamplesLayout = pageSlug === 'examples';
+  const isOldExamplesVersion = pageSlug === 'examples' && isLegacyExamplesVersion(version);
   const usesMigrationLayout = pageSlug === 'migration';
   const usesLargeExamplesGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
 
   return (
     <article className={cn(
       "mx-auto min-w-0 px-4 animate-fade-in",
-      usesSplitExamplesLayout ? "max-w-[1400px]" : "max-w-[900px]",
+      pageSlug === 'examples' ? "max-w-[1400px]" : "max-w-[900px]",
       usesMigrationLayout && "[counter-reset: migration-section]"
     )}>
-      <MarkdownRenderer
-        content={page.content}
-        usesLargeExamplesGif={usesLargeExamplesGif}
-        layoutVariant={
-          usesSplitExamplesLayout
-            ? 'snapshotExamples'
-            : usesMigrationLayout
-              ? 'migration'
-              : 'default'
-        }
-      />
+      {isOldExamplesVersion ? (
+        <OldVersionMarkdownRenderer content={page.content} />
+      ) : (
+        <MarkdownRenderer
+          content={page.content}
+          usesLargeExamplesGif={usesLargeExamplesGif}
+          layoutVariant={
+            pageSlug === 'examples'
+              ? 'snapshotExamples'
+              : usesMigrationLayout
+                ? 'migration'
+                : 'default'
+          }
+        />
+      )}
     </article>
   );
 }
