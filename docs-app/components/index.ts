@@ -2,6 +2,8 @@ export { Header } from './Header';
 export { VersionSwitcher } from './VersionSwitcher';
 export { MarkdownRenderer } from './MarkdownRenderer';
 export { WikiSidebar } from './WikiSidebar';
+export { Breadcrumbs } from './Breadcrumbs';
+export { OnThisPage } from './OnThisPage';
 export { MetadataPanel } from './MetadataPanel';
 export { ChartHeroVisual } from './ChartHeroVisual';
 export { CiStatsSection } from './CiStatsSection';
