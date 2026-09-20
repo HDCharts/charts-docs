@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import fs from "node:fs";
 import path from "node:path";
 import versionsRegistry from "../registry/versions.json";
 
@@ -9,6 +10,17 @@ const defaultDocsVersion =
   "snapshot";
 const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
 const repositoryRoot = path.join(__dirname, "..");
+
+// The single Examples page was split into per-chart pages and no longer
+// exists for snapshot or any release cut after that change. Only redirect
+// versions that actually lost the page — older releases still serve their
+// own frozen wiki/examples.md and must keep resolving normally.
+const examplesPageRedirects = versionsRegistry.versions
+  .filter((version) => !fs.existsSync(path.join(repositoryRoot, "content", version.id, "wiki", "examples.md")))
+  .flatMap((version) => [
+    { source: `/${version.id}/wiki/examples`, destination: `/${version.id}/wiki`, permanent: true },
+    { source: `/${version.id}/wiki/examples/`, destination: `/${version.id}/wiki`, permanent: true },
+  ]);
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: repositoryRoot,
@@ -215,6 +227,7 @@ const nextConfig: NextConfig = {
         destination: `/${defaultDocsVersion}/wiki`,
         permanent: false,
       },
+      ...examplesPageRedirects,
     ];
   },
 };

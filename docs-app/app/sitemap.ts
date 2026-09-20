@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { getPageSlugs } from '@/lib/content';
+import { getPageSlugs, getMigrationReleases } from '@/lib/content';
 import { getAllVersions, getDefaultVersionId } from '@/lib/versions';
 import { getCanonicalUrl, siteUrl } from '@/lib/seo';
 
@@ -10,6 +10,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const path = `/${version.id}/wiki${slug ? `/${slug}` : ''}`;
       return { url: getCanonicalUrl(path) };
     }),
+  );
+  const migrationReleaseUrls = versions.flatMap((version) =>
+    getMigrationReleases(version.id).map((release) => ({
+      url: getCanonicalUrl(`/${version.id}/wiki/migration/${release.label}`),
+    })),
   );
   const apiUrls = versions.map((version) => ({
     url: `${siteUrl}/${version.id}/api`,
@@ -26,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/built-with` },
     workflowUrl,
     ...wikiUrls,
+    ...migrationReleaseUrls,
     ...apiUrls,
     screenshotUrl,
   ];

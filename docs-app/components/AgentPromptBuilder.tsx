@@ -8,16 +8,10 @@ import { cn } from '@/lib/utils';
 type PlatformOption = 'KMP + Compose' | 'Android Compose' | 'Compose Multiplatform';
 type ScopeOption = 'Selected chart module' | 'HDCharts umbrella (all modules)';
 
-const CHART_OPTIONS = [
-  'Line Chart',
-  'Bar Chart',
-  'Pie Chart',
-  'Histogram Chart',
-  'Multi Line Chart',
-  'Stacked Bar Chart',
-  'Stacked Area Chart',
-  'Radar Chart',
-] as const;
+interface ChartPage {
+  slug: string;
+  title: string;
+}
 
 const PLATFORM_OPTIONS: PlatformOption[] = [
   'KMP + Compose',
@@ -32,6 +26,7 @@ const CHARTS_REPO_URL = 'https://github.com/HDCharts/charts';
 
 interface AgentPromptBuilderProps {
   versionId: string;
+  chartPages: ChartPage[];
 }
 
 function useSiteOrigin() {
@@ -49,10 +44,12 @@ function useSiteOrigin() {
   return useSyncExternalStore(subscribe, getSnapshot, () => '');
 }
 
-export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
+export function AgentPromptBuilder({ versionId, chartPages }: AgentPromptBuilderProps) {
   const [platform, setPlatform] = useState<PlatformOption>('KMP + Compose');
   const [scope, setScope] = useState<ScopeOption>('Selected chart module');
-  const [chartTypes, setChartTypes] = useState<string[]>(['Line Chart']);
+  const [selectedChartSlugs, setSelectedChartSlugs] = useState<string[]>(
+    chartPages[0] ? [chartPages[0].slug] : [],
+  );
   const [includeSampleData, setIncludeSampleData] = useState(true);
   const [includeNavigation, setIncludeNavigation] = useState(false);
   const [extraRequirements, setExtraRequirements] = useState('');
@@ -65,10 +62,15 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
 
   useLayoutEffect(() => {
     if (isUmbrellaScope && !prevIsUmbrellaScope.current) {
-      setChartTypes([...CHART_OPTIONS]);
+      setSelectedChartSlugs(chartPages.map((page) => page.slug));
     }
     prevIsUmbrellaScope.current = isUmbrellaScope;
-  }, [isUmbrellaScope]);
+  }, [isUmbrellaScope, chartPages]);
+
+  const selectedChartPages = useMemo(
+    () => chartPages.filter((page) => selectedChartSlugs.includes(page.slug)),
+    [chartPages, selectedChartSlugs],
+  );
 
   const prompt = useMemo(
     () =>
@@ -77,13 +79,13 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
         siteOrigin,
         platform,
         scope,
-        chartTypes,
+        selectedChartPages,
         includeSampleData,
         includeNavigation,
         extraRequirements,
       }),
     [
-      chartTypes,
+      selectedChartPages,
       extraRequirements,
       includeNavigation,
       includeSampleData,
@@ -94,15 +96,15 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
     ],
   );
 
-  const onChartToggle = useCallback((chart: string) => {
+  const onChartToggle = useCallback((slug: string) => {
     if (isUmbrellaScope) {
       return;
     }
-    setChartTypes((current) => {
-      const next = current.includes(chart)
-        ? current.filter((item) => item !== chart)
-        : [...current, chart];
-      return next.length > 0 ? next : [chart];
+    setSelectedChartSlugs((current) => {
+      const next = current.includes(slug)
+        ? current.filter((item) => item !== slug)
+        : [...current, slug];
+      return next.length > 0 ? next : [slug];
     });
   }, [isUmbrellaScope]);
 
@@ -222,11 +224,11 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
                 Chart types to include
               </span>
               <div className="flex flex-wrap gap-2" role="group" aria-labelledby="chart-chips-label">
-                {CHART_OPTIONS.map((chart) => {
-                  const selected = chartTypes.includes(chart);
+                {chartPages.map((page) => {
+                  const selected = selectedChartSlugs.includes(page.slug);
                   return (
                     <button
-                      key={chart}
+                      key={page.slug}
                       type="button"
                       className={cn(
                         "rounded-full border border-[var(--border-subtle)] bg-[var(--surface-overlay)] px-3 py-2 text-sm transition-colors",
@@ -235,11 +237,11 @@ export function AgentPromptBuilder({ versionId }: AgentPromptBuilderProps) {
                         (isUmbrellaScope || selected) && "[disabled]:opacity-50 [disabled]:cursor-not-allowed",
                         isUmbrellaScope && "cursor-not-allowed"
                       )}
-                      onClick={() => onChartToggle(chart)}
+                      onClick={() => onChartToggle(page.slug)}
                       aria-pressed={selected}
                       disabled={isUmbrellaScope}
                     >
-                      {chart}
+                      {page.title}
                     </button>
                   );
                 })}
@@ -347,7 +349,7 @@ interface PromptInputs {
   siteOrigin: string;
   platform: PlatformOption;
   scope: ScopeOption;
-  chartTypes: string[];
+  selectedChartPages: ChartPage[];
   includeSampleData: boolean;
   includeNavigation: boolean;
   extraRequirements: string;
@@ -359,7 +361,7 @@ function buildAgentPrompt(inputs: PromptInputs): string {
     siteOrigin,
     platform,
     scope,
-    chartTypes,
+    selectedChartPages,
     includeSampleData,
     includeNavigation,
     extraRequirements,
@@ -383,7 +385,9 @@ function buildAgentPrompt(inputs: PromptInputs): string {
     : 'Extra requirements: none';
   const buildDocsUrl = (path: string) => (siteOrigin ? `${siteOrigin}${path}` : path);
   const manualPath = buildDocsUrl(`/${versionId}/wiki/getting-started`);
-  const examplesPath = buildDocsUrl(`/${versionId}/wiki/examples`);
+  const chartDocLines = selectedChartPages.map(
+    (page) => `- ${page.title} docs: ${buildDocsUrl(`/${versionId}/wiki/${page.slug}`)}`,
+  );
   const apiPath = buildDocsUrl(`/${versionId}/api`);
 
   return [
@@ -394,7 +398,7 @@ function buildAgentPrompt(inputs: PromptInputs): string {
     '',
     'Context:',
     `- Platform: ${platform}`,
-    `- Chart types: ${chartTypes.join(', ')}`,
+    `- Chart types: ${selectedChartPages.map((page) => page.title).join(', ')}`,
     `- Scope policy: ${scopeLine}`,
     `- Data policy: ${sampleDataLine}`,
     `- Navigation policy: ${navigationLine}`,
@@ -402,7 +406,7 @@ function buildAgentPrompt(inputs: PromptInputs): string {
     '',
     'Primary sources:',
     `- Manual setup guide: ${manualPath}`,
-    `- Examples: ${examplesPath}`,
+    ...chartDocLines,
     `- API reference: ${apiPath}`,
     `- Repository: ${CHARTS_REPO_URL}`,
   ].join('\n');
