@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { MarkdownRenderer } from '@/components';
+import { Breadcrumbs, MarkdownRenderer } from '@/components';
 import { getPage, getMigrationReleases } from '@/lib/content';
 import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
@@ -36,6 +36,7 @@ export default async function MigrationIndexPage({ params }: MigrationIndexPageP
 
   return (
     <article className="min-w-0 max-w-[860px] animate-fade-in">
+      <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: 'Migration' }]} />
       <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
       {releases.length > 0 ? (
         <ul className="mt-6 flex flex-col gap-2">

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { DocPage, DocVersion, NavItem, PageFrontmatter } from './types';
-import { createHeadingSlugger } from './anchors';
+import { createHeadingSlugger, slugifyHeading } from './anchors';
 import { getAllVersions, getVersion } from './versions';
 
 /**
@@ -525,6 +525,38 @@ export function getNavigation(versionId: string): NavItem[] {
   });
 
   return navigation;
+}
+
+export interface PageHeading {
+  title: string;
+  anchor: string;
+}
+
+/**
+ * H2 headings in a page's own markdown body, for an "on this page" list.
+ * Anchors are generated the same way (plain slugifyHeading, no dedup) that
+ * the markdown renderer generates heading ids, so links here always match.
+ *
+ * Limited to H2 rather than H2/H3: migration release pages concatenate every
+ * migration doc for that release, each demoted by one level, so H3 there is
+ * "Before"/"After" repeated per doc — same anchor, no way to tell them apart
+ * without slug-level dedup. H2 (each doc's own, unique, title) stays safe,
+ * and no current page uses H3 for anything else.
+ */
+export function getPageHeadings(content: string): PageHeading[] {
+  const headings: PageHeading[] = [];
+
+  for (const rawLine of content.split('\n')) {
+    const match = rawLine.match(/^##\s+(.+)$/);
+    if (!match) {
+      continue;
+    }
+
+    const title = match[1].trim().replace(/\s+#+\s*$/, '');
+    headings.push({ title, anchor: slugifyHeading(title) });
+  }
+
+  return headings;
 }
 
 /**

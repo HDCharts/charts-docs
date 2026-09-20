@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { MarkdownRenderer } from '@/components';
-import { getMigrationReleasePage, getMigrationReleases } from '@/lib/content';
+import { Breadcrumbs, MarkdownRenderer, OnThisPage } from '@/components';
+import { getMigrationReleasePage, getMigrationReleases, getPageHeadings } from '@/lib/content';
 import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 
@@ -37,11 +37,22 @@ export default async function MigrationReleasePage({ params }: MigrationReleaseP
   }
 
   const usesLargeGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
+  const headings = getPageHeadings(page.content);
 
   return (
-    <article className="min-w-0 max-w-[860px] animate-fade-in">
-      <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
-    </article>
+    <div className="flex min-w-0 gap-8">
+      <article className="min-w-0 max-w-[860px] flex-1 animate-fade-in">
+        <Breadcrumbs
+          items={[
+            { label: 'Docs', href: `/${version}/wiki` },
+            { label: 'Migration', href: `/${version}/wiki/migration` },
+            { label: release },
+          ]}
+        />
+        <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
+      </article>
+      <OnThisPage headings={headings} />
+    </div>
   );
 }
 

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Breadcrumbs } from '@/components';
 import { GoldenScreenshotsGallery } from '@/components/GoldenScreenshotsGallery';
 import { getDefaultVersionId } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
@@ -20,9 +21,12 @@ export async function generateMetadata({ params }: ScreenshotsPageProps): Promis
   };
 }
 
-export default function ScreenshotsPage() {
+export default async function ScreenshotsPage({ params }: ScreenshotsPageProps) {
+  const { version } = await params;
+
   return (
     <article className="max-w-[1200px] animate-fade-in">
+      <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: 'Screenshots' }]} />
       <header className="mb-10">
         <h1>Android Screenshots</h1>
         <p className="max-w-[760px]">

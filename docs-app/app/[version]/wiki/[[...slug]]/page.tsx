@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { MarkdownRenderer } from '@/components';
-import { getPage, getPageSlugs } from '@/lib/content';
+import { Breadcrumbs, MarkdownRenderer, OnThisPage } from '@/components';
+import { getPage, getPageHeadings, getPageSlugs } from '@/lib/content';
 import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 
@@ -39,11 +39,18 @@ export default async function WikiPage({ params }: WikiPageProps) {
   }
 
   const usesLargeGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
+  const headings = getPageHeadings(page.content);
 
   return (
-    <article className="min-w-0 max-w-[860px] animate-fade-in">
-      <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
-    </article>
+    <div className="flex min-w-0 gap-8">
+      <article className="min-w-0 max-w-[860px] flex-1 animate-fade-in">
+        {pageSlug !== '' ? (
+          <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: page.title }]} />
+        ) : null}
+        <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
+      </article>
+      <OnThisPage headings={headings} />
+    </div>
   );
 }
 
