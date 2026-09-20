@@ -1,7 +1,7 @@
 export { Header } from './Header';
 export { VersionSwitcher } from './VersionSwitcher';
 export { MarkdownRenderer } from './MarkdownRenderer';
-export { OldVersionMarkdownRenderer } from './OldVersionMarkdownRenderer';
+export { WikiSidebar } from './WikiSidebar';
 export { MetadataPanel } from './MetadataPanel';
 export { ChartHeroVisual } from './ChartHeroVisual';
 export { CiStatsSection } from './CiStatsSection';

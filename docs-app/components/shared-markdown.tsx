@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 export function createSharedMarkdownComponents(
   headingSlugger: (text: string) => string,
   renderCodeBlock: (props: { code: string; language: string; wrapLines: boolean }) => ReactNode,
+  imageMaxWidthClassName: string,
 ): Components {
   const createHeading = (tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') => {
     const HeadingComponent = ({ children }: { children?: React.ReactNode }) => {
@@ -48,7 +49,7 @@ export function createSharedMarkdownComponents(
       <SafeImage
         src={src}
         alt={alt || ''}
-        className="max-w-full rounded-lg object-contain"
+        className={cn('mx-auto block max-w-full rounded-lg object-contain', imageMaxWidthClassName)}
         width={typeof width === 'number' ? width : undefined}
         height={typeof height === 'number' ? height : undefined}
       />

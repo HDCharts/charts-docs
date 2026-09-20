@@ -214,7 +214,7 @@ function getVersionBreakingChangesMarkdown(versionId: string): string {
     .join('\n\n');
 }
 
-interface MigrationRelease {
+export interface MigrationRelease {
   label: string;
   previousLabel?: string;
   markdown: string;
@@ -231,7 +231,7 @@ function getStableVersions(): DocVersion[] {
  * The registry is ordered newest first, so the next stable entry is the
  * previous release used in the generated guidance text.
  */
-function getMigrationReleases(versionId: string): MigrationRelease[] {
+export function getMigrationReleases(versionId: string): MigrationRelease[] {
   const stableVersions = getStableVersions();
   const currentSnapshotVersion = getReleaseNotesVersion(versionId);
   let targetVersions = stableVersions;
@@ -269,30 +269,39 @@ function getMigrationReleases(versionId: string): MigrationRelease[] {
   });
 }
 
-function demoteMigrationHeadings(markdown: string): string {
-  return markdown.replace(/^(#{2,5})\s+/gm, (_, hashes: string) => `${hashes}# `);
+function demoteAllHeadings(markdown: string): string {
+  return markdown.replace(/^(#{1,5})\s+/gm, (_, hashes: string) => `${hashes}# `);
 }
 
-function renderCumulativeMigrationMarkdown(versionId: string): string {
-  const migrationReleases = getMigrationReleases(versionId);
-  if (migrationReleases.length === 0) {
-    return 'No breaking changes have been recorded for this release or earlier supported releases.';
+/**
+ * Standalone page for one release's migration notes, so each release gets
+ * its own URL instead of every release being concatenated onto one page.
+ */
+export function getMigrationReleasePage(versionId: string, releaseLabel: string): DocPage | null {
+  const release = getMigrationReleases(versionId).find((item) => item.label === releaseLabel);
+  if (!release) {
+    return null;
   }
 
-  const lines: string[] = [];
-  for (const migrationRelease of [...migrationReleases].reverse()) {
-    lines.push(`## ${migrationRelease.label}`, '');
-    lines.push(
-      migrationRelease.previousLabel
-        ? `> **Upgrade note:** If upgrading from ${migrationRelease.previousLabel} or earlier, read these migration notes.`
-        : '> **Upgrade note:** If upgrading from an earlier release, read these migration notes.',
-      '',
-      demoteMigrationHeadings(migrationRelease.markdown),
-      '',
-    );
-  }
+  const upgradeNote = release.previousLabel
+    ? `> **Upgrade note:** If upgrading from ${release.previousLabel} or earlier, read these migration notes.`
+    : '> **Upgrade note:** If upgrading from an earlier release, read these migration notes.';
 
-  return lines.join('\n').trimEnd();
+  const content = [
+    `# ${release.label} Migration`,
+    '',
+    upgradeNote,
+    '',
+    demoteAllHeadings(release.markdown),
+    '',
+  ].join('\n').trimEnd() + '\n';
+
+  return {
+    slug: `migration/${release.label}`,
+    title: `${release.label} Migration`,
+    content,
+    frontmatter: {},
+  };
 }
 
 function getDefaultMigrationPageMarkdown(): string {
@@ -402,6 +411,16 @@ function getMarkdownFiles(dir: string): string[] {
     'getting-started': 1,
   };
 
+  // Chart-type pages (any `*-chart` slug) are grouped together, ahead of
+  // other guides like Customization — same convention getChartPages() uses,
+  // so this stays correct as pages are added without needing a name list.
+  function rankFor(slug: string): number {
+    if (slug in orderRank) {
+      return orderRank[slug];
+    }
+    return slug.endsWith('-chart') ? 2 : 3;
+  }
+
   return readDirectory(dir)
     .filter(file => /\.mdx?$/.test(file))
     .sort((a, b) => {
@@ -416,8 +435,8 @@ function getMarkdownFiles(dir: string): string[] {
         return -1;
       }
 
-      const aRank = orderRank[aSlug] ?? Number.MAX_SAFE_INTEGER;
-      const bRank = orderRank[bSlug] ?? Number.MAX_SAFE_INTEGER;
+      const aRank = rankFor(aSlug);
+      const bRank = rankFor(bSlug);
 
       if (aRank !== bRank) {
         return aRank - bRank;
@@ -440,7 +459,7 @@ export function getNavigation(versionId: string): NavItem[] {
   const navigation = navigationFiles.map((file) => {
     const slug = file.replace(/\.mdx?$/, '');
     const filePath = path.join(wikiPath, file);
-    const pagePath = `/${versionId}/wiki/${slug === 'index' ? '' : slug}`;
+    const pagePath = slug === 'index' ? `/${versionId}/wiki` : `/${versionId}/wiki/${slug}`;
 
     // Read frontmatter to get custom title if available
     let title = filenameToTitle(file);
@@ -488,14 +507,12 @@ export function getNavigation(versionId: string): NavItem[] {
       ];
     }
 
-    if (slug === 'migration') {
-      const baseMigrationMarkdown = markdownContent || getDefaultMigrationPageMarkdown();
-      const cumulativeMigrationMarkdown = renderCumulativeMigrationMarkdown(versionId);
-      const markdownWithBreakingChanges = `${baseMigrationMarkdown.trimEnd()}\n\n${cumulativeMigrationMarkdown}\n`;
-      const children = extractMigrationChildren(markdownWithBreakingChanges, pagePath);
-      if (children.length > 0) {
-        navItem.children = children;
-      }
+    if (slug === 'migration' && migrationReleases.length > 0) {
+      navItem.children = migrationReleases.map((release) => ({
+        title: release.label,
+        slug: release.label,
+        path: `/${versionId}/wiki/migration/${release.label}`,
+      }));
     }
 
     return navItem;
@@ -508,6 +525,26 @@ export function getNavigation(versionId: string): NavItem[] {
   });
 
   return navigation;
+}
+
+/**
+ * Chart-type doc pages for a version, derived from whichever `*-chart` wiki
+ * pages exist for it — no separate list to keep in sync as pages are added,
+ * renamed, or removed. Falls back to a single "Examples" entry for older
+ * versions that predate dedicated per-chart pages.
+ */
+export function getChartPages(versionId: string): { slug: string; title: string }[] {
+  const navigation = getNavigation(versionId);
+  const chartPages = navigation
+    .filter((item) => item.slug.endsWith('-chart'))
+    .map((item) => ({ slug: item.slug, title: item.title }));
+
+  if (chartPages.length > 0) {
+    return chartPages;
+  }
+
+  const examplesPage = navigation.find((item) => item.slug === 'examples');
+  return examplesPage ? [{ slug: examplesPage.slug, title: examplesPage.title }] : [];
 }
 
 /**
@@ -561,34 +598,6 @@ function extractExamplesChildren(content: string, pagePath: string): NavItem[] {
   return children;
 }
 
-function extractMigrationChildren(content: string, pagePath: string): NavItem[] {
-  const children: NavItem[] = [];
-  const makeSlug = createHeadingSlugger();
-
-  for (const rawLine of content.split('\n')) {
-    const match = rawLine.match(/^(#{1,6})\s+(.+)$/);
-    if (!match) {
-      continue;
-    }
-
-    const level = match[1].length;
-    const title = match[2].trim().replace(/\s+#+\s*$/, '');
-    const anchor = makeSlug(title);
-
-    if (level !== 2) {
-      continue;
-    }
-
-    if (/^overview$/i.test(title)) {
-      continue;
-    }
-
-    children.push({ title, slug: anchor, path: `${pagePath}#${anchor}` });
-  }
-
-  return children;
-}
-
 /**
  * Get all page slugs for a version (for static generation)
  */
@@ -619,11 +628,10 @@ export function getPage(versionId: string, slug: string): DocPage | null {
   
   if (!pathExists(actualPath)) {
     if (slug === 'migration') {
-      const pageContent = `${getDefaultMigrationPageMarkdown().trimEnd()}\n\n${renderCumulativeMigrationMarkdown(versionId)}\n`;
       return {
         slug,
         title: 'Migration',
-        content: pageContent,
+        content: getDefaultMigrationPageMarkdown(),
         frontmatter: {},
       };
     }
@@ -656,10 +664,6 @@ export function getPage(versionId: string, slug: string): DocPage | null {
       }
     }
 
-    if (slug === 'migration') {
-      pageContent = `${pageContent.trimEnd()}\n\n${renderCumulativeMigrationMarkdown(versionId)}\n`;
-    }
-    
     return {
       slug,
       title: frontmatter.title ?? filenameToTitle(filename),

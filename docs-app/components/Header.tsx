@@ -30,7 +30,6 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const demoUrl = getVersionDemoUrl(currentVersion);
-  const migrationItem = navigation?.find((item) => item.slug === 'migration');
 
   function isCurrent(path: string): boolean {
     return pathname === path || pathname.startsWith(`${path}/`);
@@ -84,35 +83,6 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
           Docs
         </Link>
         {navigation ? <SetupMenu versionId={currentVersion.id} variant="docs" /> : null}
-        <Link
-          href={`/${currentVersion.id}/wiki/examples`}
-          className={cn(
-            "hidden rounded-full px-3 py-2 text-sm font-medium no-underline transition-colors lg:flex",
-            isCurrent(`/${currentVersion.id}/wiki/examples`) && "bg-[var(--surface-overlay)] text-[var(--text-primary)]",
-            !isCurrent(`/${currentVersion.id}/wiki/examples`) && "text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)] hover:text-[var(--text-primary)]"
-          )}
-          aria-current={isCurrent(`/${currentVersion.id}/wiki/examples`) ? 'page' : undefined}
-        >
-          Examples
-        </Link>
-        {migrationItem && (
-          <Link
-            href={`/${currentVersion.id}/wiki/migration`}
-            className={cn(
-              "hidden rounded-full px-3 py-2 text-sm font-medium no-underline transition-colors lg:flex lg:items-center lg:gap-1.5",
-              isCurrent(`/${currentVersion.id}/wiki/migration`) && "bg-[var(--surface-overlay)] text-[var(--text-primary)]",
-              !isCurrent(`/${currentVersion.id}/wiki/migration`) && "text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)] hover:text-[var(--text-primary)]"
-            )}
-            aria-current={isCurrent(`/${currentVersion.id}/wiki/migration`) ? 'page' : undefined}
-          >
-            Migration
-            {migrationItem.badgeCount ? (
-              <span className="rounded-full bg-[var(--color-warning)] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[var(--bg-primary)]">
-                {migrationItem.badgeCount}
-              </span>
-            ) : null}
-          </Link>
-        )}
         <Link
           href={`/${currentVersion.id}/api`}
           className={cn(
@@ -205,23 +175,6 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
               Agent
             </Link>
           </>
-        ) : null}
-        <Link
-          href={`/${currentVersion.id}/wiki/examples`}
-          className={cn('docs-mobile-nav-link', isCurrent(`/${currentVersion.id}/wiki/examples`) && 'is-active')}
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          Examples
-        </Link>
-        {migrationItem ? (
-          <Link
-            href={`/${currentVersion.id}/wiki/migration`}
-            className={cn('docs-mobile-nav-link', isCurrent(`/${currentVersion.id}/wiki/migration`) && 'is-active')}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <span>Migration</span>
-            {migrationItem.badgeCount ? <span className="docs-mobile-nav-badge">{migrationItem.badgeCount}</span> : null}
-          </Link>
         ) : null}
         <Link
           href={`/${currentVersion.id}/api`}

@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { MarkdownRenderer, OldVersionMarkdownRenderer } from '@/components';
+import { MarkdownRenderer } from '@/components';
 import { getPage, getPageSlugs } from '@/lib/content';
-import { getAllVersions, isLegacyExamplesVersion, isVersionAtLeast } from '@/lib/versions';
+import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
-import { cn } from '@/lib/utils';
 
 export const dynamicParams = false;
 
@@ -39,31 +38,11 @@ export default async function WikiPage({ params }: WikiPageProps) {
     notFound();
   }
 
-  const isOldExamplesVersion = pageSlug === 'examples' && isLegacyExamplesVersion(version);
-  const usesMigrationLayout = pageSlug === 'migration';
-  const usesLargeExamplesGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
+  const usesLargeGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
 
   return (
-    <article className={cn(
-      "mx-auto min-w-0 px-4 animate-fade-in",
-      pageSlug === 'examples' ? "max-w-[1400px]" : "max-w-[900px]",
-      usesMigrationLayout && "[counter-reset: migration-section]"
-    )}>
-      {isOldExamplesVersion ? (
-        <OldVersionMarkdownRenderer content={page.content} />
-      ) : (
-        <MarkdownRenderer
-          content={page.content}
-          usesLargeExamplesGif={usesLargeExamplesGif}
-          layoutVariant={
-            pageSlug === 'examples'
-              ? 'snapshotExamples'
-              : usesMigrationLayout
-                ? 'migration'
-                : 'default'
-          }
-        />
-      )}
+    <article className="min-w-0 max-w-[860px] animate-fade-in">
+      <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
     </article>
   );
 }
@@ -73,8 +52,11 @@ export function generateStaticParams() {
   const params: { version: string; slug?: string[] }[] = [];
 
   for (const version of versions) {
-    const slugs = getPageSlugs(version.id);
-    
+    // migration has its own dedicated routes (wiki/migration and
+    // wiki/migration/[release]), so it's excluded here to avoid both routes
+    // claiming the same path.
+    const slugs = getPageSlugs(version.id).filter((slug) => slug !== 'migration');
+
     for (const slug of slugs) {
       if (slug === '') {
         params.push({ version: version.id, slug: undefined });

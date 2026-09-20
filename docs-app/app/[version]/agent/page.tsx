@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { getAllVersions } from '@/lib/versions';
+import { getChartPages } from '@/lib/content';
 import { AgentPromptBuilder } from '@/components/AgentPromptBuilder';
 import { getCanonicalUrl } from '@/lib/seo';
 
@@ -22,7 +23,7 @@ export default async function AgentPromptPage({ params }: AgentPromptPageProps) 
   const { version } = await params;
   return (
     <div className="mx-auto max-w-[900px] px-4">
-      <AgentPromptBuilder versionId={version} />
+      <AgentPromptBuilder versionId={version} chartPages={getChartPages(version)} />
     </div>
   );
 }

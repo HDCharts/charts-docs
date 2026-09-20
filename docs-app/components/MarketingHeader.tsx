@@ -22,7 +22,7 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
         </Link>
 
         <nav className="marketing-nav-links" aria-label="Main navigation">
-          <Link href={`/${versionId}/wiki/examples`}>Examples</Link>
+          <Link href={`/${versionId}/wiki`}>Docs</Link>
           <Link href={`/${versionId}/api`}>API</Link>
           <Link href="/workflow">Workflow</Link>
           <a href={`/demo/${versionId}/`} target="_blank" rel="noopener noreferrer">
@@ -50,7 +50,7 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
       <div id="marketing-mobile-nav" className={`marketing-mobile-nav${menuOpen ? ' is-open' : ''}`}>
         <Link href={`/${versionId}/wiki/getting-started`} onClick={() => setMenuOpen(false)}>Setup</Link>
         <Link href={`/${versionId}/agent`} onClick={() => setMenuOpen(false)}>Agent</Link>
-        <Link href={`/${versionId}/wiki/examples`} onClick={() => setMenuOpen(false)}>Examples</Link>
+        <Link href={`/${versionId}/wiki`} onClick={() => setMenuOpen(false)}>Docs</Link>
         <Link href={`/${versionId}/api`} onClick={() => setMenuOpen(false)}>API</Link>
         <Link href="/workflow" onClick={() => setMenuOpen(false)}>Workflow</Link>
         <a href={`/demo/${versionId}/`} target="_blank" rel="noopener noreferrer">

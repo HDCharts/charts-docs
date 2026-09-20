@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: ScreenshotsPageProps): Promis
 
 export default function ScreenshotsPage() {
   return (
-    <article className="mx-auto max-w-[1200px] animate-fade-in">
+    <article className="max-w-[1200px] animate-fade-in">
       <header className="mb-10">
         <h1>Android Screenshots</h1>
         <p className="max-w-[760px]">

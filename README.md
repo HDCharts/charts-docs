@@ -8,6 +8,10 @@ Documentation repository for HDCharts.
 
 - `docs-app/` - Next.js docs website
 - `content/` - versioned markdown content
+  - `content/snapshot/wiki/*.md` (except `assets/`) is synced automatically from
+    [`HDCharts/charts` `docs/wiki/`](https://github.com/HDCharts/charts/tree/main/docs/wiki)
+    by CI (`sync-wiki-docs.sh`) — edit it there, not here; changes here are overwritten on
+    the next sync
 - `registry/versions.json` - version registry used by the site
 - static assets for API/demo/playground are served from object storage/CDN
 
