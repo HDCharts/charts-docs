@@ -23,6 +23,7 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
 
         <nav className="marketing-nav-links" aria-label="Main navigation">
           <Link href={`/${versionId}/wiki`}>Docs</Link>
+          <Link href="/snapshot/wiki" className="marketing-nav-highlight">Try Prerelease</Link>
           <Link href={`/${versionId}/api`}>API</Link>
           <Link href="/workflow">Workflow</Link>
           <a href={`/demo/${versionId}/`} target="_blank" rel="noopener noreferrer">
@@ -51,6 +52,7 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
         <Link href={`/${versionId}/wiki/getting-started`} onClick={() => setMenuOpen(false)}>Setup</Link>
         <Link href={`/${versionId}/agent`} onClick={() => setMenuOpen(false)}>Agent</Link>
         <Link href={`/${versionId}/wiki`} onClick={() => setMenuOpen(false)}>Docs</Link>
+        <Link href="/snapshot/wiki" className="marketing-nav-highlight" onClick={() => setMenuOpen(false)}>Try Prerelease</Link>
         <Link href={`/${versionId}/api`} onClick={() => setMenuOpen(false)}>API</Link>
         <Link href="/workflow" onClick={() => setMenuOpen(false)}>Workflow</Link>
         <a href={`/demo/${versionId}/`} target="_blank" rel="noopener noreferrer">
