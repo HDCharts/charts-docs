@@ -475,6 +475,21 @@
   color: var(--marketing-ink);
 }
 
+.marketing-nav-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.marketing-nav-highlight::before {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--marketing-apricot);
+}
+
 .marketing-setup-menu {
   display: block;
 }
