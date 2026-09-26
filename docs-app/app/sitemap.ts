@@ -34,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/privacy-policy` },
     { url: `${siteUrl}/built-with` },
     workflowUrl,
+    { url: getCanonicalUrl('/ci-stats') },
     ...wikiUrls,
     ...migrationReleaseUrls,
     ...apiUrls,

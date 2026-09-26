@@ -1,9 +1,9 @@
+import 'server-only';
 import type { CiStatsResult } from '@/lib/ci-stats-types';
 
 const GITHUB_OWNER = 'HDCharts';
 const GITHUB_REPOSITORY = 'charts';
 const GITHUB_WORKFLOW = 'pull-request.yml';
-const CACHE_SECONDS = 3600;
 const PAGE_SIZE = 100;
 const MAX_RESULTS_PER_QUERY = 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -85,13 +85,7 @@ async function fetchWorkflowRunsPage(range: DateRange, page: number): Promise<Gi
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, {
-    headers,
-    next: {
-      revalidate: CACHE_SECONDS,
-      tags: ['charts-ci-stats'],
-    },
-  });
+  const response = await fetch(url, { headers });
 
   if (!response.ok) {
     throw new Error(`GitHub returned HTTP ${response.status}`);
@@ -139,8 +133,7 @@ export async function getCiStats(): Promise<CiStatsResult> {
       validationMinutes: Math.round(totalMinutes),
       completedRuns: uniqueRuns.length,
     };
-  } catch (error) {
-    console.error('Unable to load HDCharts CI stats:', error);
+  } catch {
     return {
       validationMinutes: 0,
       completedRuns: 0,

@@ -98,9 +98,9 @@ function getItemAvatar(item: AvatarSource): string | undefined {
 export function ThanksContent() {
   return (
     <>
-      <h1 className="mb-4 [font-family:var(--font-display)] text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Built With</h1>
+      <h1 className="mb-4 [font-family:var(--font-display)] text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Built with</h1>
       <p className="mb-6 text-base text-[var(--text-secondary)]">
-        HDCharts is built using a set of tools, frameworks, and services.
+        The tools, frameworks, and services behind HDCharts.
       </p>
 
       <div className="mb-6 grid grid-cols-3 gap-4 gap-x-6 sm:grid-cols-2 md:min-[601px]:grid-cols-2">

@@ -25,12 +25,12 @@ const ibmPlexMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://charts.hdcode.dev"),
   title: "HDCharts — Compose Multiplatform charting",
-  description: "Composable charts for Android, iOS, desktop, and web with a Compose-first Kotlin Multiplatform library.",
+  description: "Charts for Android, iOS, desktop, and web, built with Compose Multiplatform.",
   keywords: ["charts", "kotlin", "compose", "multiplatform", "visualization", "data"],
   authors: [{ name: "hdcode.dev" }],
   openGraph: {
     title: "HDCharts — Compose Multiplatform charting",
-    description: "Composable charts for Android, iOS, desktop, and web with a Compose-first Kotlin Multiplatform library.",
+    description: "Charts for Android, iOS, desktop, and web, built with Compose Multiplatform.",
     type: "website",
     images: [
       {
