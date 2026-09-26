@@ -382,7 +382,7 @@ function removeSection(content: string, sectionPattern: RegExp): string {
 /**
  * Convert a filename to a human-readable title
  */
-function filenameToTitle(filename: string): string {
+export function filenameToTitle(filename: string): string {
   // Remove .md extension
   const name = filename.replace(/\.mdx?$/, '');
   
@@ -527,6 +527,28 @@ export function getNavigation(versionId: string): NavItem[] {
   return navigation;
 }
 
+// Lines outside code fences; per CommonMark a fence closes only on the same char, at least as long.
+function linesOutsideCodeFences(content: string): string[] {
+  const lines: string[] = [];
+  let openFence: string | null = null;
+
+  for (const line of content.split('\n')) {
+    const fence = line.match(/^ {0,3}(`{3,}|~{3,})/)?.[1];
+    if (openFence === null) {
+      if (fence) {
+        openFence = fence;
+      } else {
+        lines.push(line);
+      }
+    } else if (fence && fence[0] === openFence[0] && fence.length >= openFence.length
+      && line.trim() === fence) {
+      openFence = null;
+    }
+  }
+
+  return lines;
+}
+
 export interface PageHeading {
   title: string;
   anchor: string;
@@ -546,7 +568,7 @@ export interface PageHeading {
 export function getPageHeadings(content: string): PageHeading[] {
   const headings: PageHeading[] = [];
 
-  for (const rawLine of content.split('\n')) {
+  for (const rawLine of linesOutsideCodeFences(content)) {
     const match = rawLine.match(/^##\s+(.+)$/);
     if (!match) {
       continue;
@@ -589,12 +611,8 @@ function extractExamplesChildren(content: string, pagePath: string): NavItem[] {
   const makeSlug = createHeadingSlugger();
   let hasStartedPrimaryGroup = false;
   let hasEndedPrimaryGroup = false;
-  const isSnapshotVersion = pagePath.startsWith('/snapshot/');
 
-  const displayTitle = (title: string) =>
-    isSnapshotVersion ? title.replace(/\s+Chart$/, '') : title;
-
-  for (const rawLine of content.split('\n')) {
+  for (const rawLine of linesOutsideCodeFences(content)) {
     const match = rawLine.match(/^(#{1,6})\s+(.+)$/);
     if (!match) {
       continue;
@@ -609,12 +627,12 @@ function extractExamplesChildren(content: string, pagePath: string): NavItem[] {
         continue;
       }
       hasStartedPrimaryGroup = true;
-      children.push({ title: displayTitle(title), slug: anchor, path: `${pagePath}#${anchor}` });
+      children.push({ title, slug: anchor, path: `${pagePath}#${anchor}` });
       continue;
     }
 
     if (!hasEndedPrimaryGroup && level === 3) {
-      children.push({ title: displayTitle(title), slug: anchor, path: `${pagePath}#${anchor}` });
+      children.push({ title, slug: anchor, path: `${pagePath}#${anchor}` });
       continue;
     }
 
@@ -706,21 +724,4 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     console.error(`Failed to load page ${slug}:`, error);
     return null;
   }
-}
-
-/**
- * Get all pages for a version
- */
-export function getAllPages(versionId: string): DocPage[] {
-  const slugs = getPageSlugs(versionId);
-  const pages: DocPage[] = [];
-  
-  for (const slug of slugs) {
-    const page = getPage(versionId, slug);
-    if (page) {
-      pages.push(page);
-    }
-  }
-  
-  return pages;
 }

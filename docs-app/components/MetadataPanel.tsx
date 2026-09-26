@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DocVersion } from '@/lib/types';
+import { DocVersion, MavenArtifacts } from '@/lib/types';
 import { getVersionApiIndexUrl, getVersionDemoUrl } from '@/lib/version-links';
 import { formatPublishedAt } from '@/lib/format';
 
 interface MetadataPanelProps {
   version: DocVersion;
+  artifacts: MavenArtifacts;
 }
 
 interface PublicationMetadata {
@@ -17,14 +18,12 @@ interface PublicationMetadata {
 
 const CHARTS_REPO_URL = 'https://github.com/HDCharts/charts';
 const PLAYGROUND_REPO_URL = 'https://github.com/HDCharts/charts-playground';
-const MAVEN_BASE_URL = 'https://central.sonatype.com/artifact/io.github.dautovicharis';
-const MAVEN_SNAPSHOT_BASE_URL = 'https://central.sonatype.com/repository/maven-snapshots/io/github/dautovicharis';
-const MAVEN_SNAPSHOT_CHARTS_METADATA_URL = `${MAVEN_SNAPSHOT_BASE_URL}/charts/maven-metadata.xml`;
-const MAVEN_SNAPSHOT_BOM_METADATA_URL = `${MAVEN_SNAPSHOT_BASE_URL}/charts-bom/maven-metadata.xml`;
+const MAVEN_ARTIFACT_URL = 'https://central.sonatype.com/artifact';
+const MAVEN_SNAPSHOT_URL = 'https://central.sonatype.com/repository/maven-snapshots';
 const ANDROID_RELEASE_APK_URL = '/static/android/release/hdcharts-release.apk';
 const ANDROID_SNAPSHOT_APK_URL = '/static/android/snapshot/hdcharts-snapshot.apk';
 
-export function MetadataPanel({ version }: MetadataPanelProps) {
+export function MetadataPanel({ version, artifacts }: MetadataPanelProps) {
   const [releaseMetadata, setReleaseMetadata] = useState<PublicationMetadata | null>(null);
   const [snapshotMetadata, setSnapshotMetadata] = useState<PublicationMetadata | null>(null);
 
@@ -59,9 +58,14 @@ export function MetadataPanel({ version }: MetadataPanelProps) {
 
       <div className="grid gap-5 lg:grid-cols-2">
         {isSnapshot ? (
-          <SnapshotMetadataCard metadata={snapshotMetadata} version={version} />
+          <SnapshotMetadataCard metadata={snapshotMetadata} version={version} artifacts={artifacts} />
         ) : (
-          <ReleaseMetadataCard metadata={currentMetadata} version={version} playgroundMetadata={snapshotMetadata} />
+          <ReleaseMetadataCard
+            metadata={currentMetadata}
+            version={version}
+            artifacts={artifacts}
+            playgroundMetadata={snapshotMetadata}
+          />
         )}
 
       </div>
@@ -72,10 +76,12 @@ export function MetadataPanel({ version }: MetadataPanelProps) {
 function ReleaseMetadataCard({
   metadata,
   version,
+  artifacts,
   playgroundMetadata,
 }: {
   metadata: PublicationMetadata | null;
   version: DocVersion;
+  artifacts: MavenArtifacts;
   playgroundMetadata: PublicationMetadata | null;
 }) {
   return (
@@ -88,13 +94,22 @@ function ReleaseMetadataCard({
       apkUrl={ANDROID_RELEASE_APK_URL}
       apkLabel="Download Android release APK"
       artifactVersion={metadata?.charts_version ?? version.id}
+      artifacts={artifacts}
       isSnapshot={false}
       playgroundMetadata={playgroundMetadata}
     />
   );
 }
 
-function SnapshotMetadataCard({ metadata, version }: { metadata: PublicationMetadata | null; version: DocVersion }) {
+function SnapshotMetadataCard({
+  metadata,
+  version,
+  artifacts,
+}: {
+  metadata: PublicationMetadata | null;
+  version: DocVersion;
+  artifacts: MavenArtifacts;
+}) {
   return (
     <ChannelMetadataCard
       title="Latest snapshot"
@@ -105,6 +120,7 @@ function SnapshotMetadataCard({ metadata, version }: { metadata: PublicationMeta
       apkUrl={ANDROID_SNAPSHOT_APK_URL}
       apkLabel="Download Android snapshot APK"
       artifactVersion={metadata?.charts_version ?? version.id}
+      artifacts={artifacts}
       isSnapshot
       playgroundMetadata={metadata}
     />
@@ -120,6 +136,7 @@ function ChannelMetadataCard({
   apkUrl,
   apkLabel,
   artifactVersion,
+  artifacts,
   isSnapshot,
   playgroundMetadata,
 }: {
@@ -131,6 +148,7 @@ function ChannelMetadataCard({
   apkUrl: string;
   apkLabel: string;
   artifactVersion: string;
+  artifacts: MavenArtifacts;
   isSnapshot: boolean;
   playgroundMetadata: PublicationMetadata | null;
 }) {
@@ -143,7 +161,7 @@ function ChannelMetadataCard({
           <MetadataLink href={apiUrl}>API</MetadataLink>
           <MetadataLink href={demoUrl}>Demo</MetadataLink>
           {isSnapshot ? (
-            <MetadataLink href={MAVEN_SNAPSHOT_CHARTS_METADATA_URL}>Metadata</MetadataLink>
+            <MetadataLink href={mavenArtifactUrl(artifacts.group, 'charts', isSnapshot)}>Metadata</MetadataLink>
           ) : (
             <MetadataLink href={CHARTS_REPO_URL}>Source</MetadataLink>
           )}
@@ -152,11 +170,7 @@ function ChannelMetadataCard({
           <ApkDownloadLink href={apkUrl} label={apkLabel} />
         </ApkAction>
       </section>
-      <AndroidArtifacts
-        artifactVersion={artifactVersion}
-        isSnapshot={isSnapshot}
-        mavenArtifactBaseUrl={isSnapshot ? MAVEN_SNAPSHOT_BASE_URL : MAVEN_BASE_URL}
-      />
+      <AndroidArtifacts artifactVersion={artifactVersion} artifacts={artifacts} isSnapshot={isSnapshot} />
       <PlaygroundDetails metadata={playgroundMetadata} />
     </MetadataCard>
   );
@@ -219,32 +233,36 @@ function MetadataLinks({ children }: { children: React.ReactNode }) {
   return <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[var(--border-color)] pt-3">{children}</div>;
 }
 
+function mavenArtifactUrl(group: string, artifact: string, isSnapshot: boolean): string {
+  return isSnapshot
+    ? `${MAVEN_SNAPSHOT_URL}/${group.replaceAll('.', '/')}/${artifact}/maven-metadata.xml`
+    : `${MAVEN_ARTIFACT_URL}/${group}/${artifact}/overview`;
+}
+
 function AndroidArtifacts({
   artifactVersion,
+  artifacts,
   isSnapshot,
-  mavenArtifactBaseUrl,
 }: {
   artifactVersion: string;
+  artifacts: MavenArtifacts;
   isSnapshot: boolean;
-  mavenArtifactBaseUrl: string;
 }) {
   return (
     <div className="mt-5 border-t border-[var(--border-color)] pt-4">
       <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Android and multiplatform artifacts</h3>
       <div className="space-y-2 text-sm">
         <MetadataRow label="Platforms">Android, iOS, Desktop, Web</MetadataRow>
-        <MetadataRow label="Group">io.github.dautovicharis</MetadataRow>
+        <MetadataRow label="Group">{artifacts.group}</MetadataRow>
         <MetadataRow label="Main artifact">
-          <code>io.github.dautovicharis:charts:{artifactVersion}</code>
+          <code>{artifacts.group}:charts:{artifactVersion}</code>
         </MetadataRow>
         <MetadataRow label="BOM artifact">
-          <code>io.github.dautovicharis:charts-bom:{artifactVersion}</code>
+          <code>{artifacts.group}:{artifacts.bomArtifact}:{artifactVersion}</code>
         </MetadataRow>
         <MetadataLinks>
-          <MetadataLink href={isSnapshot ? MAVEN_SNAPSHOT_CHARTS_METADATA_URL : `${mavenArtifactBaseUrl}/charts/overview`}>
-            Metadata
-          </MetadataLink>
-          <MetadataLink href={isSnapshot ? MAVEN_SNAPSHOT_BOM_METADATA_URL : `${mavenArtifactBaseUrl}/charts-bom/overview`}>
+          <MetadataLink href={mavenArtifactUrl(artifacts.group, 'charts', isSnapshot)}>Metadata</MetadataLink>
+          <MetadataLink href={mavenArtifactUrl(artifacts.group, artifacts.bomArtifact, isSnapshot)}>
             BOM metadata
           </MetadataLink>
         </MetadataLinks>

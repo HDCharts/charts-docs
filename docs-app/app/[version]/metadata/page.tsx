@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MetadataPanel } from '@/components/MetadataPanel';
-import { getAllVersions, getVersion } from '@/lib/versions';
+import { getAllVersions, getMavenArtifacts, getVersion } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 
 interface MetadataPageProps {
@@ -27,7 +27,12 @@ export default async function MetadataPage({ params }: MetadataPageProps) {
     notFound();
   }
 
-  return <MetadataPanel version={version} />;
+  return (
+    <MetadataPanel
+      version={version}
+      artifacts={getMavenArtifacts(version.id)}
+    />
+  );
 }
 
 export function generateStaticParams() {

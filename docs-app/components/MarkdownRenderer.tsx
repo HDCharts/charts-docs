@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { slugifyHeading } from '@/lib/anchors';
 import { cn } from '@/lib/utils';
+import { MermaidDiagram } from './MermaidDiagram';
 import { CodeBlockContainer, createSharedMarkdownComponents } from './shared-markdown';
 
 let highlighterPromise: Promise<Highlighter> | null = null;
@@ -118,7 +119,8 @@ function escapeHtml(text: string): string {
 function createMarkdownComponents(usesLargeGif: boolean) {
   return createSharedMarkdownComponents(
     slugifyHeading,
-    ({ code, language }) => <CodeBlock code={code} language={language} />,
+    ({ code, language }) =>
+      language === 'mermaid' ? <MermaidDiagram code={code} /> : <CodeBlock code={code} language={language} />,
     usesLargeGif ? 'sm:max-w-[640px]' : 'sm:max-w-[320px]',
   );
 }
