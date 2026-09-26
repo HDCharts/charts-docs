@@ -755,32 +755,6 @@
   margin-top: 0.5rem;
 }
 
-.marketing-visual-metric {
-  position: absolute;
-  right: 1.7rem;
-  bottom: 1.7rem;
-  display: flex;
-  flex-direction: column;
-  padding: 0.7rem 0.85rem;
-  border: 1px solid #d6e5df;
-  border-radius: 0.7rem;
-  background: rgba(247, 252, 249, 0.9);
-  box-shadow: 0 1rem 2rem -1.5rem rgba(33, 75, 65, 0.45);
-}
-
-.marketing-visual-metric strong {
-  color: var(--marketing-aqua);
-  font-size: 1.2rem;
-  letter-spacing: -0.04em;
-}
-
-.marketing-visual-metric span {
-  color: var(--marketing-muted);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-}
-
 .marketing-section {
   padding: 6rem 0;
 }
