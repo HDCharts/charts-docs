@@ -73,7 +73,7 @@ export function GoldenScreenshotsGallery() {
           </h2>
           <div className="grid gap-y-12">
             {chartScreenshots.map((screenshot) => (
-              <figure key={screenshot.path}>
+              <figure key={screenshot.path} className="mx-auto w-full max-w-[880px]">
                 <a
                   href={screenshot.sourceUrl}
                   target="_blank"
