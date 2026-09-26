@@ -71,7 +71,7 @@ export function GoldenScreenshotsGallery() {
           <h2 id={`golden-${chart}`} className="mt-0">
             {chart}
           </h2>
-          <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
+          <div className="grid gap-y-12">
             {chartScreenshots.map((screenshot) => (
               <figure key={screenshot.path}>
                 <a
