@@ -14,15 +14,10 @@ export function ChartHeroVisual() {
         className="marketing-hero-image"
         src="/charts-hero-chart.png"
         alt="A line chart rendered with HDCharts"
-        width={800}
-        height={440}
+        width={720}
+        height={390}
         priority
       />
-
-      <div className="marketing-visual-metric">
-        <strong>+46%</strong>
-        <span>total revenue</span>
-      </div>
     </div>
   );
 }
