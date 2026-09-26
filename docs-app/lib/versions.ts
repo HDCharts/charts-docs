@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { VersionRegistry, DocVersion } from './types';
+import { VersionRegistry, DocVersion, MavenArtifacts } from './types';
 
 /**
  * Path to the version registry file
@@ -60,16 +60,22 @@ export function getVersion(versionId: string): DocVersion | undefined {
  * Get the current (default) version
  */
 export function getCurrentVersion(): DocVersion | undefined {
-  const versions = getVersions();
-  return versions.find(v => v.id !== 'snapshot') ?? versions[0];
+  return getVersion(getDefaultVersionId());
 }
 
 /**
  * Get the default version ID
  */
 export function getDefaultVersionId(): string {
-  const current = getCurrentVersion();
-  return current?.id ?? getAllVersions()[0]?.id ?? 'snapshot';
+  return pickDefaultVersionId(getAllVersions());
+}
+
+/**
+ * First visible release, else first visible version, else first version.
+ */
+export function pickDefaultVersionId(versions: DocVersion[]): string {
+  const visible = versions.filter(isVisible);
+  return visible.find((v) => v.id !== 'snapshot')?.id ?? visible[0]?.id ?? versions[0]?.id ?? 'snapshot';
 }
 
 /**
@@ -103,9 +109,23 @@ export function isVersionAtLeast(versionId: string, targetId: string): boolean {
   return version[2] >= target[2];
 }
 
+// Snapshot docs describe the upcoming 3.0.0 release.
+function isThreeOrLater(versionId: string): boolean {
+  return versionId === 'snapshot' || isVersionAtLeast(versionId, '3.0.0');
+}
+
 /**
- * Clear the registry cache (useful for development)
+ * Maven coordinates moved to io.github.hdcharts in 3.0.0; older releases keep the old group.
  */
-export function clearRegistryCache(): void {
-  registryCache = null;
+export function getMavenArtifacts(versionId: string): MavenArtifacts {
+  return isThreeOrLater(versionId)
+    ? { group: 'io.github.hdcharts', bomArtifact: 'bom' }
+    : { group: 'io.github.dautovicharis', bomArtifact: 'charts-bom' };
+}
+
+/**
+ * Snapshot and 3.0.0+ docs ship wider GIFs than older releases.
+ */
+export function hasLargeGifs(versionId: string): boolean {
+  return isThreeOrLater(versionId);
 }

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { Breadcrumbs, MarkdownRenderer } from '@/components';
 import { getPage, getMigrationReleases } from '@/lib/content';
-import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
+import { getAllVersions, hasLargeGifs } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 
 export const dynamicParams = false;
@@ -32,12 +32,11 @@ export default async function MigrationIndexPage({ params }: MigrationIndexPageP
   }
 
   const releases = getMigrationReleases(version);
-  const usesLargeGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
 
   return (
     <article className="min-w-0 max-w-[860px] animate-fade-in">
       <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: 'Migration' }]} />
-      <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
+      <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} />
       {releases.length > 0 ? (
         <ul className="mt-6 flex flex-col gap-2">
           {releases.map((release) => (

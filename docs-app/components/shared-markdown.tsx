@@ -45,6 +45,19 @@ export function createSharedMarkdownComponents(
       );
     },
     pre: ({ children }) => <>{children}</>,
+    table: ({ children }) => (
+      <div className="mb-6 overflow-x-auto rounded-lg border border-[var(--border-color)]" tabIndex={0} role="region" aria-label="Table">
+        <table className="w-full border-collapse text-sm">{children}</table>
+      </div>
+    ),
+    th: ({ children }) => (
+      <th className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)] px-3 py-2 text-left font-semibold text-[var(--text-primary)]">
+        {children}
+      </th>
+    ),
+    td: ({ children }) => (
+      <td className="border-b border-[var(--border-color)] px-3 py-2 align-top text-[var(--text-secondary)]">{children}</td>
+    ),
     img: ({ src, alt, width, height }) => (
       <SafeImage
         src={src}

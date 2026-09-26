@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { Breadcrumbs, MarkdownRenderer, OnThisPage } from '@/components';
 import { getMigrationReleasePage, getMigrationReleases, getPageHeadings } from '@/lib/content';
-import { getAllVersions, isVersionAtLeast } from '@/lib/versions';
+import { getAllVersions, hasLargeGifs } from '@/lib/versions';
 import { getCanonicalUrl } from '@/lib/seo';
 
 export const dynamicParams = false;
@@ -36,7 +36,6 @@ export default async function MigrationReleasePage({ params }: MigrationReleaseP
     notFound();
   }
 
-  const usesLargeGif = version === 'snapshot' || isVersionAtLeast(version, '3.0.0');
   const headings = getPageHeadings(page.content);
 
   return (
@@ -49,7 +48,7 @@ export default async function MigrationReleasePage({ params }: MigrationReleaseP
             { label: release },
           ]}
         />
-        <MarkdownRenderer content={page.content} usesLargeGif={usesLargeGif} />
+        <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} />
       </article>
       <OnThisPage headings={headings} />
     </div>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getPageSlugs, getMigrationReleases } from '@/lib/content';
+import { getDevSlugs } from '@/lib/dev-docs';
 import { getAllVersions, getDefaultVersionId } from '@/lib/versions';
 import { getCanonicalUrl, siteUrl } from '@/lib/seo';
 
@@ -25,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const workflowUrl = {
     url: getCanonicalUrl('/workflow'),
   };
+  const devUrls = getDevSlugs().map((slug) => ({
+    url: getCanonicalUrl(`/dev/${slug.join('/')}`),
+  }));
 
   return [
     { url: `${siteUrl}/privacy-policy` },
@@ -34,5 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...migrationReleaseUrls,
     ...apiUrls,
     screenshotUrl,
+    ...devUrls,
   ];
 }

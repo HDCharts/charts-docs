@@ -2,12 +2,9 @@ import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
 import versionsRegistry from "../registry/versions.json";
+import { pickDefaultVersionId } from "./lib/versions";
 
-const defaultDocsVersion =
-  versionsRegistry.versions.find((version) => version.visible !== false && version.id !== "snapshot")?.id ??
-  versionsRegistry.versions.find((version) => version.visible !== false)?.id ??
-  versionsRegistry.versions[0]?.id ??
-  "snapshot";
+const defaultDocsVersion = pickDefaultVersionId(versionsRegistry.versions);
 const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
 const repositoryRoot = path.join(__dirname, "..");
 

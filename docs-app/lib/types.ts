@@ -16,6 +16,14 @@ export interface DocVersion {
 }
 
 /**
+ * Maven group and BOM artifact published for a docs version
+ */
+export interface MavenArtifacts {
+  group: string;
+  bomArtifact: string;
+}
+
+/**
  * Version registry structure
  */
 export interface VersionRegistry {
