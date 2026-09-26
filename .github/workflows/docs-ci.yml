@@ -21,7 +21,7 @@ concurrency:
 jobs:
   docs:
     name: Docs Build and Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
