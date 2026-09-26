@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { OnThisPage } from '@/components/OnThisPage';
+import { slugifyHeading } from '@/lib/anchors';
 import type { GoldenScreenshot, GoldenScreenshotResult } from '@/lib/golden-screenshot-types';
 
 function groupScreenshots(screenshots: GoldenScreenshot[]): Map<string, GoldenScreenshot[]> {
@@ -63,40 +65,47 @@ export function GoldenScreenshotsGallery() {
   }
 
   const groupedScreenshots = groupScreenshots(result.screenshots);
+  const headings = Array.from(groupedScreenshots.keys(), (chart) => ({
+    title: chart,
+    anchor: slugifyHeading(chart),
+  }));
 
   return (
-    <div className="space-y-12">
-      {Array.from(groupedScreenshots, ([chart, chartScreenshots]) => (
-        <section key={chart} aria-labelledby={`golden-${chart}`}>
-          <h2 id={`golden-${chart}`} className="mt-0">
-            {chart}
-          </h2>
-          <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
-            {chartScreenshots.map((screenshot) => (
-              <figure key={screenshot.path}>
-                <a
-                  href={screenshot.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block no-underline"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={screenshot.imageUrl}
-                    alt={screenshot.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="mx-auto h-auto max-h-[720px] w-full rounded-lg object-contain"
-                  />
-                </a>
-                <figcaption className="mt-3 text-center text-sm text-[var(--text-secondary)]">
-                  {screenshot.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      ))}
+    <div className="flex min-w-0 gap-8">
+      <div className="min-w-0 flex-1 space-y-12">
+        {Array.from(groupedScreenshots, ([chart, chartScreenshots]) => (
+          <section key={chart} aria-labelledby={slugifyHeading(chart)}>
+            <h2 id={slugifyHeading(chart)} className="mt-0">
+              {chart}
+            </h2>
+            <div className="grid gap-y-12">
+              {chartScreenshots.map((screenshot) => (
+                <figure key={screenshot.path} className="mx-auto w-full max-w-[880px]">
+                  <a
+                    href={screenshot.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block no-underline"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={screenshot.imageUrl}
+                      alt={screenshot.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="mx-auto h-auto w-full rounded-lg object-contain"
+                    />
+                  </a>
+                  <figcaption className="mt-3 text-center text-sm text-[var(--text-secondary)]">
+                    {screenshot.name}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+      <OnThisPage headings={headings} />
     </div>
   );
 }
