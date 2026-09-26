@@ -600,7 +600,7 @@
 .marketing-stats-section,
 .marketing-cta-section,
 .marketing-footer {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - 5.5rem));
   margin-inline: auto;
 }
 
@@ -648,10 +648,17 @@
 }
 
 .marketing-page h1 {
-  max-width: 10ch;
+  max-width: 16ch;
   margin-bottom: 1.25rem;
-  font-size: clamp(2.8rem, 4.6vw, 4.75rem);
+  font-size: clamp(2.6rem, 4.4vw, 4rem);
   font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.marketing-hero h1 {
+  max-width: 10ch;
+  font-size: clamp(2.8rem, 4.6vw, 4.75rem);
   letter-spacing: -0.075em;
   line-height: 0.96;
 }
@@ -778,31 +785,23 @@
   padding: 6rem 0;
 }
 
-.marketing-section-intro {
-  border-top: 1px solid var(--marketing-border);
-}
-
 .marketing-section-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-  column-gap: 3rem;
-  align-items: end;
   margin-bottom: 2.5rem;
 }
 
 .marketing-section-heading .marketing-eyebrow {
-  grid-column: 1 / -1;
   margin-bottom: 1rem;
 }
 
-.marketing-page h2 {
-  max-width: 13ch;
+.marketing-page h2,
+.workflow-page h1 {
+  max-width: 20ch;
   margin: 0;
   color: var(--marketing-ink);
-  font-size: clamp(2.3rem, 4.5vw, 4.6rem);
+  font-size: clamp(2rem, 3.4vw, 3rem);
   font-weight: 700;
-  letter-spacing: -0.065em;
-  line-height: 0.98;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
 .built-with-page h2 {
@@ -817,7 +816,6 @@
   line-height: 1.35;
 }
 
-.marketing-section-heading > p:last-child,
 .marketing-code-copy > p:not(.marketing-eyebrow) {
   max-width: 28rem;
   margin: 0;
@@ -826,67 +824,8 @@
   line-height: 1.6;
 }
 
-.marketing-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.marketing-feature-card {
-  position: relative;
-  isolation: isolate;
-  min-height: 16rem;
-  overflow: hidden;
-  padding: 1.5rem;
-  border: 1px solid var(--marketing-border);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.58);
-}
-
-.marketing-feature-card > :not(.marketing-feature-line) {
-  position: relative;
-  z-index: 1;
-}
-
-.marketing-feature-number {
-  color: var(--marketing-aqua);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-}
-
-.marketing-feature-card h3 {
-  margin-top: 3rem;
-  margin-bottom: 0.75rem;
-  color: var(--marketing-ink);
-  font-size: 1.35rem;
-  letter-spacing: -0.04em;
-}
-
-.marketing-feature-card p {
-  max-width: 19rem;
-  color: var(--marketing-copy) !important;
-  font-size: 0.95rem;
-}
-
-.marketing-feature-line {
-  position: absolute;
-  right: -1rem;
-  bottom: 0.9rem;
-  left: 1.5rem;
-  z-index: 0;
-  height: 2.25rem;
-  border-top: 2px solid;
-  border-radius: 50%;
-  opacity: 0.72;
-  pointer-events: none;
-  transform: rotate(-8deg);
-}
-
-.marketing-feature-line-a { border-color: var(--marketing-aqua); }
-.marketing-feature-line-b { border-color: var(--marketing-lilac); transform: rotate(8deg); }
-.marketing-feature-line-c { border-color: var(--marketing-apricot); transform: rotate(-3deg); }
-
 .marketing-code-section {
+  border-top: 1px solid var(--marketing-border);
   display: grid;
   grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
   gap: 4rem;
@@ -955,120 +894,6 @@
 .marketing-code-card .code-keyword { color: #58e0d0; }
 .marketing-code-card .code-property { color: #f4b56a; }
 .marketing-code-card .code-value { color: #b9aaff; }
-
-.workflow-hero {
-  gap: clamp(2rem, 5vw, 5rem);
-}
-
-.workflow-hero-panel {
-  position: relative;
-  min-height: 23rem;
-  overflow: hidden;
-  padding: 1rem 1.2rem 1.25rem;
-  border: 1px solid rgba(33, 75, 65, 0.8);
-  border-radius: 1.5rem;
-  background: #162422;
-  box-shadow: 0 2rem 4rem -3rem rgba(20, 48, 42, 0.75);
-  transform: rotate(1.5deg);
-}
-
-.workflow-hero-panel::after {
-  position: absolute;
-  right: -10rem;
-  bottom: -12rem;
-  width: 28rem;
-  height: 28rem;
-  border: 1px solid rgba(88, 224, 208, 0.2);
-  border-radius: 50%;
-  content: '';
-  pointer-events: none;
-}
-
-.workflow-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: #9bb4ab;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-}
-
-.workflow-panel-state {
-  margin-left: auto;
-  color: #58e0d0;
-}
-
-.workflow-flow {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 5.5rem;
-}
-
-.workflow-flow > i {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(88, 224, 208, 0.7), rgba(157, 140, 255, 0.7));
-}
-
-.workflow-flow-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 4.7rem;
-  height: 4.7rem;
-  flex: 0 0 4.7rem;
-  border: 1px solid rgba(215, 235, 227, 0.18);
-  border-radius: 50%;
-  background: #203b35;
-  box-shadow: 0 0 0 0.4rem rgba(88, 224, 208, 0.05);
-}
-
-.workflow-flow-node strong {
-  color: #d7ebe3;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-}
-
-.workflow-flow-node span {
-  margin-top: 0.3rem;
-  color: #9bb4ab;
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  text-transform: uppercase;
-}
-
-.workflow-flow-node-final {
-  border-color: rgba(88, 224, 208, 0.7);
-  background: #214d45;
-}
-
-.workflow-panel-note {
-  position: relative;
-  z-index: 1;
-  max-width: 18rem;
-  margin: 5rem 0 0;
-  color: #d7ebe3 !important;
-  font-size: 1.05rem;
-  line-height: 1.5;
-}
-
-.workflow-principles {
-  padding-top: 2rem;
-}
-
-.workflow-principle-card {
-  min-height: 13rem;
-}
-
-.workflow-principle-card h3 {
-  margin-top: 2.25rem;
-}
 
 .workflow-ecosystem-section {
   padding-top: 3rem;
@@ -1193,29 +1018,12 @@
   font-weight: 500;
 }
 
-.workflow-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  color: var(--marketing-muted);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
 .marketing-stats-section {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 3rem;
   align-items: end;
   padding: 5rem 0;
-  border-top: 1px solid var(--marketing-border);
-}
-
-.marketing-stats-copy h2 {
-  max-width: 11ch;
-  margin-bottom: 1.25rem;
 }
 
 .marketing-stats-copy > p:not(.marketing-eyebrow) {
@@ -1290,8 +1098,6 @@
   background: var(--marketing-aqua-soft);
 }
 
-.marketing-cta-section h2 { max-width: 10ch; }
-
 .marketing-footer {
   display: flex;
   align-items: center;
@@ -1334,14 +1140,10 @@
   .marketing-mobile-nav.is-open { display: flex; }
   .marketing-hero { grid-template-columns: 1fr; min-height: auto; padding-top: 4rem; }
   .marketing-hero-copy { max-width: 42rem; }
-  .marketing-hero h1 { max-width: 10ch; }
   .marketing-hero-visual { max-width: 42rem; width: 100%; margin-inline: auto; }
-  .marketing-section-heading,
   .marketing-code-section { grid-template-columns: 1fr; gap: 1.5rem; }
 
   .marketing-stats-section { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0; }
-  .marketing-stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .workflow-hero-panel { transform: none; }
   .ecosystem-output-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -1352,24 +1154,17 @@
   .marketing-brand { font-size: 1.1rem; }
   .marketing-hero,
   .marketing-section,
+  .marketing-stats-section,
   .marketing-cta-section,
   .marketing-footer { width: min(100% - 3.3rem, 1120px); }
   .marketing-hero { padding: 3.5rem 0 4rem; }
-  .marketing-page h1 { font-size: clamp(2.75rem, 13vw, 4.5rem); }
-  .marketing-feature-grid { grid-template-columns: 1fr; }
+  .marketing-page h1 { font-size: clamp(2.4rem, 11vw, 3.1rem); }
+  .marketing-hero h1 { font-size: clamp(2.75rem, 13vw, 4.5rem); }
+  .workflow-page h1 { font-size: 2rem; }
+  .marketing-stats-grid { grid-template-columns: 1fr; }
+  .marketing-stat-card { min-height: auto; }
   .ecosystem-card-grid,
   .ecosystem-output-grid { grid-template-columns: 1fr; }
-  .marketing-feature-card { min-height: 13.5rem; }
-  .marketing-feature-card h3 { margin-top: 2.5rem; }
-  .marketing-feature-line {
-    bottom: 0.35rem;
-    height: 1rem;
-    transform: none;
-  }
   .marketing-cta-section { align-items: start; flex-direction: column; margin-bottom: 3rem; padding: 1.5rem; }
-  .workflow-flow { gap: 0.25rem; margin-top: 4rem; }
-  .workflow-flow-node { width: 3.8rem; height: 3.8rem; flex-basis: 3.8rem; }
-  .workflow-flow-node strong { font-size: 0.65rem; }
-  .workflow-panel-note { margin-top: 4rem; }
   .marketing-footer { align-items: start; flex-direction: column; }
 }

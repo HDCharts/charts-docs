@@ -16,6 +16,7 @@ export function MarketingFooter({ versionId }: MarketingFooterProps) {
         {versionId ? <Link href={`/${versionId}/metadata`}>Build metadata</Link> : null}
         {versionId ? <Link href={`/${versionId}/wiki/screenshots`}>Screenshots</Link> : null}
         <Link href="/workflow">Workflow</Link>
+        <Link href="/ci-stats">CI stats</Link>
         <Link href="/dev">Dev docs</Link>
         <Link href="/built-with">Built with</Link>
         <Link href="/privacy-policy">Privacy</Link>
