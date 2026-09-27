@@ -2,7 +2,8 @@
 
 Documentation repository for HDCharts.
 
-<img width="1000" alt="Screenshot 2026-08-09 at 08 14 23" src="https://github.com/user-attachments/assets/4b6f197f-8284-489b-b6a8-b05a79e6c369" />
+<img width="1675" height="776" alt="Screenshot 2026-09-27 at 18 15 04" src="https://github.com/user-attachments/assets/b4694d0b-024c-4369-ae0d-0ff77ae6215a" />
+
 
 ## Repo Layout
 
