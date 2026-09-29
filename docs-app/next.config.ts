@@ -203,6 +203,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/dev/releases/ci-test-matrix",
+        destination: "/dev/releases/validation-matrix",
+        permanent: true,
+      },
+      {
+        source: "/dev/releases/ci-test-matrix/",
+        destination: "/dev/releases/validation-matrix",
+        permanent: true,
+      },
+      {
         source: "/demo/:version/index.html",
         destination: "/demo/:version/",
         permanent: true,
