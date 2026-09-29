@@ -19,7 +19,7 @@ export default function HomePage() {
             </p>
             <div className="marketing-actions">
               <Link href={`/${defaultVersion}/wiki`} className="marketing-button marketing-button-primary">Read the docs</Link>
-              <a href="/playground" target="_blank" rel="noopener noreferrer" className="marketing-button marketing-button-secondary">Open playground <span aria-hidden="true">↗</span></a>
+              <a href={`/demo/${defaultVersion}/`} target="_blank" rel="noopener noreferrer" className="marketing-button marketing-button-secondary">Open demo <span aria-hidden="true">↗</span></a>
             </div>
             <p className="marketing-hero-note">Line, bar, pie, radar, and histogram charts, with flexible styling and interaction.</p>
           </div>
