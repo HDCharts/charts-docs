@@ -64,6 +64,7 @@ const nextConfig: NextConfig = {
 
   // Snapshot artifacts change frequently and keep stable filenames.
   // Disable browser caching to avoid stale playground bundles after regeneration.
+  // Playground wasm files are the exception: their names are content hashes, so they are cached for good.
   async headers() {
     return [
       {
@@ -92,6 +93,25 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "no-store, max-age=0",
+          },
+        ],
+      },
+      // Must follow the no-store rules above (later rule wins); mirrors charts publish-docs-to-s3.sh.
+      {
+        source: "/playground/snapshot/:file([0-9a-f]{20}\\.wasm)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/static/playground/snapshot/:file([0-9a-f]{20}\\.wasm)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
