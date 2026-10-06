@@ -11,7 +11,7 @@ export function OnThisPage({ headings }: OnThisPageProps) {
 
   return (
     <nav aria-label="On this page" className="hidden w-48 shrink-0 xl:block">
-      <div className="xl:sticky xl:top-[calc(var(--header-height)+2rem)]">
+      <div className="xl:sticky xl:top-[calc(var(--header-height)+2rem)] xl:-m-1 xl:max-h-[calc(100vh-var(--header-height)-4rem)] xl:overflow-y-auto xl:p-1 xl:[scrollbar-gutter:stable]">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
           On this page
         </p>
