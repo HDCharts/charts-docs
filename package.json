@@ -1,0 +1,12 @@
+{
+  "name": "charts-docs",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix docs-app install",
+    "dev": "npm --prefix docs-app run dev --",
+    "dev:turbo": "npm --prefix docs-app run dev:turbo --",
+    "build": "npm --prefix docs-app run build --",
+    "start": "npm --prefix docs-app run start --",
+    "lint": "npm --prefix docs-app run lint --"
+  }
+}
