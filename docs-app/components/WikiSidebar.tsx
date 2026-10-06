@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRef } from 'react';
 import type { NavItem } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { useScrollActiveIntoView } from '@/lib/use-scroll-active-into-view';
+import { cn, stickySidebar } from '@/lib/utils';
 
 interface WikiSidebarProps {
   navigation: NavItem[];
@@ -15,6 +17,8 @@ const HEADER_DUPLICATED_SLUGS = new Set(['getting-started']);
 
 export function WikiSidebar({ navigation }: WikiSidebarProps) {
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+  useScrollActiveIntoView(navRef);
   const items = navigation.filter((item) => !HEADER_DUPLICATED_SLUGS.has(item.slug));
 
   function isActive(path: string): boolean {
@@ -23,8 +27,9 @@ export function WikiSidebar({ navigation }: WikiSidebarProps) {
 
   return (
     <nav
+      ref={navRef}
       aria-label="Documentation"
-      className="lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:self-start"
+      className={stickySidebar}
     >
       <ul className="flex flex-col gap-1">
         {items.map((item) => (

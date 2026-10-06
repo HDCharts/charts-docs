@@ -107,6 +107,8 @@
 
   html {
     scrollbar-gutter: stable;
+    /* Keeps scroll targets (route changes and heading anchors) clear of the fixed header. */
+    scroll-padding-top: calc(var(--header-height) + 1.5rem);
   }
 
   body {
@@ -203,10 +205,6 @@
     margin-top: clamp(1rem, 0.78rem + 0.85vw, 1.5rem);
     margin-bottom: clamp(0.5rem, 0.42rem + 0.35vw, 0.75rem);
     text-wrap: balance;
-  }
-
-  h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-    scroll-margin-top: calc(var(--header-height) + 1.5rem);
   }
 
   p {

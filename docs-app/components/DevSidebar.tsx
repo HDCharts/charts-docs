@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRef } from 'react';
 import type { DevNavSection } from '@/lib/dev-docs';
-import { cn } from '@/lib/utils';
+import { useScrollActiveIntoView } from '@/lib/use-scroll-active-into-view';
+import { cn, stickySidebar } from '@/lib/utils';
 
 interface DevSidebarProps {
   sections: DevNavSection[];
@@ -11,11 +13,14 @@ interface DevSidebarProps {
 
 export function DevSidebar({ sections }: DevSidebarProps) {
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+  useScrollActiveIntoView(navRef);
 
   return (
     <nav
+      ref={navRef}
       aria-label="Developer docs"
-      className="lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:self-start"
+      className={stickySidebar}
     >
       {sections.map((section) => (
         <div key={section.path} className="mb-5">
