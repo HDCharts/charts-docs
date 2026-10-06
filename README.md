@@ -20,7 +20,11 @@ Documentation repository for HDCharts.
 
 ## Local Development
 
+From the repo root:
+
 ```bash
-cd docs-app
+npm install   # also installs docs-app dependencies
 npm run dev
 ```
+
+The root scripts forward to `docs-app/`, so `build`, `start`, and `lint` work the same way.
