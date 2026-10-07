@@ -54,9 +54,7 @@ entry.
 **4. Formatting reads the caller's formatter and is never hardcoded in a content composable.** A
 chart without a formatter parameter falls back to its `Defaults`.
 
-Rules 1, 2 and 3 hold for every chart. **Rule 4's exception** is
-stacked bar, stacked area and radar, which format their readouts from `ChartValueFormatters.Default`
-because their public composables declare the formatter through `ChartValueFormatters.Default`.
+All four rules hold for every chart.
 
 ## The test for a stage that is not obviously placed
 

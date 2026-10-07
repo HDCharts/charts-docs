@@ -13,7 +13,8 @@ in the legend and while it is selected. Slice colors come from the style, either
 palette or as shades generated from its base color.
 
 Categories are optional, as they are on every chart. A pie without them draws its slices with no
-legend, the way a line chart draws with no X-axis labels.
+legend, the way a line chart draws with no X-axis labels. With no category and no title, a selected
+slice shows only its share.
 
 The example below is minimal and runs as written. The full source behind the GIF is in
 [`PieExample.kt`](https://github.com/HDCharts/charts/blob/main/sample/androidApp/src/main/kotlin/io/github/hdcharts/app/gif/docs/PieExample.kt).
@@ -43,3 +44,16 @@ PieChart(
 ```
 
 A palette whose count does not match the slice count is reported as an error rather than drawn.
+
+## Selected Share
+
+A selected slice shows its share of the total next to its category, such as `42.5%`.
+`selectedValueFormatter` formats that share, given in percent from 0 to 100. This one shows whole
+percents:
+
+```kotlin
+PieChart(
+    data = data,
+    selectedValueFormatter = ChartValueFormatter { share -> "${share.roundToInt()}%" },
+)
+```
