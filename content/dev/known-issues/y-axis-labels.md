@@ -23,25 +23,6 @@ Options:
 
 ## Confirmed
 
-### Line charts cannot show ranges wider than Double.MAX_VALUE
-
-For a range such as `-1e308..1e308`, `normalizeByMinMax` and `baselineYForRange` compute
-`max − min`, which overflows, so the line and the zero line are drawn in the wrong place. The Y
-tick values stay right, because `buildNumericYAxisTicks` never subtracts the ends. Bar charts map
-values with their own overflow-safe `barValueYFraction`.
-
-Confirmed by `baselineYForRange(-1e308, 1e308, 200f)`, which returns 200, the bottom of the plot.
-The misplaced line follows from the same overflow in `normalizeByMinMax`; no rendered chart shows
-it yet.
-
-### Near-flat ranges can put a tick outside the range
-
-A range whose ends are one double apart can still put a tick one double outside it. This changes a
-label only next to a rounding tie.
-
-Confirmed by evaluating `max × (1 − p) + min × p` in double arithmetic: about 1% of ticks fall
-outside ranges one double wide.
-
 ### Long labels are cut off
 
 The Y label column is never wider than 40% of the chart width, and a longer label shows only as
