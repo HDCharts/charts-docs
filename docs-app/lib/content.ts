@@ -137,20 +137,21 @@ function getVersionChangesets(versionId: string): VersionChangeset[] {
     .filter((item): item is VersionChangeset => item !== null);
 }
 
-function typeHeading(type: string): string {
+function changesetGroup(type: string): string {
   switch (type) {
+    case 'feat':
     case 'feature':
-      return 'Features';
+      return 'New features';
     case 'fix':
-      return 'Fixes';
+      return 'Bug fixes';
     case 'refactor':
-      return 'Refactors';
+    case 'perf':
+    case 'chore':
+      return 'Improvements';
     case 'docs':
       return 'Documentation';
-    case 'chore':
-      return 'Chores';
     default:
-      return 'Other';
+      return 'Other changes';
   }
 }
 
@@ -159,11 +160,11 @@ function renderChangesetsMarkdown(changesets: VersionChangeset[]): string {
     return '';
   }
 
-  const typeOrder = ['feature', 'fix', 'refactor', 'docs', 'chore', 'other'];
+  const groupOrder = ['New features', 'Improvements', 'Bug fixes', 'Documentation', 'Other changes'];
   const grouped = new Map<string, VersionChangeset[]>();
 
   for (const changeset of changesets) {
-    const key = typeOrder.includes(changeset.type) ? changeset.type : 'other';
+    const key = changesetGroup(changeset.type);
     const entries = grouped.get(key) ?? [];
     entries.push(changeset);
     grouped.set(key, entries);
@@ -171,22 +172,17 @@ function renderChangesetsMarkdown(changesets: VersionChangeset[]): string {
 
   const lines: string[] = [];
 
-  for (const type of typeOrder) {
-    const entries = grouped.get(type);
+  for (const group of groupOrder) {
+    const entries = grouped.get(group);
     if (!entries || entries.length === 0) {
       continue;
     }
 
-    lines.push(`#### ${typeHeading(type)}`);
+    lines.push(`### ${group}`);
     lines.push('');
 
     for (const entry of entries) {
-      const details: string[] = [];
-      if (entry.module && entry.module !== 'unknown') {
-        details.push(entry.module);
-      }
-      const detailSuffix = details.length > 0 ? ` (${details.join(' · ')})` : '';
-      lines.push(`- ${entry.releaseNote}${detailSuffix}`);
+      lines.push(`- ${entry.releaseNote}`);
     }
 
     lines.push('');
@@ -256,8 +252,7 @@ export function getMigrationReleases(versionId: string): MigrationRelease[] {
 
   return targetVersions.flatMap((version, index) => {
     const markdown = getVersionBreakingChangesMarkdown(version.id);
-    const guideCount = countMigrationGuides(markdown);
-    if (guideCount === 0) {
+    if (!markdown.trim()) {
       return [];
     }
 
@@ -308,20 +303,6 @@ function getDefaultMigrationPageMarkdown(): string {
   return `# Migration Guide
 
 Migration notes are grouped by release. If you are upgrading, read every section newer than your current version.`;
-}
-
-function countMigrationGuides(markdown: string): number {
-  if (!markdown.trim()) {
-    return 0;
-  }
-
-  return markdown
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => /^##\s+/.test(line))
-    .map((line) => line.replace(/^##\s+/, '').trim().toLowerCase())
-    .filter((title) => title !== 'overview' && title !== 'breaking changes / migration')
-    .length;
 }
 
 function injectIntoSection(
@@ -708,8 +689,7 @@ export function getPage(versionId: string, slug: string): DocPage | null {
 
     if (slug === '') {
       const breakingChangesMarkdown = getVersionBreakingChangesMarkdown(versionId);
-      const migrationGuideCount = countMigrationGuides(breakingChangesMarkdown);
-      if (migrationGuideCount === 0) {
+      if (!breakingChangesMarkdown.trim()) {
         pageContent = removeSection(pageContent, /^##\s+Breaking Changes \/ Migration\b/i);
       }
     }
