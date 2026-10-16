@@ -27,6 +27,8 @@ export function createSharedMarkdownComponents(
     h4: createHeading('h4'),
     h5: createHeading('h5'),
     h6: createHeading('h6'),
+    ul: ({ children }) => <ul className="list-disc">{children}</ul>,
+    ol: ({ children }) => <ol className="list-decimal">{children}</ol>,
     code: ({ className, children }) => {
       const languageMatch = /language-([\w-]+)/.exec(className || '');
       if (languageMatch) {
