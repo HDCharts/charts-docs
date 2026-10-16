@@ -37,12 +37,15 @@ export default function HomePage() {
             <div className="marketing-code-bar"><span /><span /><span /><b>LineChart.kt</b></div>
             <pre><code>{`@Composable
 private fun ShowLine() {
-  val dataSet = listOf(42f, 38f, 45f, 51f)
-    .toChartDataSet(
-      title = "Support Tickets"
-    )
+  val data = listOf(
+    "Web Store" to listOf(42.0, 38.0, 45.0, 51.0),
+    "Mobile App" to listOf(31.0, 35.0, 40.0, 44.0),
+    "Partner Sales" to listOf(24.0, 29.0, 33.0, 39.0),
+  ).toChartData(
+    categories = listOf("Q1", "Q2", "Q3", "Q4"),
+  )
 
-  LineChart(dataSet)
+  LineChart(data = data, title = "Revenue by Channel")
 }`}</code></pre>
           </div>
         </section>
