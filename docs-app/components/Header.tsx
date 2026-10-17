@@ -8,7 +8,7 @@ import { VersionSwitcher } from './VersionSwitcher';
 import { SetupMenu } from './SetupMenu';
 import { DocVersion, NavItem } from '@/lib/types';
 import { formatPublishedAt } from '@/lib/format';
-import { getVersionDemoUrl } from '@/lib/version-links';
+import { getVersionApiIndexUrl, getVersionDemoUrl } from '@/lib/version-links';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
@@ -30,6 +30,7 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const demoUrl = getVersionDemoUrl(currentVersion);
+  const apiUrl = getVersionApiIndexUrl(currentVersion);
 
   function isCurrent(path: string): boolean {
     return pathname === path || pathname.startsWith(`${path}/`);
@@ -83,17 +84,16 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
           Docs
         </Link>
         {navigation ? <SetupMenu versionId={currentVersion.id} variant="docs" /> : null}
-        <Link
-          href={`/${currentVersion.id}/api`}
-          className={cn(
-            "hidden rounded-full px-3 py-2 text-sm font-medium no-underline transition-colors lg:flex",
-            isCurrent(`/${currentVersion.id}/api`) && "bg-[var(--surface-overlay)] text-[var(--text-primary)]",
-            !isCurrent(`/${currentVersion.id}/api`) && "text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)] hover:text-[var(--text-primary)]"
-          )}
-          aria-current={isCurrent(`/${currentVersion.id}/api`) ? 'page' : undefined}
+        <a
+          href={apiUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="API (opens in a new tab)"
+          className="hidden rounded-full px-3 py-2 text-sm font-medium text-[var(--text-secondary)] no-underline transition-colors hover:bg-[var(--surface-overlay)] hover:text-[var(--text-primary)] lg:flex lg:items-center lg:gap-1.5"
         >
           API
-        </Link>
+          <span aria-hidden="true">↗</span>
+        </a>
         <a
           href="/playground"
           target="_blank"
@@ -176,13 +176,16 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
             </Link>
           </>
         ) : null}
-        <Link
-          href={`/${currentVersion.id}/api`}
-          className={cn('docs-mobile-nav-link', isCurrent(`/${currentVersion.id}/api`) && 'is-active')}
+        <a
+          href={apiUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="API (opens in a new tab)"
+          className="docs-mobile-nav-link"
           onClick={() => setMobileMenuOpen(false)}
         >
-          API
-        </Link>
+          API <span aria-hidden="true">↗</span>
+        </a>
         <a href="/playground" target="_blank" rel="noopener noreferrer" className="docs-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
           Playground <span aria-hidden="true">↗</span>
         </a>

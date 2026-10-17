@@ -158,7 +158,7 @@ function ChannelMetadataCard({
         <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Publication</h3>
         <PublicationDetails metadata={metadata} unavailableLabel={unavailableLabel} />
         <MetadataLinks>
-          <MetadataLink href={apiUrl}>API</MetadataLink>
+          <MetadataLink href={apiUrl}>API <span aria-hidden="true">↗</span><span className="sr-only"> (opens in a new tab)</span></MetadataLink>
           <MetadataLink href={demoUrl}>Demo</MetadataLink>
           {isSnapshot ? (
             <MetadataLink href={mavenArtifactUrl(artifacts.group, 'charts', isSnapshot)}>Metadata</MetadataLink>

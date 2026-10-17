@@ -24,7 +24,9 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
         <nav className="marketing-nav-links" aria-label="Main navigation">
           <Link href="/snapshot/wiki" className="marketing-nav-highlight">Try Prerelease</Link>
           <Link href={`/${versionId}/wiki`}>Docs</Link>
-          <Link href={`/${versionId}/api`}>API</Link>
+          <a href={`/${versionId}/api`} target="_blank" rel="noopener noreferrer" aria-label="API (opens in a new tab)">
+            API <span aria-hidden="true">↗</span>
+          </a>
           <Link href="/workflow">Workflow</Link>
           <a href="/playground" target="_blank" rel="noopener noreferrer">
             Playground <span aria-hidden="true">↗</span>
@@ -53,7 +55,9 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
         <Link href={`/${versionId}/wiki/getting-started`} onClick={() => setMenuOpen(false)}>Setup</Link>
         <Link href={`/${versionId}/agent`} onClick={() => setMenuOpen(false)}>Agent</Link>
         <Link href={`/${versionId}/wiki`} onClick={() => setMenuOpen(false)}>Docs</Link>
-        <Link href={`/${versionId}/api`} onClick={() => setMenuOpen(false)}>API</Link>
+        <a href={`/${versionId}/api`} target="_blank" rel="noopener noreferrer" aria-label="API (opens in a new tab)" onClick={() => setMenuOpen(false)}>
+          API <span aria-hidden="true">↗</span>
+        </a>
         <Link href="/workflow" onClick={() => setMenuOpen(false)}>Workflow</Link>
         <a href="/playground" target="_blank" rel="noopener noreferrer">
           Playground <span aria-hidden="true">↗</span>
