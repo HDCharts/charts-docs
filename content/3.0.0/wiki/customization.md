@@ -1,0 +1,265 @@
+# Customization
+
+General patterns for styling, sizing, and interaction that apply across chart types.
+
+## Style Customization
+
+To customize chart appearance, start from each chart's `*ChartDefaults.style(...)` factory and override only the fields you need.
+
+```kotlin
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.github.hdcharts.bar.BarChart
+import io.github.hdcharts.core.model.ChartValueFormatters
+import io.github.hdcharts.core.model.toChartData
+import io.github.hdcharts.core.style.AxesDefaults
+import io.github.hdcharts.core.style.AxisLinesDefaults
+import io.github.hdcharts.core.style.GridDefaults
+import io.github.hdcharts.core.style.BarChartDefaults
+
+@Composable
+private fun ShowStyledBar() {
+    val data = listOf(45.0, -12.0, 38.0, 27.0, -19.0, 42.0, 31.0).toChartData(
+        categories = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"),
+        seriesName = "Net cash flow",
+    )
+
+    val bars = BarChartDefaults.bars(
+        color = Color(0xFF0F766E),
+        alpha = 0.78f,
+        space = 14.dp,
+        minBarWidth = 10.dp,
+    )
+    val grid = GridDefaults.style(color = Color(0xFF94A3B8), lineWidth = 1.dp)
+    val selection = BarChartDefaults.selection(
+        color = Color(0xFFEA580C),
+        width = 1.dp,
+        unselectedAlpha = 0.7f,
+    )
+    val xLabels = BarChartDefaults.xLabels(color = Color.Gray, size = 11.sp, maxCount = 6)
+    val yLabels = BarChartDefaults.yLabels(color = Color.Gray, size = 11.sp, maxCount = 6)
+    val axes = AxesDefaults.style(
+        lines = AxisLinesDefaults.style(color = Color.Gray, lineWidth = 1.dp),
+        grid = grid,
+        xLabels = xLabels,
+        yLabels = yLabels,
+    )
+
+    BarChart(
+        data = data,
+        modifier = Modifier.background(Color(0xFFF8FAFC), RoundedCornerShape(18.dp)).padding(20.dp),
+        title = "Daily Net Cash Flow",
+        style = BarChartDefaults.style(bars = bars, axes = axes, selection = selection),
+        selectedValueFormatter = ChartValueFormatters.prefix("$"),
+    )
+}
+```
+
+Chart chrome (background, shape, shadow, and outer padding) lives on the caller-supplied `modifier`; sizing is fully modifier-driven. The `chartContainerStyle` block carries `contentPadding` and the title and subtitle text styles.
+
+Here `selectedValueFormatter` adds currency to selected raw values only; Y ticks keep the independent `axisValueFormatter` default. Titles do not generate labels: omitting `categories` hides X labels and leaves only the formatted value in selected readouts.
+
+Several charts can paint their shapes with a gradient instead of a solid color, covered in
+[Gradients](/{{version}}/wiki/gradients).
+
+## Axes
+
+Bar, histogram, line, stacked bar, and stacked area charts share `AxesStyle`. Its `lines`, `grid`,
+`xLabels`, and `yLabels` blocks control each element separately. `lines` means the X- and Y-axis
+strokes, including the chart baseline.
+
+Set `axes = AxesDefaults.style(visible = false)` to hide all four elements and reclaim label space.
+This also hides the grid on a sparkline. To keep labels and grid while hiding just the axis strokes,
+use `AxesDefaults.style(lines = AxisLinesDefaults.style(visible = false))`.
+
+## Axis Labels
+
+Cartesian charts take `xLabels(...)` and `yLabels(...)` from their `*ChartDefaults`. Their `maxCount` is null by default, which lets the chart choose:
+
+- X labels show as many categories as fit, evenly spaced from the first item, and never overlapping. Wider charts show more labels.
+- Y labels show up to five values, evenly spaced from the lowest to the highest value. Short charts show fewer, so labels never overlap.
+
+Set `maxCount` to cap the number of labels; it must be in 2..1000. Labels never overlap, so a chart can show fewer than `maxCount`:
+
+- X labels use the densest even grid from the first item with at most `maxCount` labels. When the chart scrolls, the cap applies per screen. Without scrolling, a grid that ends on the last item wins when it shows at most one label fewer.
+- Y labels show `maxCount` values when they fit.
+
+```kotlin
+val style =
+    BarChartDefaults.style(
+        axes =
+            AxesDefaults.style(
+                xLabels = BarChartDefaults.xLabels(maxCount = 4),
+                yLabels = BarChartDefaults.yLabels(maxCount = 6),
+            ),
+    )
+```
+
+## Grid Lines
+
+Bar, histogram, line, stacked bar, and stacked area charts draw horizontal grid lines. Configure `axes.grid` with `GridDefaults.style(...)`: `visible`, `steps`, `color`, and `lineWidth`. When Y labels show, the grid draws one line on each label, so it keeps matching them on short plots and with `yLabels(maxCount = ...)`. With Y labels hidden, `steps` sets the number of intervals; the default 4 steps draw 5 evenly spaced lines.
+
+```kotlin
+val style =
+    LineChartDefaults.style(
+        axes = AxesDefaults.style(grid = GridDefaults.style(color = Color.LightGray)),
+    )
+```
+
+Pass `GridDefaults.style(visible = false)` to hide only the grid.
+
+## Sizing
+
+The chart composable's `modifier` is the only sizing control. A bounded `modifier` becomes a rectangular plot; a one-axis bounded `modifier` derives a square fallback; a fully unbounded `modifier` falls back to a 200.dp default.
+
+```kotlin
+val dataSet = listOf(42.0, 38.0, 45.0, 51.0, 47.0, 54.0, 49.0).toChartData()
+
+LineChart(
+    data = dataSet,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(260.dp),
+)
+```
+
+## Surrounding Chrome
+
+Background, shadow, shape, and outer spacing are not applied by the chart. Wrap the chart in any Compose surface to add chrome.
+
+```kotlin
+val dataSet = listOf(42.0, 38.0, 45.0, 51.0, 47.0, 54.0, 49.0).toChartData()
+
+Card(modifier = Modifier.padding(16.dp)) {
+    LineChart(
+        data = dataSet,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(260.dp),
+    )
+}
+```
+
+## Title and Subtitle
+
+Every chart accepts optional `title` and `subtitle` text. The subtitle appears below the title
+with a 4 dp gap and stays visible when selection changes the title. A subtitle also works on its
+own. Null or blank subtitles reserve no space.
+
+```kotlin
+LineChart(
+    data = dataSet,
+    title = "Daily Support Tickets",
+    subtitle = "Resolved tickets per day · October 2026",
+)
+```
+
+Use `ChartContainerDefaults.style(styleTitle = ..., styleSubtitle = ...)` to customize each text
+style. The subtitle defaults to 14 sp text with the theme's `onSurfaceVariant` color.
+
+```kotlin
+val container = ChartContainerDefaults.style()
+LineChart(
+    data = dataSet,
+    subtitle = "Resolved tickets per day",
+    style = LineChartDefaults.style(
+        chartContainerStyle = ChartContainerDefaults.style(
+            styleSubtitle = container.styleSubtitle.copy(fontSize = 16.sp),
+        ),
+    ),
+)
+```
+
+## Content Spacing
+
+`ChartContainerDefaults.style()` returns a `ChartContainerStyle` with `styleTitle`, `styleSubtitle`, and `contentPadding`. Set `contentPadding` to change the internal spacing reserved for axes, title, and legend.
+
+```kotlin
+val dataSet = listOf(42.0, 38.0, 45.0, 51.0, 47.0, 54.0, 49.0).toChartData()
+
+LineChart(
+    data = dataSet,
+    modifier = Modifier.fillMaxWidth().height(260.dp),
+    style = LineChartDefaults.style(
+        chartContainerStyle = ChartContainerDefaults.style(contentPadding = 8.dp),
+    ),
+)
+```
+
+## Selection
+
+Use `rememberChartSelection()` to hoist selection. The chart calls back into it; you read `selectedIndex` to drive external UI such as legends or summary cards.
+
+```kotlin
+val selection = rememberChartSelection()
+val values = listOf(42.0, 38.0, 45.0, 51.0, 47.0, 54.0, 49.0)
+
+LineChart(
+    data = values.toChartData(),
+    modifier = Modifier.fillMaxWidth().height(260.dp),
+    selection = selection,
+)
+
+val selected = values.getOrNull(selection.selectedIndex ?: 0)
+Text("Selected: $selected")
+```
+
+## Legend
+
+Line, live line, radar, stacked bar, and stacked area charts list their series in a legend, and pie
+and ring gauge charts list their categories. The legend shows when there are at least two items and at least one has a name.
+Hide it with the chart's `legend` style:
+
+```kotlin
+StackedBarChart(
+    data = data,
+    style = StackedBarChartDefaults.style(
+        legend = StackedBarChartDefaults.legend(visible = false),
+    ),
+)
+```
+
+While a point is selected, a chart with several series shows each series' value in its legend item,
+and the title shows the selected category. A chart with one series shows `Category: value` in the
+title instead. Pass `selectedValueFormatter` to format these values. A pie shows `Category: share` in the title,
+with the share in percent formatted by its `selectedValueFormatter`, and its legend does not change. A ring gauge is one series, so it
+shows `Category: value` in the title, and its legend does not change either. A hidden legend hides the values
+too; read `selectedIndex` from a hoisted selection to show them in your own UI.
+
+## Animation and Interaction
+
+`animateOnStart` controls the initial reveal animation; `interactionEnabled` disables gestures, selection, and zoom controls together. Disable interaction to embed a chart inside a tappable card without conflicts.
+
+```kotlin
+val dataSet = listOf(42.0, 38.0, 45.0, 51.0, 47.0, 54.0, 49.0).toChartData()
+
+LineChart(
+    data = dataSet,
+    modifier = Modifier.fillMaxWidth().height(260.dp),
+    animateOnStart = true,
+    interactionEnabled = false,
+)
+```
+
+## Responsive Layout
+
+Compose the chart with any layout, including `Row`, `Column`, `LazyColumn`, or `BoxWithConstraints`. A bounded `modifier` is always honored; an unbounded one falls back to the documented defaults.
+
+```kotlin
+Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    LineChart(
+        data = lineData,
+        modifier = Modifier.fillMaxWidth().height(220.dp),
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    BarChart(
+        data = barData,
+        modifier = Modifier.fillMaxWidth().height(220.dp),
+    )
+}
+```

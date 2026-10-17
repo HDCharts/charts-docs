@@ -1,0 +1,59 @@
+---
+title: Stacked Bar
+---
+
+# Stacked Bar Chart
+
+`StackedBarChart` renders multiple series as stacked segments within each category's bar.
+
+![Stacked Bar Demo](/content/{{version}}/wiki/assets/stacked_bar_default.gif)
+
+The example below is minimal and runs as written. The GIF above uses a longer generated
+series per channel; its full source is in
+[`StackedBarExample.kt`](https://github.com/HDCharts/charts/blob/main/sample/androidApp/src/main/kotlin/io/github/hdcharts/app/gif/docs/StackedBarExample.kt).
+
+```kotlin
+@Composable
+fun ShowStackedBar() {
+    val data = listOf(
+        "Online" to listOf(280.0, 520.0, 760.0, 1080.0),
+        "Retail" to listOf(480.0, 760.0, 1050.0, 1400.0),
+        "Wholesale" to listOf(360.0, 540.0, 620.0, 720.0),
+    ).toChartData(
+        categories = listOf("Q1", "Q2", "Q3", "Q4"),
+    )
+
+    StackedBarChart(data = data, title = "Quarterly Revenue by Channel")
+}
+```
+
+## Formatting
+
+```kotlin
+StackedBarChart(
+    data = data,
+    title = "Quarterly Revenue by Channel",
+    selectedValueFormatter = ChartValueFormatters.prefix("$"),
+    axisValueFormatter = ChartValueFormatter { value ->
+        "$" + StackedBarChartDefaults.axisValueFormatter.format(value)
+    },
+)
+```
+
+`selectedValueFormatter` formats the selected values, and `axisValueFormatter` formats the Y-axis labels.
+`StackedAreaChart` takes the same two formatters.
+
+## Gradients
+
+Pass a shared `ChartGradient` to `StackedBarChartDefaults.segments(gradient = ...)` to use it for
+every segment. Stacked bars do not support separate gradients per series. See
+[Gradients](/{{version}}/wiki/gradients) for details.
+
+We currently recommend only fade gradients for stacked bar charts. Fades preserve each series'
+color. Gradients through multiple colors within a segment can make series hard to distinguish.
+
+```kotlin
+StackedBarChartDefaults.segments(
+    gradient = ChartGradients.fade(endAlpha = 0.35f),
+)
+```

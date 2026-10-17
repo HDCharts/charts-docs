@@ -9,6 +9,14 @@
       "notes": "Latest development snapshot"
     },
     {
+      "id": "3.0.0",
+      "label": "3.0.0",
+      "wikiRoot": "/content/3.0.0/wiki",
+      "apiBase": "/static/api/3.0.0",
+      "demoBase": "/demo/3.0.0/",
+      "notes": "Release 3.0.0"
+    },
+    {
       "id": "2.4.0",
       "label": "2.4.0",
       "wikiRoot": "/content/2.4.0/wiki",
