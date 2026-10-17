@@ -8,6 +8,11 @@ const defaultDocsVersion = pickDefaultVersionId(versionsRegistry.versions);
 const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
 const repositoryRoot = path.join(__dirname, "..");
 
+const apiVersionRedirects = versionsRegistry.versions.flatMap((version) => [
+  { source: `/api/${version.id}`, destination: `/${version.id}/api`, permanent: true },
+  { source: `/api/${version.id}/`, destination: `/${version.id}/api`, permanent: true },
+]);
+
 // The single Examples page was split into per-chart pages and no longer
 // exists for snapshot or any release cut after that change. Only redirect
 // versions that actually lost the page — older releases still serve their
@@ -149,6 +154,7 @@ const nextConfig: NextConfig = {
   // Redirects for convenience
   async redirects() {
     return [
+      ...apiVersionRedirects,
       // Legacy static-content URLs previously exposed the Markdown source.
       {
         source: "/content/:version/wiki",
