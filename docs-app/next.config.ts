@@ -3,14 +3,15 @@ import fs from "node:fs";
 import path from "node:path";
 import versionsRegistry from "../registry/versions.json";
 import { pickDefaultVersionId } from "./lib/versions";
+import { getVersionApiIndexUrl } from "./lib/version-links";
 
 const defaultDocsVersion = pickDefaultVersionId(versionsRegistry.versions);
 const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net";
 const repositoryRoot = path.join(__dirname, "..");
 
 const apiVersionRedirects = versionsRegistry.versions.flatMap((version) => [
-  { source: `/api/${version.id}`, destination: `/${version.id}/api`, permanent: true },
-  { source: `/api/${version.id}/`, destination: `/${version.id}/api`, permanent: true },
+  { source: `/api/${version.id}`, destination: getVersionApiIndexUrl(version), permanent: true },
+  { source: `/api/${version.id}/`, destination: getVersionApiIndexUrl(version), permanent: true },
 ]);
 
 // The single Examples page was split into per-chart pages and no longer
