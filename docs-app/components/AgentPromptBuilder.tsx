@@ -388,7 +388,10 @@ function buildAgentPrompt(inputs: PromptInputs): string {
   const chartDocLines = selectedChartPages.map(
     (page) => `- ${page.title} docs: ${buildDocsUrl(`/${versionId}/wiki/${page.slug}`)}`,
   );
-  const apiPath = buildDocsUrl(`/${versionId}/api`);
+  // Give agents the published Dokka entry point directly. The local `/api`
+  // route is a redirect intended for browser navigation, while generated
+  // prompts should point at the API document that agents need to read.
+  const apiPath = buildDocsUrl(`/static/api/${versionId}/index.html`);
 
   return [
     'You are an HDCharts integration agent.',
