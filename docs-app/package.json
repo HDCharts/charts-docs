@@ -8,6 +8,7 @@
     "dev:turbo": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --test lib/remark-wiki-example-markers.test.mjs",
     "lint": "eslint"
   },
   "dependencies": {
