@@ -533,30 +533,39 @@ function linesOutsideCodeFences(content: string): string[] {
 export interface PageHeading {
   title: string;
   anchor: string;
+  level?: 2 | 3;
 }
 
 /**
- * H2 headings in a page's own markdown body, for an "on this page" list.
+ * H2 headings and capability H3s in a page's own markdown body, for an
+ * "on this page" list.
  * Anchors are generated the same way (plain slugifyHeading, no dedup) that
  * the markdown renderer generates heading ids, so links here always match.
  *
- * Limited to H2 rather than H2/H3: migration release pages concatenate every
- * migration doc for that release, each demoted by one level, so H3 there is
- * "Before"/"After" repeated per doc — same anchor, no way to tell them apart
- * without slug-level dedup. H2 (each doc's own, unique, title) stays safe,
- * and no current page uses H3 for anything else.
+ * H3s are limited to Capabilities to keep the list focused and avoid clutter
+ * on pages with many minor subsections. Migration pages concatenate multiple
+ * documents with repeated H3 headings, so those remain excluded.
  */
 export function getPageHeadings(content: string): PageHeading[] {
   const headings: PageHeading[] = [];
+  let inCapabilities = false;
 
   for (const rawLine of linesOutsideCodeFences(content)) {
-    const match = rawLine.match(/^##\s+(.+)$/);
-    if (!match) {
+    const h2Match = rawLine.match(/^##\s+(.+)$/);
+    if (h2Match) {
+      const title = h2Match[1].trim().replace(/\s+#+\s*$/, '');
+      inCapabilities = title.toLowerCase() === 'capabilities';
+      headings.push({ title, anchor: slugifyHeading(title), level: 2 });
       continue;
     }
 
-    const title = match[1].trim().replace(/\s+#+\s*$/, '');
-    headings.push({ title, anchor: slugifyHeading(title) });
+    if (inCapabilities) {
+      const h3Match = rawLine.match(/^###\s+(.+)$/);
+      if (h3Match) {
+        const title = h3Match[1].trim().replace(/\s+#+\s*$/, '');
+        headings.push({ title, anchor: slugifyHeading(title), level: 3 });
+      }
+    }
   }
 
   return headings;
