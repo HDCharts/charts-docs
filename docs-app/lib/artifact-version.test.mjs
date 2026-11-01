@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import test from 'node:test';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -7,8 +9,6 @@ import artifactVersion from './artifact-version.cjs';
 const { resolveArtifactVersion, resolveKotlinArtifactVersion } = artifactVersion;
 
 const snapshotManifest = JSON.stringify({
-  source_sha: '28709d9a845932ec6cb020bb63e69451c89744dd',
-  docs_source_sha: '28709d9a845932ec6cb020bb63e69451c89744dd',
   charts_version: '3.0.1-SNAPSHOT',
 });
 
@@ -19,26 +19,16 @@ test('resolves snapshot docs to the artifact version recorded by publication', (
 test('resolves released docs to their immutable release version', () => {
   assert.equal(resolveArtifactVersion('3.0.0', snapshotManifest), '3.0.0');
   assert.equal(resolveArtifactVersion('2.4.0', snapshotManifest), '2.4.0');
+  assert.equal(resolveArtifactVersion('3.1.0', snapshotManifest), '3.1.0');
 });
 
 test('preserves the placeholder when snapshot metadata is missing, malformed, or inconsistent', () => {
   assert.equal(resolveArtifactVersion('snapshot', ''), null);
   assert.equal(resolveArtifactVersion('snapshot', '{'), null);
   assert.equal(resolveArtifactVersion('snapshot', JSON.stringify({
-    source_sha: 'not-a-commit',
-    docs_source_sha: 'not-a-commit',
-    charts_version: '3.0.1-SNAPSHOT',
-  })), null);
-  assert.equal(resolveArtifactVersion('snapshot', JSON.stringify({
-    source_sha: '28709d9a845932ec6cb020bb63e69451c89744dd',
-    docs_source_sha: '60864f821601ef8b12afe84586638553ce8f8090',
-    charts_version: '3.0.1-SNAPSHOT',
-  })), null);
-  assert.equal(resolveArtifactVersion('snapshot', JSON.stringify({
-    source_sha: '28709d9a845932ec6cb020bb63e69451c89744dd',
-    docs_source_sha: '28709d9a845932ec6cb020bb63e69451c89744dd',
     charts_version: 'snapshot',
   })), null);
+  assert.equal(resolveArtifactVersion('snapshot', snapshotManifest), '3.0.1-SNAPSHOT');
   assert.equal(resolveArtifactVersion('main', snapshotManifest), null);
 });
 
@@ -105,16 +95,42 @@ test('copy input is the resolved code parsed from a Kotlin fence', async () => {
   assert.equal(code.value, 'implementation("io.github.hdcharts:charts:3.0.1-SNAPSHOT")');
 });
 
-test('supports tilde fences and keeps historical release dependency coordinates intact', () => {
+test('keeps historical release dependency examples and version tags unchanged', () => {
+  const historicalPath = path.join('..', 'content', '2.4.0', 'wiki', 'getting-started.md');
+  const historicalPage = fs.readFileSync(historicalPath, 'utf8');
+  assert.equal(resolveKotlinArtifactVersion(historicalPage, '2.4.0'), historicalPage);
+
   const historical = [
     '~~~kotlin',
-    'implementation("io.github.dautovicharis:charts:{{artifactVersion}}")',
-    'implementation(platform("io.github.dautovicharis:charts-bom:{{artifactVersion}}"))',
+    'implementation("io.github.dautovicharis:charts:2.4.0")',
+    'implementation(platform("io.github.dautovicharis:charts-bom:2.4.0"))',
     '~~~',
   ].join('\n');
-  const result = resolveKotlinArtifactVersion(historical, '2.4.0');
-  assert.match(result, /io\.github\.dautovicharis:charts:2\.4\.0/);
-  assert.match(result, /io\.github\.dautovicharis:charts-bom:2\.4\.0/);
+  assert.equal(resolveKotlinArtifactVersion(historical, '2.4.0'), historical);
+});
+
+test('leaves every published release Markdown page byte-for-byte unchanged', () => {
+  const contentRoot = path.join('..', 'content');
+  const releaseIds = fs.readdirSync(contentRoot).filter((entry) => /^\d+\.\d+\.\d+$/.test(entry));
+
+  function markdownFiles(directory) {
+    return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+      const filePath = path.join(directory, entry.name);
+      if (entry.isDirectory()) return markdownFiles(filePath);
+      return /\.mdx?$/.test(entry.name) ? [filePath] : [];
+    });
+  }
+
+  for (const releaseId of releaseIds) {
+    for (const filePath of markdownFiles(path.join(contentRoot, releaseId))) {
+      const markdown = fs.readFileSync(filePath, 'utf8');
+      assert.equal(
+        resolveKotlinArtifactVersion(markdown, resolveArtifactVersion(releaseId, '')),
+        markdown,
+        filePath,
+      );
+    }
+  }
 });
 
 test('keeps fenced Kotlin template source intact when metadata is unavailable', () => {

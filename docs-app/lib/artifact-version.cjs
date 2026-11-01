@@ -1,9 +1,8 @@
 const SNAPSHOT_VERSION = /^\d+\.\d+\.\d+-SNAPSHOT$/;
-const SOURCE_SHA = /^[0-9a-f]{40}$/i;
 
 /**
  * A release route is immutable and uses its own SemVer ID. Snapshot routes use
- * the version and source SHA recorded by the snapshot publication workflow.
+ * the version recorded by the snapshot publication workflow.
  */
 function resolveArtifactVersion(versionId, snapshotManifestText) {
   if (versionId !== 'snapshot') {
@@ -14,12 +13,7 @@ function resolveArtifactVersion(versionId, snapshotManifestText) {
     const manifest = JSON.parse(snapshotManifestText);
     if (
       typeof manifest.charts_version === 'string' &&
-      SNAPSHOT_VERSION.test(manifest.charts_version) &&
-      typeof manifest.source_sha === 'string' &&
-      SOURCE_SHA.test(manifest.source_sha) &&
-      typeof manifest.docs_source_sha === 'string' &&
-      SOURCE_SHA.test(manifest.docs_source_sha) &&
-      manifest.docs_source_sha === manifest.source_sha
+      SNAPSHOT_VERSION.test(manifest.charts_version)
     ) {
       return manifest.charts_version;
     }
