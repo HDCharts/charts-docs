@@ -8,42 +8,11 @@ const example = {
   snippetId: 'pie-basic-usage',
 };
 
-test('resolves snapshot documentation to its published source SHA', () => {
-  assert.equal(
-    resolveWikiSourceRevision('snapshot', {
-      charts_version: '3.0.1-SNAPSHOT',
-      source_sha: 'fedcba9876543210fedcba9876543210fedcba98',
-      wiki_source_sha: sha,
-      wiki_charts_version: '3.0.1-SNAPSHOT',
-    }, null),
-    sha,
-  );
-  assert.equal(
-    resolveWikiSourceRevision('snapshot', { charts_version: '3.0.1-SNAPSHOT', source_sha: sha }, null),
-    null,
-    'artifact provenance alone does not identify the revision used to sync wiki Markdown',
-  );
-  assert.equal(resolveWikiSourceRevision('snapshot', {
-    charts_version: '3.0.1-SNAPSHOT',
-    wiki_source_sha: sha,
-    wiki_charts_version: '3.0.0-SNAPSHOT',
-  }, null), null, 'stale wiki metadata for a different snapshot version is rejected');
-  assert.equal(resolveWikiSourceRevision('snapshot', {
-    charts_version: '3.0.1-SNAPSHOT',
-    wiki_source_sha: 'main',
-    wiki_charts_version: '3.0.1-SNAPSHOT',
-  }, null), null);
-  assert.equal(resolveWikiSourceRevision('snapshot', null, null), null);
-});
-
-test('resolves releases to their matching manifest SHA or registered release tag', () => {
-  assert.equal(
-    resolveWikiSourceRevision('3.0.0', null, { charts_version: '3.0.0', source_sha: sha }, ['3.0.0']),
-    sha,
-  );
-  assert.equal(resolveWikiSourceRevision('2.4.0', null, null, ['3.0.0', '2.4.0']), '2.4.0');
-  assert.equal(resolveWikiSourceRevision('4.0.0', null, null, ['3.0.0']), null);
-  assert.equal(resolveWikiSourceRevision('snapshot', null, null), null);
+test('uses main for snapshot source links and the registered release tag for versioned docs', () => {
+  assert.equal(resolveWikiSourceRevision('snapshot'), 'main');
+  assert.equal(resolveWikiSourceRevision('3.0.0', ['3.0.0']), '3.0.0');
+  assert.equal(resolveWikiSourceRevision('2.4.0', ['3.0.0', '2.4.0']), '2.4.0');
+  assert.equal(resolveWikiSourceRevision('4.0.0', ['3.0.0']), null);
 });
 
 test('builds a safe canonical GitHub link that targets the snippet marker', () => {
@@ -54,6 +23,10 @@ test('builds a safe canonical GitHub link that targets the snippet marker', () =
   assert.equal(
     buildWikiSourceUrl(example, '3.0.0'),
     `https://github.com/HDCharts/charts/blob/3.0.0/${example.sourcePath}#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage`,
+  );
+  assert.equal(
+    buildWikiSourceUrl(example, 'main'),
+    `https://github.com/HDCharts/charts/blob/main/${example.sourcePath}#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage`,
   );
 });
 
@@ -71,6 +44,7 @@ test('keeps separate source files and snippet targets for multiple examples on o
 
 test('omits links for missing revisions and unsafe paths or snippet identifiers', () => {
   assert.equal(buildWikiSourceUrl(example, null), null);
+  assert.equal(buildWikiSourceUrl(example, 'latest'), null);
   assert.equal(buildWikiSourceUrl({ ...example, sourcePath: 'sample/../../secrets.kt' }, sha), null);
   assert.equal(buildWikiSourceUrl({ ...example, sourcePath: 'https://example.com/Evil.kt' }, sha), null);
   assert.equal(buildWikiSourceUrl({ ...example, sourcePath: 'sample/androidApp/build.gradle.kts' }, sha), null);
