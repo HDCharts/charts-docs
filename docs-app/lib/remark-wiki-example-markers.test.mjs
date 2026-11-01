@@ -4,7 +4,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { renderToStaticMarkup } from 'react-dom/server';
 import remarkGfm from 'remark-gfm';
-import { remarkWikiExampleMarkers } from './remark-wiki-example-markers.ts';
+import { remarkWikiExampleMarkers } from './remark-wiki-example-markers.mjs';
 
 function render(markdown) {
   return renderToStaticMarkup(

@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { slugifyHeading } from '@/lib/anchors';
-import { remarkWikiExampleMarkers } from '@/lib/remark-wiki-example-markers';
+import { remarkWikiExampleMarkers } from '@/lib/remark-wiki-example-markers.mjs';
 import { cn } from '@/lib/utils';
 import { MermaidDiagram } from './MermaidDiagram';
 import { CodeBlockContainer, createSharedMarkdownComponents } from './shared-markdown';

@@ -42,6 +42,10 @@ jobs:
         working-directory: docs-app
         run: npm ci
 
+      - name: Test Markdown renderer
+        working-directory: docs-app
+        run: npm test
+
       - name: Build docs app
         working-directory: docs-app
         run: npm run build
