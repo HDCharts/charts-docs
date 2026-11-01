@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { DocPage, DocVersion, NavItem, PageFrontmatter } from './types';
 import { createHeadingSlugger, slugifyHeading } from './anchors';
 import { getAllVersions, getVersion } from './versions';
+import artifactVersion from './artifact-version.cjs';
 
 /**
  * Base path to wiki content
@@ -11,6 +12,8 @@ import { getAllVersions, getVersion } from './versions';
 const CONTENT_BASE = path.join(process.cwd(), '..', 'content');
 const RELEASE_NOTES_BASE = path.join(process.cwd(), '..', 'release-notes');
 const CURRENT_RELEASE_NOTES_VERSION_PATH = path.join(RELEASE_NOTES_BASE, 'current-version.txt');
+const SNAPSHOT_MANIFEST_PATH = path.join(process.cwd(), 'public', 'snapshot-manifest.json');
+const { resolveArtifactVersion, resolveKotlinArtifactVersion } = artifactVersion;
 const CHANGESETS_DIR_NAME = 'changes';
 const MIGRATIONS_DIR_NAME = 'migrations';
 
@@ -24,6 +27,18 @@ function readDirectory(directoryPath: string): string[] {
 
 function readTextFile(filePath: string): string {
   return fs.readFileSync(/* turbopackIgnore: true */ filePath, 'utf-8');
+}
+
+function getArtifactVersion(versionId: string): string | null {
+  if (versionId !== 'snapshot') {
+    return resolveArtifactVersion(versionId, '');
+  }
+
+  try {
+    return resolveArtifactVersion(versionId, readTextFile(SNAPSHOT_MANIFEST_PATH));
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -688,6 +703,8 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     let pageContent = content
       .replace(/\{\{version\}\}/g, versionId)
       .replace(/\{\{versionLabel\}\}/g, versionLabel);
+
+    pageContent = resolveKotlinArtifactVersion(pageContent, getArtifactVersion(versionId));
 
     if (slug === '') {
       const changesetsMarkdown = renderChangesetsMarkdown(getVersionChangesets(versionId));
