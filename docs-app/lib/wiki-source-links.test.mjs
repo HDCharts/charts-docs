@@ -15,18 +15,18 @@ test('uses main for snapshot source links and the registered release tag for ver
   assert.equal(resolveWikiSourceRevision('4.0.0', ['3.0.0']), null);
 });
 
-test('builds a safe canonical GitHub link that targets the snippet marker', () => {
+test('builds a safe canonical GitHub file link', () => {
   assert.equal(
     buildWikiSourceUrl(example, sha),
-    `https://github.com/HDCharts/charts/blob/${sha}/${example.sourcePath}#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage`,
+    `https://github.com/HDCharts/charts/blob/${sha}/${example.sourcePath}`,
   );
   assert.equal(
     buildWikiSourceUrl(example, '3.0.0'),
-    `https://github.com/HDCharts/charts/blob/3.0.0/${example.sourcePath}#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage`,
+    `https://github.com/HDCharts/charts/blob/3.0.0/${example.sourcePath}`,
   );
   assert.equal(
     buildWikiSourceUrl(example, 'main'),
-    `https://github.com/HDCharts/charts/blob/main/${example.sourcePath}#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage`,
+    `https://github.com/HDCharts/charts/blob/main/${example.sourcePath}`,
   );
 });
 
@@ -37,9 +37,10 @@ test('keeps separate source files and snippet targets for multiple examples on o
   };
   const links = [example, second].map((source) => buildWikiSourceUrl(source, sha));
 
-  assert.ok(links[0].includes('PieBasicExample.kt#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20pie-basic-usage'));
-  assert.ok(links[1].includes('LineExample.kt#:~:text=BEGIN%20WIKI%20EXAMPLE%3A%20line-selection'));
+  assert.ok(links[0].endsWith('PieBasicExample.kt'));
+  assert.ok(links[1].endsWith('LineExample.kt'));
   assert.notEqual(links[0], links[1]);
+  assert.ok(links.every((link) => !link.includes('#')));
 });
 
 test('omits links for missing revisions and unsafe paths or snippet identifiers', () => {

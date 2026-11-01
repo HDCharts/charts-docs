@@ -16,6 +16,5 @@ export function buildWikiSourceUrl(source, revision) {
   if (typeof source.snippetId !== 'string' || !SNIPPET_ID.test(source.snippetId)) return null;
 
   const encodedPath = source.sourcePath.split('/').map(encodeURIComponent).join('/');
-  const markerText = encodeURIComponent(`BEGIN WIKI EXAMPLE: ${source.snippetId}`);
-  return `https://github.com/HDCharts/charts/blob/${revision}/${encodedPath}#:~:text=${markerText}`;
+  return `https://github.com/HDCharts/charts/blob/${revision}/${encodedPath}`;
 }
