@@ -7,8 +7,9 @@ const SNIPPET_ID = /^[a-z0-9-]+$/;
 export function resolveWikiSourceRevision(versionId, snapshotManifest, releaseManifest, releaseVersions = []) {
   if (versionId === 'snapshot') {
     return SNAPSHOT_VERSION.test(snapshotManifest?.charts_version ?? '')
-      && FULL_COMMIT_SHA.test(snapshotManifest?.source_sha ?? '')
-      ? snapshotManifest.source_sha.toLowerCase()
+      && snapshotManifest?.wiki_charts_version === snapshotManifest.charts_version
+      && FULL_COMMIT_SHA.test(snapshotManifest?.wiki_source_sha ?? '')
+      ? snapshotManifest.wiki_source_sha.toLowerCase()
       : null;
   }
 

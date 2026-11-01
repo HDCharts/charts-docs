@@ -76,10 +76,9 @@ interface CodeBlockProps {
   code: string;
   language: string;
   sourceUrl?: string | null;
-  hasSource?: boolean;
 }
 
-function CodeBlock({ code, language, sourceUrl = null, hasSource = false }: CodeBlockProps) {
+function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
   const { highlighter, ready } = useHighlighterContext();
 
   const highlightedHtml = useMemo(() => {
@@ -97,7 +96,7 @@ function CodeBlock({ code, language, sourceUrl = null, hasSource = false }: Code
   }, [highlighter, ready, code, language]);
 
   const codeBlock = (
-    <CodeBlockContainer code={code} language={language} className={hasSource ? 'mb-0' : undefined}>
+    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0' : undefined}>
       {highlightedHtml ? (
         <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
       ) : (
@@ -111,27 +110,21 @@ function CodeBlock({ code, language, sourceUrl = null, hasSource = false }: Code
     </CodeBlockContainer>
   );
 
-  if (!hasSource) return codeBlock;
+  if (!sourceUrl) return codeBlock;
 
   return (
     <div className="mb-4 min-w-0">
       <div className="mb-1 flex justify-end pr-3">
-        {sourceUrl ? (
-          <a
-            href={sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="View canonical Kotlin source"
-            aria-label="View canonical Kotlin source"
-            className="inline-flex size-6 items-center justify-center rounded-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
-          >
-            <SourceFileIcon />
-          </a>
-        ) : (
-          <span role="img" title="View canonical Kotlin source" aria-label="View canonical Kotlin source" className="inline-flex size-6 items-center justify-center text-[var(--text-muted)]">
-            <SourceFileIcon />
-          </span>
-        )}
+        <a
+          href={sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="View canonical Kotlin source"
+          aria-label="View canonical Kotlin source"
+          className="inline-flex size-6 items-center justify-center rounded-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
+        >
+          <SourceFileIcon />
+        </a>
       </div>
       {codeBlock}
     </div>
@@ -140,9 +133,11 @@ function CodeBlock({ code, language, sourceUrl = null, hasSource = false }: Code
 
 function SourceFileIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="8" cy="8" r="6" stroke="var(--color-success)" strokeWidth="1.5" />
-      <path d="m5 8 2 2 4-4" stroke="var(--color-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="m10 13-2 2 2 2" />
+      <path d="m14 13 2 2-2 2" />
     </svg>
   );
 }
@@ -165,7 +160,7 @@ function createMarkdownComponents(usesLargeGif: boolean, sourceRevision: string 
         : null;
       return language === 'mermaid'
         ? <MermaidDiagram code={code} />
-        : <CodeBlock code={code} language={language} sourceUrl={sourceUrl} hasSource={source !== null} />;
+        : <CodeBlock code={code} language={language} sourceUrl={sourceUrl} />;
     },
     usesLargeGif ? 'sm:max-w-[640px]' : 'sm:max-w-[320px]',
   );

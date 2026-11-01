@@ -10,10 +10,29 @@ const example = {
 
 test('resolves snapshot documentation to its published source SHA', () => {
   assert.equal(
-    resolveWikiSourceRevision('snapshot', { charts_version: '3.0.1-SNAPSHOT', source_sha: sha }, null),
+    resolveWikiSourceRevision('snapshot', {
+      charts_version: '3.0.1-SNAPSHOT',
+      source_sha: 'fedcba9876543210fedcba9876543210fedcba98',
+      wiki_source_sha: sha,
+      wiki_charts_version: '3.0.1-SNAPSHOT',
+    }, null),
     sha,
   );
-  assert.equal(resolveWikiSourceRevision('snapshot', { charts_version: '3.0.1-SNAPSHOT', source_sha: 'main' }, null), null);
+  assert.equal(
+    resolveWikiSourceRevision('snapshot', { charts_version: '3.0.1-SNAPSHOT', source_sha: sha }, null),
+    null,
+    'artifact provenance alone does not identify the revision used to sync wiki Markdown',
+  );
+  assert.equal(resolveWikiSourceRevision('snapshot', {
+    charts_version: '3.0.1-SNAPSHOT',
+    wiki_source_sha: sha,
+    wiki_charts_version: '3.0.0-SNAPSHOT',
+  }, null), null, 'stale wiki metadata for a different snapshot version is rejected');
+  assert.equal(resolveWikiSourceRevision('snapshot', {
+    charts_version: '3.0.1-SNAPSHOT',
+    wiki_source_sha: 'main',
+    wiki_charts_version: '3.0.1-SNAPSHOT',
+  }, null), null);
   assert.equal(resolveWikiSourceRevision('snapshot', null, null), null);
 });
 
