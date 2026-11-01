@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { Breadcrumbs, MarkdownRenderer } from '@/components';
 import { getPage, getMigrationReleases } from '@/lib/content';
 import { getAllVersions, hasLargeGifs } from '@/lib/versions';
+import { getWikiSourceRevision } from '@/lib/wiki-source-revisions';
 import { getCanonicalUrl } from '@/lib/seo';
 
 export const dynamicParams = false;
@@ -36,7 +37,7 @@ export default async function MigrationIndexPage({ params }: MigrationIndexPageP
   return (
     <article className="min-w-0 max-w-[860px] animate-fade-in">
       <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: 'Migration' }]} />
-      <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} />
+      <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} sourceRevision={getWikiSourceRevision(version)} />
       {releases.length > 0 ? (
         <ul className="mt-6 flex flex-col gap-2">
           {releases.map((release) => (
