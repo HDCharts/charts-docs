@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { slugifyHeading } from '@/lib/anchors';
+import { remarkWikiExampleMarkers } from '@/lib/remark-wiki-example-markers';
 import { cn } from '@/lib/utils';
 import { MermaidDiagram } from './MermaidDiagram';
 import { CodeBlockContainer, createSharedMarkdownComponents } from './shared-markdown';
@@ -61,7 +62,7 @@ export function MarkdownRenderer({ content, usesLargeGif = false }: MarkdownRend
   return (
     <HighlighterProvider>
       <div className="mx-auto min-w-0 max-w-[1120px]">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+        <ReactMarkdown remarkPlugins={[remarkGfm, remarkWikiExampleMarkers]} components={components}>
           {content}
         </ReactMarkdown>
       </div>
