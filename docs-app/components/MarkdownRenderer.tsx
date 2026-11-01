@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { slugifyHeading } from '@/lib/anchors';
 import { remarkWikiExampleMarkers } from '@/lib/remark-wiki-example-markers.mjs';
+import { buildWikiSourceUrl } from '@/lib/wiki-source-links.mjs';
 import { cn } from '@/lib/utils';
 import { MermaidDiagram } from './MermaidDiagram';
 import { CodeBlockContainer, createSharedMarkdownComponents } from './shared-markdown';
@@ -54,10 +55,11 @@ function useHighlighterContext() {
 interface MarkdownRendererProps {
   content: string;
   usesLargeGif?: boolean;
+  sourceRevision?: string | null;
 }
 
-export function MarkdownRenderer({ content, usesLargeGif = false }: MarkdownRendererProps) {
-  const components = useMemo(() => createMarkdownComponents(usesLargeGif), [usesLargeGif]);
+export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null }: MarkdownRendererProps) {
+  const components = useMemo(() => createMarkdownComponents(usesLargeGif, sourceRevision), [usesLargeGif, sourceRevision]);
 
   return (
     <HighlighterProvider>
@@ -73,9 +75,10 @@ export function MarkdownRenderer({ content, usesLargeGif = false }: MarkdownRend
 interface CodeBlockProps {
   code: string;
   language: string;
+  sourceUrl?: string | null;
 }
 
-function CodeBlock({ code, language }: CodeBlockProps) {
+function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
   const { highlighter, ready } = useHighlighterContext();
 
   const highlightedHtml = useMemo(() => {
@@ -92,8 +95,8 @@ function CodeBlock({ code, language }: CodeBlockProps) {
     }
   }, [highlighter, ready, code, language]);
 
-  return (
-    <CodeBlockContainer code={code} language={language}>
+  const codeBlock = (
+    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0' : undefined}>
       {highlightedHtml ? (
         <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
       ) : (
@@ -106,6 +109,37 @@ function CodeBlock({ code, language }: CodeBlockProps) {
       )}
     </CodeBlockContainer>
   );
+
+  if (!sourceUrl) return codeBlock;
+
+  return (
+    <div className="mb-4 min-w-0">
+      <div className="mb-1 flex justify-end pr-3">
+        <a
+          href={sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="View canonical Kotlin source"
+          aria-label="View canonical Kotlin source"
+          className="inline-flex size-6 items-center justify-center rounded-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
+        >
+          <SourceFileIcon />
+        </a>
+      </div>
+      {codeBlock}
+    </div>
+  );
+}
+
+function SourceFileIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="m10 13-2 2 2 2" />
+      <path d="m14 13 2 2-2 2" />
+    </svg>
+  );
 }
 
 function escapeHtml(text: string): string {
@@ -117,11 +151,17 @@ function escapeHtml(text: string): string {
     .replace(/'/g, '&#039;');
 }
 
-function createMarkdownComponents(usesLargeGif: boolean) {
+function createMarkdownComponents(usesLargeGif: boolean, sourceRevision: string | null) {
   return createSharedMarkdownComponents(
     slugifyHeading,
-    ({ code, language }) =>
-      language === 'mermaid' ? <MermaidDiagram code={code} /> : <CodeBlock code={code} language={language} />,
+    ({ code, language, source }) => {
+      const sourceUrl = source && sourceRevision
+        ? buildWikiSourceUrl(source, sourceRevision)
+        : null;
+      return language === 'mermaid'
+        ? <MermaidDiagram code={code} />
+        : <CodeBlock code={code} language={language} sourceUrl={sourceUrl} />;
+    },
     usesLargeGif ? 'sm:max-w-[640px]' : 'sm:max-w-[320px]',
   );
 }

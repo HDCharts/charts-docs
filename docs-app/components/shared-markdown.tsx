@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export function createSharedMarkdownComponents(
   headingSlugger: (text: string) => string,
-  renderCodeBlock: (props: { code: string; language: string; wrapLines: boolean }) => ReactNode,
+  renderCodeBlock: (props: { code: string; language: string; wrapLines: boolean; source: { sourcePath: string; snippetId: string } | null }) => ReactNode,
   imageMaxWidthClassName: string,
 ): Components {
   const createHeading = (tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') => {
@@ -29,11 +29,19 @@ export function createSharedMarkdownComponents(
     h6: createHeading('h6'),
     ul: ({ children }) => <ul className="list-disc">{children}</ul>,
     ol: ({ children }) => <ol className="list-decimal">{children}</ol>,
-    code: ({ className, children }) => {
+    code: ({ className, children, node }) => {
       const languageMatch = /language-([\w-]+)/.exec(className || '');
       if (languageMatch) {
         const code = flattenText(children).replace(/\n$/, '');
-        return renderCodeBlock({ code, language: languageMatch[1], wrapLines: false });
+        const source = node?.properties?.wikiExampleSource as { sourcePath?: unknown; snippetId?: unknown } | undefined;
+        return renderCodeBlock({
+          code,
+          language: languageMatch[1],
+          wrapLines: false,
+          source: source && typeof source.sourcePath === 'string' && typeof source.snippetId === 'string'
+            ? { sourcePath: source.sourcePath, snippetId: source.snippetId }
+            : null,
+        });
       }
       return (
         <code
