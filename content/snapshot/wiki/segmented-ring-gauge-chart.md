@@ -4,9 +4,6 @@ title: Segmented Ring Gauge
 
 # Segmented Ring Gauge Chart
 
-On this page: [Capacity and Center Labels](#capacity-and-center-labels) · [Selection](#selection) ·
-[Segment Styling](#segment-styling) · [Start Position and Direction](#start-position-and-direction)
-
 ## Overview
 
 `SegmentedRingGaugeChart` shows how several contributions fill one fixed capacity. The colored
@@ -74,6 +71,8 @@ fun CalorieProgress() {
 }
 ```
 <!-- END WIKI EXAMPLE: segmented-ring-gauge-basic-usage -->
+
+![Segmented ring gauge showing calorie progress by category](/content/{{version}}/wiki/assets/wiki-segmented-ring-gauge-basic.png)
 
 The total is `740` kcal, so the ring fills 740 of its 2,000 kcal capacity. Segment values must be
 non-negative, and their sum must not exceed the finite positive capacity.

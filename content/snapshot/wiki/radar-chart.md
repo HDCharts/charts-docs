@@ -4,9 +4,6 @@ title: Radar
 
 # Radar Chart
 
-On this page: [Multiple Series](#multiple-series) · [Category Selection](#category-selection) ·
-[Series Selection](#series-selection) · [Styling and Layout](#styling-and-layout)
-
 ## Overview
 
 `RadarChart` compares one or more series across shared categories drawn as radial axes. Use it for
@@ -27,11 +24,8 @@ category names label the same positions.
 
 <!-- BEGIN WIKI EXAMPLE: sample/androidApp/src/main/kotlin/io/github/hdcharts/app/docs/RadarBasicExample.kt#radar-basic-usage -->
 ```kotlin
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import io.github.hdcharts.core.model.toChartData
 import io.github.hdcharts.radar.RadarChart
 
@@ -41,7 +35,7 @@ private data class ReadinessMetric(
 )
 
 @Composable
-fun ShowPlatformReadiness() {
+fun ShowPlatformReadiness(modifier: Modifier = Modifier) {
     val metrics =
         listOf(
             ReadinessMetric("Performance", 84.0),
@@ -60,12 +54,14 @@ fun ShowPlatformReadiness() {
 
     RadarChart(
         data = data,
-        modifier = Modifier.fillMaxWidth().height(320.dp),
+        modifier = modifier,
         title = "Platform Readiness",
     )
 }
 ```
 <!-- END WIKI EXAMPLE: radar-basic-usage -->
+
+![Radar chart comparing platform readiness across categories](/content/{{version}}/wiki/assets/wiki-radar-basic.png)
 
 ## Capabilities
 

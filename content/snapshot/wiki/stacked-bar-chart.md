@@ -22,16 +22,13 @@ quarter's total bar; segment colors follow the series order.
 
 <!-- BEGIN WIKI EXAMPLE: sample/androidApp/src/main/kotlin/io/github/hdcharts/app/docs/StackedBarBasicExample.kt#stacked-bar-basic-usage -->
 ```kotlin
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import io.github.hdcharts.core.model.toChartData
 import io.github.hdcharts.stackedbar.StackedBarChart
 
 @Composable
-fun ShowQuarterlyRevenue() {
+fun ShowQuarterlyRevenue(modifier: Modifier = Modifier) {
     val data =
         listOf(
             "Online" to listOf(280.0, 520.0, 760.0, 1_080.0),
@@ -41,12 +38,14 @@ fun ShowQuarterlyRevenue() {
 
     StackedBarChart(
         data = data,
-        modifier = Modifier.fillMaxWidth().height(300.dp),
+        modifier = modifier,
         title = "Quarterly Revenue by Channel",
     )
 }
 ```
 <!-- END WIKI EXAMPLE: stacked-bar-basic-usage -->
+
+![Stacked bar chart comparing quarterly revenue by channel](/content/{{version}}/wiki/assets/wiki-stacked-bar-basic.png)
 
 ## Capabilities
 

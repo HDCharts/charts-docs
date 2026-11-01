@@ -4,8 +4,6 @@ title: Line Chart
 
 # Line Chart
 
-On this page: [Multiple Series](#multiple-series) · [Fixed Value Range](#fixed-value-range) · [Selection and Interaction](#selection-and-interaction) · [Gradients](#gradients) · [Morphing](#morphing) · [Live Line Chart](#live-line-chart)
-
 ## Overview
 
 `LineChart` shows how one or more numeric series change across ordered categories. It derives the
@@ -36,7 +34,7 @@ data class DailyMeasurement(
 )
 
 @Composable
-fun ShowDailyTemperatures() {
+fun ShowDailyTemperatures(modifier: Modifier = Modifier) {
     val measurements =
         listOf(
             DailyMeasurement("Mon", 18.0),
@@ -54,12 +52,14 @@ fun ShowDailyTemperatures() {
 
     LineChart(
         data = data,
-        modifier = Modifier.fillMaxWidth().height(300.dp),
+        modifier = modifier,
         title = "Daily High Temperature (°C)",
     )
 }
 ```
 <!-- END WIKI EXAMPLE: line-basic-usage -->
+
+![Line chart showing daily high temperatures across five weekdays](/content/{{version}}/wiki/assets/wiki-line-basic.png)
 
 ## Capabilities
 
