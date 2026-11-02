@@ -8,7 +8,7 @@ This guide will help you integrate the HDCharts library into your Kotlin Multipl
 
 ## Installation
 
-Dependencies below use the selected documentation version: [![Release](https://img.shields.io/maven-central/v/io.github.hdcharts/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.hdcharts/charts/overview)
+[![Release](https://img.shields.io/maven-central/v/io.github.hdcharts/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.hdcharts/charts/overview)
 
 ### Repository
 ```kotlin

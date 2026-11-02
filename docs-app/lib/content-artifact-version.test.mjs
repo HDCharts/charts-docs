@@ -72,7 +72,7 @@ test('release wiki uses its selected version and existing route substitution', (
   assert.equal((dependencies.match(/io\.github\.hdcharts:[\w-]+:3\.0\.0/g) ?? []).length, 10);
   assert.doesNotMatch(dependencies, /\{\{artifactVersion\}\}/);
   assert.doesNotMatch(dependencies, /io\.github\.hdcharts:[\w-]+:<version>/);
-  assert.match(page.content, /Dependencies below use the selected documentation version/);
+  assert.doesNotMatch(page.content, /Dependencies below use the selected documentation version/);
   assert.doesNotMatch(page.content, /Replace `<version>`/);
   assert.match(page.content, /io\.github\.hdcharts:charts:<snapshot-version>/);
 
@@ -102,17 +102,25 @@ test('rendered Markdown code and copied code text contain the resolved dependenc
   assert.doesNotMatch(dependencies, /\{\{artifactVersion\}\}/);
 });
 
-test('explicit historical dependency versions remain unchanged', () => {
-  const source = fs.readFileSync(
-    path.join(repositoryDirectory, 'content', '2.4.0', 'wiki', 'getting-started.md'),
-    'utf8',
-  );
-  const page = getPage('2.4.0', 'getting-started');
+test('older release dependencies keep their Maven coordinates and use the selected version', () => {
+  for (const version of ['2.0.0', '2.4.0']) {
+    const source = fs.readFileSync(
+      path.join(repositoryDirectory, 'content', version, 'wiki', 'getting-started.md'),
+      'utf8',
+    );
+    const page = getPage(version, 'getting-started');
 
-  assert.ok(page);
-  assert.match(page.content, /io\.github\.dautovicharis:charts:<version>/);
-  assert.equal(
-    page.content,
-    matter(source).content.replaceAll('{{version}}', '2.4.0').replaceAll('{{versionLabel}}', '2.4.0'),
-  );
+    assert.ok(page);
+    assert.match(page.content, new RegExp(`io\\.github\\.dautovicharis:charts:${version}`));
+    if (version === '2.0.0') {
+      assert.match(page.content, /io\.github\.dautovicharis:charts-android:2\.0\.0/);
+    }
+    assert.equal(
+      page.content,
+      matter(source).content
+        .replaceAll('{{version}}', version)
+        .replaceAll('{{versionLabel}}', version)
+        .replaceAll('{{artifactVersion}}', version),
+    );
+  }
 });

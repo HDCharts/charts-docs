@@ -9,11 +9,11 @@ This guide will help you integrate the HDCharts library into your Kotlin Multipl
 ## Installation
 
 ### Core Dependency
-Replace `<version>` with the latest version: [![Release](https://img.shields.io/maven-central/v/io.github.dautovicharis/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dautovicharis/charts/overview)
+[![Release](https://img.shields.io/maven-central/v/io.github.dautovicharis/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dautovicharis/charts/overview)
 
 ```kotlin
 commonMain.dependencies {
-    implementation("io.github.dautovicharis:charts:<version>")
+    implementation("io.github.dautovicharis:charts:{{artifactVersion}}")
 }
 
 dependencyResolutionManagement {
@@ -25,11 +25,11 @@ dependencyResolutionManagement {
 
 ### Platform-Specific Dependencies
 ```kotlin
-implementation("io.github.dautovicharis:charts-android:<version>") // For Android
-implementation("io.github.dautovicharis:charts-jvm:<version>")     // For JVM
-implementation("io.github.dautovicharis:charts-js:<version>")      // For JavaScript
-implementation("io.github.dautovicharis:charts-iosx64:<version>")  // For iOS (x64)
-implementation("io.github.dautovicharis:charts-iosarm64:<version>") // For iOS (ARM64)
+implementation("io.github.dautovicharis:charts-android:{{artifactVersion}}") // For Android
+implementation("io.github.dautovicharis:charts-jvm:{{artifactVersion}}")     // For JVM
+implementation("io.github.dautovicharis:charts-js:{{artifactVersion}}")      // For JavaScript
+implementation("io.github.dautovicharis:charts-iosx64:{{artifactVersion}}")  // For iOS (x64)
+implementation("io.github.dautovicharis:charts-iosarm64:{{artifactVersion}}") // For iOS (ARM64)
 ```
 
 ### Snapshot Builds [![Snapshots](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fio%2Fgithub%2Fdautovicharis%2Fcharts%2Fmaven-metadata.xml&label=Snapshots&color=4285F4)](https://central.sonatype.com/repository/maven-snapshots/io/github/dautovicharis/charts/maven-metadata.xml)
