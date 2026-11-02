@@ -11,6 +11,7 @@ import { getAllVersions, getVersion } from './versions';
 const CONTENT_BASE = path.join(process.cwd(), '..', 'content');
 const RELEASE_NOTES_BASE = path.join(process.cwd(), '..', 'release-notes');
 const CURRENT_RELEASE_NOTES_VERSION_PATH = path.join(RELEASE_NOTES_BASE, 'current-version.txt');
+const SNAPSHOT_MANIFEST_PATH = path.join(process.cwd(), 'public', 'snapshot-manifest.json');
 const CHANGESETS_DIR_NAME = 'changes';
 const MIGRATIONS_DIR_NAME = 'migrations';
 
@@ -24,6 +25,22 @@ function readDirectory(directoryPath: string): string[] {
 
 function readTextFile(filePath: string): string {
   return fs.readFileSync(/* turbopackIgnore: true */ filePath, 'utf-8');
+}
+
+export function resolveArtifactVersion(versionId: string, snapshotManifestText?: string): string | null {
+  if (versionId !== 'snapshot') {
+    return versionId;
+  }
+
+  try {
+    const manifest = JSON.parse(snapshotManifestText ?? readTextFile(SNAPSHOT_MANIFEST_PATH));
+    return typeof manifest.charts_version === 'string' &&
+      /^\d+\.\d+\.\d+-SNAPSHOT$/.test(manifest.charts_version)
+      ? manifest.charts_version
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -687,7 +704,8 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     const versionLabel = getVersion(versionId)?.label ?? versionId;
     let pageContent = content
       .replace(/\{\{version\}\}/g, versionId)
-      .replace(/\{\{versionLabel\}\}/g, versionLabel);
+      .replace(/\{\{versionLabel\}\}/g, versionLabel)
+      .replace(/\{\{artifactVersion\}\}/g, resolveArtifactVersion(versionId) ?? '{{artifactVersion}}');
 
     if (slug === '') {
       const changesetsMarkdown = renderChangesetsMarkdown(getVersionChangesets(versionId));

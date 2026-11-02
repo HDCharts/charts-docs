@@ -20,24 +20,24 @@ This release adds a new chart type, improves chart controls, and introduces modu
 Use the umbrella artifact (same behavior as before):
 
 ```kotlin
-implementation("io.github.dautovicharis:charts:<version>")
+implementation("io.github.dautovicharis:charts:{{artifactVersion}}")
 ```
 
 Use modular artifacts (pick what you need):
 
 ```kotlin
-implementation("io.github.dautovicharis:charts-line:<version>")
-implementation("io.github.dautovicharis:charts-pie:<version>")
-implementation("io.github.dautovicharis:charts-bar:<version>")
-implementation("io.github.dautovicharis:charts-stacked-bar:<version>")
-implementation("io.github.dautovicharis:charts-stacked-area:<version>")
-implementation("io.github.dautovicharis:charts-radar:<version>")
+implementation("io.github.dautovicharis:charts-line:{{artifactVersion}}")
+implementation("io.github.dautovicharis:charts-pie:{{artifactVersion}}")
+implementation("io.github.dautovicharis:charts-bar:{{artifactVersion}}")
+implementation("io.github.dautovicharis:charts-stacked-bar:{{artifactVersion}}")
+implementation("io.github.dautovicharis:charts-stacked-area:{{artifactVersion}}")
+implementation("io.github.dautovicharis:charts-radar:{{artifactVersion}}")
 ```
 
 Use BOM for aligned versions (where Gradle platforms are supported):
 
 ```kotlin
-implementation(platform("io.github.dautovicharis:charts-bom:<version>"))
+implementation(platform("io.github.dautovicharis:charts-bom:{{artifactVersion}}"))
 implementation("io.github.dautovicharis:charts-line")
 implementation("io.github.dautovicharis:charts-pie")
 implementation("io.github.dautovicharis:charts-bar")

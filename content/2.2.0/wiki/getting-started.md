@@ -8,7 +8,7 @@ This guide will help you integrate the HDCharts library into your Kotlin Multipl
 
 ## Installation
 
-Replace `<version>` with the latest release: [![Release](https://img.shields.io/maven-central/v/io.github.dautovicharis/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dautovicharis/charts/overview)
+[![Release](https://img.shields.io/maven-central/v/io.github.dautovicharis/charts.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dautovicharis/charts/overview)
 
 ### Repository
 ```kotlin
@@ -22,19 +22,19 @@ dependencyResolutionManagement {
 ### Umbrella Dependency
 ```kotlin
 commonMain.dependencies {
-    implementation("io.github.dautovicharis:charts:<version>")
+    implementation("io.github.dautovicharis:charts:{{artifactVersion}}")
 }
 ```
 
 ### Modular Dependencies (Pick What You Need)
 ```kotlin
 commonMain.dependencies {
-    implementation("io.github.dautovicharis:charts-line:<version>")
-    implementation("io.github.dautovicharis:charts-pie:<version>")
-    implementation("io.github.dautovicharis:charts-bar:<version>")
-    implementation("io.github.dautovicharis:charts-stacked-bar:<version>")
-    implementation("io.github.dautovicharis:charts-stacked-area:<version>")
-    implementation("io.github.dautovicharis:charts-radar:<version>")
+    implementation("io.github.dautovicharis:charts-line:{{artifactVersion}}")
+    implementation("io.github.dautovicharis:charts-pie:{{artifactVersion}}")
+    implementation("io.github.dautovicharis:charts-bar:{{artifactVersion}}")
+    implementation("io.github.dautovicharis:charts-stacked-bar:{{artifactVersion}}")
+    implementation("io.github.dautovicharis:charts-stacked-area:{{artifactVersion}}")
+    implementation("io.github.dautovicharis:charts-radar:{{artifactVersion}}")
 }
 ```
 
@@ -44,7 +44,7 @@ For KMP `commonMain`, keep explicit versions as shown above.
 
 ```kotlin
 dependencies {
-    implementation(platform("io.github.dautovicharis:charts-bom:<version>"))
+    implementation(platform("io.github.dautovicharis:charts-bom:{{artifactVersion}}"))
     implementation("io.github.dautovicharis:charts-line")
     implementation("io.github.dautovicharis:charts-pie")
     implementation("io.github.dautovicharis:charts-bar")

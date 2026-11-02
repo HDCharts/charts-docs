@@ -12,7 +12,7 @@ values on one scale.
 Add the `gauge` module:
 
 ```kotlin
-implementation("io.github.hdcharts:gauge:<version>")
+implementation("io.github.hdcharts:gauge:{{artifactVersion}}")
 ```
 
 A ring gauge is one series. Each value fills its ring from the start of the range towards the end,
