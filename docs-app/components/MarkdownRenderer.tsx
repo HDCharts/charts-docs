@@ -96,7 +96,7 @@ function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
   }, [highlighter, ready, code, language]);
 
   const codeBlock = (
-    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0' : undefined}>
+    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0 pb-9' : undefined}>
       {highlightedHtml ? (
         <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
       ) : (
@@ -113,31 +113,28 @@ function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
   if (!sourceUrl) return codeBlock;
 
   return (
-    <div className="mb-4 min-w-0">
-      <div className="mb-1 flex justify-end pr-3">
-        <a
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="View canonical Kotlin source"
-          aria-label="View canonical Kotlin source"
-          className="inline-flex size-6 items-center justify-center rounded-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
-        >
-          <SourceFileIcon />
-        </a>
-      </div>
+    <div className="relative mb-4 min-w-0">
+      <a
+        href={sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="View canonical Kotlin source"
+        aria-label="View canonical Kotlin source"
+        className="absolute bottom-3 right-3 z-10 inline-flex size-6 -rotate-6 items-center justify-center rounded-full border border-[color-mix(in_oklch,var(--color-success)_55%,var(--border-color))] text-[color-mix(in_oklch,var(--color-success)_72%,var(--text-secondary))] transition-colors hover:border-[var(--color-success)] hover:text-[var(--color-success)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
+      >
+        <SourceCodeIcon />
+      </a>
       {codeBlock}
     </div>
   );
 }
 
-function SourceFileIcon() {
+function SourceCodeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-      <path d="m10 13-2 2 2 2" />
-      <path d="m14 13 2 2-2 2" />
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m8 8-4 4 4 4" />
+      <path d="m16 8 4 4-4 4" />
+      <path d="m14 5-4 14" />
     </svg>
   );
 }
