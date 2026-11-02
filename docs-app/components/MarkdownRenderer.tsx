@@ -96,7 +96,7 @@ function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
   }, [highlighter, ready, code, language]);
 
   const codeBlock = (
-    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0 pb-9' : undefined}>
+    <CodeBlockContainer code={code} language={language} className={sourceUrl ? 'mb-0 pb-12' : undefined}>
       {highlightedHtml ? (
         <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
       ) : (
@@ -120,9 +120,11 @@ function CodeBlock({ code, language, sourceUrl = null }: CodeBlockProps) {
         rel="noopener noreferrer"
         title="View canonical Kotlin source"
         aria-label="View canonical Kotlin source"
-        className="absolute bottom-3 right-3 z-10 inline-flex size-6 -rotate-6 items-center justify-center rounded-full border border-[color-mix(in_oklch,var(--color-success)_55%,var(--border-color))] text-[color-mix(in_oklch,var(--color-success)_72%,var(--text-secondary))] transition-colors hover:border-[var(--color-success)] hover:text-[var(--color-success)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
+        className="group absolute bottom-1 right-1 z-10 inline-flex size-11 items-center justify-center rounded-full text-[color-mix(in_oklch,var(--color-success)_72%,var(--text-secondary))] transition-colors hover:text-[var(--color-success)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring-soft)]"
       >
-        <SourceCodeIcon />
+        <span className="inline-flex size-6 -rotate-6 items-center justify-center rounded-full border border-[color-mix(in_oklch,var(--color-success)_55%,var(--border-color))] transition-colors group-hover:border-[var(--color-success)]">
+          <SourceCodeIcon />
+        </span>
       </a>
       {codeBlock}
     </div>
