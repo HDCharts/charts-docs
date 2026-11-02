@@ -48,12 +48,13 @@ const codeBlocks = (markdown) => unified().use(remarkParse).parse(markdown).chil
   .filter((node) => node.type === 'code')
   .map((node) => node.value);
 
+const snapshotArtifactVersion = JSON.parse(fs.readFileSync(manifestPath, 'utf8')).charts_version;
+
 test('snapshot wiki dependency uses the published version in the real manifest', () => {
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const page = getPage('snapshot', 'bar-chart');
 
   assert.ok(page);
-  assert.match(page.content, new RegExp(`io\\.github\\.hdcharts:bar:${manifest.charts_version}`));
+  assert.match(page.content, new RegExp(`io\\.github\\.hdcharts:bar:${snapshotArtifactVersion}`));
   assert.match(page.content, /\/content\/snapshot\/wiki\/assets\/bar_default\.gif/);
   assert.doesNotMatch(page.content, /\{\{artifactVersion\}\}/);
 });
@@ -63,25 +64,30 @@ test('release wiki uses its selected version and existing route substitution', (
   const page = getPage('3.0.0', 'getting-started');
 
   assert.ok(page);
-  assert.match(page.content, /io\.github\.hdcharts:charts:<version>/);
-  assert.doesNotMatch(page.content, /\{\{artifactVersion\}\}/);
-  const barPage = getPage('3.0.0', 'bar-chart');
-  assert.ok(barPage);
-  assert.match(barPage.content, /\/content\/3\.0\.0\/wiki\/assets\//);
+  const dependencies = codeBlocks(page.content).join('\n');
+  assert.match(dependencies, /io\.github\.hdcharts:charts:3\.0\.0/);
+  assert.match(dependencies, /io\.github\.hdcharts:line:3\.0\.0/);
+  assert.match(dependencies, /io\.github\.hdcharts:gauge:3\.0\.0/);
+  assert.match(dependencies, /io\.github\.hdcharts:bom:3\.0\.0/);
+  assert.equal((dependencies.match(/io\.github\.hdcharts:[\w-]+:3\.0\.0/g) ?? []).length, 10);
+  assert.doesNotMatch(dependencies, /\{\{artifactVersion\}\}/);
+  assert.doesNotMatch(dependencies, /io\.github\.hdcharts:[\w-]+:<version>/);
+  assert.match(page.content, /Dependencies below use the selected documentation version/);
+  assert.doesNotMatch(page.content, /Replace `<version>`/);
+  assert.match(page.content, /io\.github\.hdcharts:charts:<snapshot-version>/);
+
+  const ringGauge = getPage('3.0.0', 'ring-gauge-chart');
+  assert.ok(ringGauge);
+  assert.match(ringGauge.content, /io\.github\.hdcharts:gauge:3\.0\.0/);
+  assert.match(ringGauge.content, /\/content\/3\.0\.0\/wiki\/assets\/ring_gauge_default\.gif/);
+  assert.doesNotMatch(ringGauge.content, /\{\{version\}\}|\{\{artifactVersion\}\}/);
 });
 
 test('missing snapshot metadata leaves the artifact placeholder unresolved', () => {
+  assert.equal(resolveArtifactVersion('snapshot', ''), null);
   assert.equal(resolveArtifactVersion('snapshot', '{}'), null);
   assert.equal(resolveArtifactVersion('snapshot', '{"charts_version":"snapshot"}'), null);
-  const original = fs.readFileSync(manifestPath, 'utf8');
-  try {
-    fs.writeFileSync(manifestPath, '{}');
-    const page = getPage('snapshot', 'bar-chart');
-    assert.ok(page);
-    assert.match(page.content, /io\.github\.hdcharts:bar:\{\{artifactVersion\}\}/);
-  } finally {
-    fs.writeFileSync(manifestPath, original);
-  }
+  assert.equal(resolveArtifactVersion('snapshot', '{'), null);
 });
 
 test('rendered Markdown code and copied code text contain the resolved dependency', () => {
@@ -89,7 +95,10 @@ test('rendered Markdown code and copied code text contain the resolved dependenc
   assert.ok(page);
   const dependencies = codeBlocks(page.content).join('\n');
 
-  assert.match(dependencies, /implementation\("io\.github\.hdcharts:bar:3\.0\.1-SNAPSHOT"\)/);
+  assert.match(
+    dependencies,
+    new RegExp(`implementation\\("io\\.github\\.hdcharts:bar:${snapshotArtifactVersion}"\\)`),
+  );
   assert.doesNotMatch(dependencies, /\{\{artifactVersion\}\}/);
 });
 
