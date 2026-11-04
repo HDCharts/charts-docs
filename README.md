@@ -16,7 +16,7 @@ Documentation repository for HDCharts.
   - `content/dev/` is synced the same way from `docs/wiki/dev/`: unversioned developer docs
     served under `/dev`, never copied into a release
 - `registry/versions.json` - version registry used by the site
-- static assets for API/demo/playground are served from object storage/CDN
+- static assets for API/demo are served from object storage/CDN
 
 ## Local Development
 

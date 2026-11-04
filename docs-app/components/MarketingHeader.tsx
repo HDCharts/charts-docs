@@ -28,9 +28,6 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
             API <span aria-hidden="true">↗</span>
           </a>
           <Link href="/workflow">Workflow</Link>
-          <a href="/playground" target="_blank" rel="noopener noreferrer">
-            Playground <span aria-hidden="true">↗</span>
-          </a>
           <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
 
@@ -59,9 +56,6 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
           API <span aria-hidden="true">↗</span>
         </a>
         <Link href="/workflow" onClick={() => setMenuOpen(false)}>Workflow</Link>
-        <a href="/playground" target="_blank" rel="noopener noreferrer">
-          Playground <span aria-hidden="true">↗</span>
-        </a>
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </header>

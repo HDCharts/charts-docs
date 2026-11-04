@@ -115,19 +115,15 @@ test_registry_release_links() {
 
 test_clean_link_routes_are_present() {
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo"' "next config redirects /demo to latest release"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/playground"' "next config redirects /playground to snapshot"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'const docsStaticBaseUrl = "https://d31fy84ku2wzt.cloudfront.net"' "next config hardcodes DOCS_STATIC_BASE_URL"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/static/:path*"' "next config rewrites static assets through CDN origin"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/demo/:version/"' "next config rewrites clean demo entry route"
   assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: `${staticOrigin}/demo/:version/index.html`' "next config maps clean demo entry route"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'source: "/playground/:version/"' "next config rewrites clean playground entry route"
-  assert_file_contains "${NEXT_CONFIG_PATH}" 'destination: `${staticOrigin}/playground/:version/index.html`' "next config maps clean playground entry route"
 }
 
 test_user_facing_links_use_clean_paths() {
   assert_file_contains "${HEADER_PATH}" 'href={demoUrl}' "header demo link resolves via version registry URL"
   assert_file_contains "${HEADER_PATH}" 'const demoUrl = getVersionDemoUrl(currentVersion);' "header uses version demoBase helper"
-  assert_file_contains "${HEADER_PATH}" 'href="/playground"' "header playground link uses clean URL"
   assert_file_contains "${API_PAGE_PATH}" 'const apiUrl = getVersionApiIndexUrl(version);' "api page uses version apiBase helper"
   assert_file_contains "${AGENT_PROMPT_PATH}" 'buildDocsUrl(`/static/api/${versionId}/index.html`)' "agent prompt uses direct Dokka entry point"
   assert_file_exists "${METADATA_PAGE_PATH}" "metadata page exists"
