@@ -169,12 +169,12 @@ const nextConfig: NextConfig = {
       // Retired playground URLs lead visitors to the interactive demo.
       {
         source: "/playground/:path*",
-        destination: `/demo/${defaultDocsVersion}/`,
+        destination: "/demo",
         permanent: true,
       },
       {
         source: "/static/playground/:path*",
-        destination: `/demo/${defaultDocsVersion}/`,
+        destination: "/demo",
         permanent: true,
       },
       {
