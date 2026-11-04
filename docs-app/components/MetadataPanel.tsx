@@ -17,7 +17,6 @@ interface PublicationMetadata {
 }
 
 const CHARTS_REPO_URL = 'https://github.com/HDCharts/charts';
-const PLAYGROUND_REPO_URL = 'https://github.com/HDCharts/charts-playground';
 const MAVEN_ARTIFACT_URL = 'https://central.sonatype.com/artifact';
 const MAVEN_SNAPSHOT_URL = 'https://central.sonatype.com/repository/maven-snapshots';
 const ANDROID_RELEASE_APK_URL = '/static/android/release/hdcharts-release.apk';
@@ -53,7 +52,7 @@ export function MetadataPanel({ version, artifacts }: MetadataPanelProps) {
     <div className="mx-auto max-w-[1000px] px-4 animate-fade-in">
       <h1>Metadata</h1>
       <p className="mb-8 max-w-[760px] text-[var(--text-secondary)]">
-        Build, publication, and artifact information for the selected HDCharts version, the latest snapshot, and the web playground.
+        Build, publication, and artifact information for the selected HDCharts version.
       </p>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -64,7 +63,6 @@ export function MetadataPanel({ version, artifacts }: MetadataPanelProps) {
             metadata={currentMetadata}
             version={version}
             artifacts={artifacts}
-            playgroundMetadata={snapshotMetadata}
           />
         )}
 
@@ -77,12 +75,10 @@ function ReleaseMetadataCard({
   metadata,
   version,
   artifacts,
-  playgroundMetadata,
 }: {
   metadata: PublicationMetadata | null;
   version: DocVersion;
   artifacts: MavenArtifacts;
-  playgroundMetadata: PublicationMetadata | null;
 }) {
   return (
     <ChannelMetadataCard
@@ -96,7 +92,6 @@ function ReleaseMetadataCard({
       artifactVersion={metadata?.charts_version ?? version.id}
       artifacts={artifacts}
       isSnapshot={false}
-      playgroundMetadata={playgroundMetadata}
     />
   );
 }
@@ -122,7 +117,6 @@ function SnapshotMetadataCard({
       artifactVersion={metadata?.charts_version ?? version.id}
       artifacts={artifacts}
       isSnapshot
-      playgroundMetadata={metadata}
     />
   );
 }
@@ -138,7 +132,6 @@ function ChannelMetadataCard({
   artifactVersion,
   artifacts,
   isSnapshot,
-  playgroundMetadata,
 }: {
   title: string;
   metadata: PublicationMetadata | null;
@@ -150,7 +143,6 @@ function ChannelMetadataCard({
   artifactVersion: string;
   artifacts: MavenArtifacts;
   isSnapshot: boolean;
-  playgroundMetadata: PublicationMetadata | null;
 }) {
   return (
     <MetadataCard title={title} className="lg:col-span-2">
@@ -171,25 +163,7 @@ function ChannelMetadataCard({
         </ApkAction>
       </section>
       <AndroidArtifacts artifactVersion={artifactVersion} artifacts={artifacts} isSnapshot={isSnapshot} />
-      <PlaygroundDetails metadata={playgroundMetadata} />
     </MetadataCard>
-  );
-}
-
-function PlaygroundDetails({ metadata }: { metadata: PublicationMetadata | null }) {
-  return (
-    <div className="mt-5 border-t border-[var(--border-color)] pt-4">
-      <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Playground</h3>
-      <div className="space-y-2 text-sm">
-        <MetadataRow label="App">Snapshot playground</MetadataRow>
-        <MetadataRow label="HDCharts build">{metadata?.charts_version ?? 'Unavailable'}</MetadataRow>
-        <MetadataRow label="Published">{formatPublishedAt(metadata?.published_at)}</MetadataRow>
-        <MetadataLinks>
-          <MetadataLink href="/playground/snapshot/">Playground</MetadataLink>
-          <MetadataLink href={PLAYGROUND_REPO_URL}>Source</MetadataLink>
-        </MetadataLinks>
-      </div>
-    </div>
   );
 }
 

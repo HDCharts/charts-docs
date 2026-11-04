@@ -95,15 +95,6 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
           <span aria-hidden="true">↗</span>
         </a>
         <a
-          href="/playground"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden rounded-full px-3 py-2 text-sm font-medium text-[var(--text-secondary)] no-underline transition-colors hover:bg-[var(--surface-overlay)] hover:text-[var(--text-primary)] lg:flex lg:items-center lg:gap-1.5"
-        >
-          Playground
-          <span aria-hidden="true">↗</span>
-        </a>
-        <a
           href={demoUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -185,9 +176,6 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
           onClick={() => setMobileMenuOpen(false)}
         >
           API <span aria-hidden="true">↗</span>
-        </a>
-        <a href="/playground" target="_blank" rel="noopener noreferrer" className="docs-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-          Playground <span aria-hidden="true">↗</span>
         </a>
         <a href={demoUrl} target="_blank" rel="noopener noreferrer" className="docs-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
           Demo <span aria-hidden="true">↗</span>

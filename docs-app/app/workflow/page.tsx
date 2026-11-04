@@ -71,12 +71,6 @@ export default function WorkflowPage() {
                 href="https://github.com/HDCharts/charts-docs"
               />
               <EcosystemCard
-                label="INTERACTIVE WEB"
-                title="charts-playground"
-                detail="Try charts in the browser. Rebuilt from the library source with each snapshot."
-                href="https://github.com/HDCharts/charts-playground"
-              />
-              <EcosystemCard
                 label="VISUAL TOOLING"
                 title="charts-gif-recorder"
                 detail="A Gradle plugin that records the animated GIFs in these docs and checks them for changes."
@@ -86,7 +80,7 @@ export default function WorkflowPage() {
             <div className="ecosystem-arrow" aria-hidden="true">↓</div>
             <div className="ecosystem-output-grid">
               <EcosystemCard label="LIBRARY OUTPUT" title="Maven Central" detail="Stable and snapshot Kotlin Multiplatform modules and the BOM." href="https://central.sonatype.com/artifact/io.github.hdcharts/charts" tone="output" />
-              <EcosystemCard label="STATIC DELIVERY" title="S3 + CloudFront" detail="Versioned API references, demos, playground files, metadata, and Android APKs." href="https://aws.amazon.com/s3/" tone="output" />
+              <EcosystemCard label="STATIC DELIVERY" title="S3 + CloudFront" detail="Versioned API references, demos, metadata, and Android APKs." href="https://aws.amazon.com/s3/" tone="output" />
               <EcosystemCard label="SITE DELIVERY" title="Vercel" detail="Builds and serves this docs site from charts-docs." href="https://vercel.com/" tone="output" />
               <EcosystemCard label="AUTOMATION" title="GitHub Actions" detail="Runs the pull request checks, snapshots, releases, and security scans." href="https://github.com/HDCharts/charts/actions" tone="output" />
             </div>

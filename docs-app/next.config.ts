@@ -68,9 +68,6 @@ const nextConfig: NextConfig = {
   // Turbopack configuration (Next.js 16+ uses Turbopack by default)
   turbopack: {},
 
-  // Snapshot artifacts change frequently and keep stable filenames.
-  // Disable browser caching to avoid stale playground bundles after regeneration.
-  // Playground wasm files are the exception: their names are content hashes, so they are cached for good.
   async headers() {
     return [
       {
@@ -81,43 +78,6 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "no-store, max-age=0",
-          },
-        ],
-      },
-      {
-        source: "/playground/snapshot/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store, max-age=0",
-          },
-        ],
-      },
-      {
-        source: "/static/playground/snapshot/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store, max-age=0",
-          },
-        ],
-      },
-      // Must follow the no-store rules above (later rule wins); mirrors charts publish-docs-to-s3.sh.
-      {
-        source: "/playground/snapshot/:file([0-9a-f]{20}\\.wasm)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/static/playground/snapshot/:file([0-9a-f]{20}\\.wasm)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
           },
         ],
       },
@@ -138,14 +98,6 @@ const nextConfig: NextConfig = {
       {
         source: "/demo/:version/:path*",
         destination: `${staticOrigin}/demo/:version/:path*`,
-      },
-      {
-        source: "/playground/:version/",
-        destination: `${staticOrigin}/playground/:version/index.html`,
-      },
-      {
-        source: "/playground/:version/:path*",
-        destination: `${staticOrigin}/playground/:version/:path*`,
       },
     ];
 
@@ -214,10 +166,16 @@ const nextConfig: NextConfig = {
         destination: `/demo/${defaultDocsVersion}/`,
         permanent: false,
       },
+      // Retired playground URLs lead visitors to the interactive demo.
       {
-        source: "/playground",
-        destination: "/playground/snapshot/",
-        permanent: false,
+        source: "/playground/:path*",
+        destination: "/demo",
+        permanent: true,
+      },
+      {
+        source: "/static/playground/:path*",
+        destination: "/demo",
+        permanent: true,
       },
       {
         source: "/thanks",
@@ -242,11 +200,6 @@ const nextConfig: NextConfig = {
       {
         source: "/demo/:version/index.html",
         destination: "/demo/:version/",
-        permanent: true,
-      },
-      {
-        source: "/playground/:version/index.html",
-        destination: "/playground/:version/",
         permanent: true,
       },
       // Redirect /docs to current version
