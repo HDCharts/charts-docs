@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { SetupMenu } from './SetupMenu';
+import { DocsSearch } from './DocsSearch';
 
 interface MarketingHeaderProps {
   versionId: string;
@@ -31,20 +32,23 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
           <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
 
-        <div className="marketing-nav-setup-cta">
-          <SetupMenu versionId={versionId} variant="marketing" />
-        </div>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <DocsSearch versionId={versionId} marketing />
+          <div className="marketing-nav-setup-cta">
+            <SetupMenu versionId={versionId} variant="marketing" />
+          </div>
 
-        <button
-          type="button"
-          className="marketing-menu-button"
-          aria-expanded={menuOpen}
-          aria-controls="marketing-mobile-nav"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span className="sr-only">Toggle navigation</span>
-          <span aria-hidden="true">{menuOpen ? 'Close' : 'Menu'}</span>
-        </button>
+          <button
+            type="button"
+            className="marketing-menu-button"
+            aria-expanded={menuOpen}
+            aria-controls="marketing-mobile-nav"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="sr-only">Toggle navigation</span>
+            <span aria-hidden="true">{menuOpen ? 'Close' : 'Menu'}</span>
+          </button>
+        </div>
       </div>
 
       <div id="marketing-mobile-nav" className={`marketing-mobile-nav${menuOpen ? ' is-open' : ''}`}>

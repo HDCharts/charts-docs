@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { VersionSwitcher } from './VersionSwitcher';
 import { SetupMenu } from './SetupMenu';
+import { DocsSearch } from './DocsSearch';
 import { DocVersion, NavItem } from '@/lib/types';
 import { formatPublishedAt } from '@/lib/format';
 import { getVersionApiIndexUrl, getVersionDemoUrl } from '@/lib/version-links';
@@ -117,6 +118,7 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
       </button>
 
       <nav className="ml-auto flex items-center gap-4 min-w-0 lg:gap-4">
+        <DocsSearch versionId={currentVersion.id} />
         {publication && (
           <div className="hidden flex-col items-end text-xs font-mono text-[var(--text-muted)] md:flex">
             <a
