@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { VersionSwitcher } from './VersionSwitcher';
 import { SetupMenu } from './SetupMenu';
+import { DocsSearch } from './DocsSearch';
 import { DocVersion, NavItem } from '@/lib/types';
 import { formatPublishedAt } from '@/lib/format';
 import { getVersionApiIndexUrl, getVersionDemoUrl } from '@/lib/version-links';
@@ -116,9 +117,10 @@ export function Header({ versions, currentVersion, navigation }: HeaderProps) {
         <span aria-hidden="true">{mobileMenuOpen ? 'Close' : 'Menu'}</span>
       </button>
 
-      <nav className="ml-auto flex items-center gap-4 min-w-0 lg:gap-4">
+      <nav className="ml-auto flex min-w-0 flex-1 items-center gap-3 lg:gap-4">
+        <DocsSearch />
         {publication && (
-          <div className="hidden flex-col items-end text-xs font-mono text-[var(--text-muted)] md:flex">
+          <div className="hidden shrink-0 flex-col items-end text-xs font-mono text-[var(--text-muted)] 2xl:flex">
             <a
             href={`${CHARTS_REPO_URL}/commit/${publication.source_sha}`}
             className="no-underline transition-colors hover:text-[var(--text-primary)]"
