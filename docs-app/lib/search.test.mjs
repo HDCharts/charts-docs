@@ -13,7 +13,7 @@ let searchSnippet;
 
 try {
   execFileSync('tsc', [
-    '--module', 'commonjs', '--target', 'es2022', '--skipLibCheck',
+    '--ignoreConfig', '--module', 'commonjs', '--target', 'es2022', '--skipLibCheck',
     '--outDir', build, path.join(lib, 'search.ts'),
   ], { cwd: path.dirname(lib), stdio: 'inherit' });
   ({ searchDocumentation, searchSnippet } = createRequire(import.meta.url)(path.join(build, 'search.js')));
