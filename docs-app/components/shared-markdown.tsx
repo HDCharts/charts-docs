@@ -9,6 +9,7 @@ export function createSharedMarkdownComponents(
   headingSlugger: (text: string) => string,
   renderCodeBlock: (props: { code: string; language: string; wrapLines: boolean; source: { sourcePath: string; snippetId: string } | null }) => ReactNode,
   imageMaxWidthClassName: string,
+  imageDimensions: Record<string, { width: number; height: number }> = {},
 ): Components {
   const createHeading = (tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') => {
     const HeadingComponent = ({ children }: { children?: React.ReactNode }) => {
@@ -73,8 +74,8 @@ export function createSharedMarkdownComponents(
         src={src}
         alt={alt || ''}
         className={cn('mx-auto block max-w-full rounded-lg object-contain', imageMaxWidthClassName)}
-        width={typeof width === 'number' ? width : undefined}
-        height={typeof height === 'number' ? height : undefined}
+        width={typeof width === 'number' ? width : imageDimensions[typeof src === 'string' ? src : '']?.width}
+        height={typeof height === 'number' ? height : imageDimensions[typeof src === 'string' ? src : '']?.height}
       />
     ),
     a: ({ href, children }) => {
