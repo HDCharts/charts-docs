@@ -56,10 +56,14 @@ interface MarkdownRendererProps {
   content: string;
   usesLargeGif?: boolean;
   sourceRevision?: string | null;
+  imageDimensions?: Record<string, { width: number; height: number }>;
 }
 
-export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null }: MarkdownRendererProps) {
-  const components = useMemo(() => createMarkdownComponents(usesLargeGif, sourceRevision), [usesLargeGif, sourceRevision]);
+export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null, imageDimensions }: MarkdownRendererProps) {
+  const components = useMemo(
+    () => createMarkdownComponents(usesLargeGif, sourceRevision, imageDimensions),
+    [usesLargeGif, sourceRevision, imageDimensions],
+  );
 
   return (
     <HighlighterProvider>
@@ -150,7 +154,11 @@ function escapeHtml(text: string): string {
     .replace(/'/g, '&#039;');
 }
 
-function createMarkdownComponents(usesLargeGif: boolean, sourceRevision: string | null) {
+function createMarkdownComponents(
+  usesLargeGif: boolean,
+  sourceRevision: string | null,
+  imageDimensions?: Record<string, { width: number; height: number }>,
+) {
   return createSharedMarkdownComponents(
     slugifyHeading,
     ({ code, language, source }) => {
@@ -162,5 +170,6 @@ function createMarkdownComponents(usesLargeGif: boolean, sourceRevision: string 
         : <CodeBlock code={code} language={language} sourceUrl={sourceUrl} />;
     },
     usesLargeGif ? 'sm:max-w-[640px]' : 'sm:max-w-[320px]',
+    imageDimensions,
   );
 }
