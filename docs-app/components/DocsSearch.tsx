@@ -157,7 +157,7 @@ export function DocsSearch({ marketing = false }: { marketing?: boolean }) {
               <p className="px-3 py-4 text-sm text-[var(--text-muted)]">Loading documentation…</p>
             ) : !query.trim() ? (
               <p className="px-3 py-4 text-sm text-[var(--text-muted)]">
-                Search chart names, guides, and Kotlin API symbols across both versions.
+                Search chart names, guides, and Kotlin API symbols across the latest release and snapshot.
               </p>
             ) : allResults.length === 0 ? (
               <p className="px-3 py-4 text-sm text-[var(--text-muted)]">
@@ -166,7 +166,7 @@ export function DocsSearch({ marketing = false }: { marketing?: boolean }) {
             ) : groups.map((group, groupIndex) => group.results.length > 0 && (
               <div key={group.scope} className={groupIndex > 0 ? 'mt-5 border-t border-[var(--border-color)] pt-4' : ''}>
                 <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                  {group.scope === 'latest' ? 'Latest release' : 'Snapshot'} · {group.version}
+                  {group.scope === 'latest' ? `Latest release · ${group.version}` : 'Snapshot'}
                 </p>
                 <div className="flex flex-col gap-1">
                   {group.results.map((result, index) => {
