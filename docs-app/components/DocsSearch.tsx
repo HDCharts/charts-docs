@@ -1,182 +1,207 @@
 'use client';
 
-import { createPortal } from 'react-dom';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { searchDocumentation, searchSnippet, type SearchEntry, type SearchIndex } from '@/lib/search';
+import {
+  searchBothVersions,
+  searchSnippet,
+  type SearchEntry,
+  type SearchIndex,
+} from '@/lib/search';
 
-type Scope = 'latest' | 'snapshot';
+interface SearchIndexes {
+  latest: SearchIndex;
+  snapshot: SearchIndex;
+}
 
-export function DocsSearch({ versionId, marketing = false }: { versionId: string; marketing?: boolean }) {
+export function DocsSearch({ marketing = false }: { marketing?: boolean }) {
   const router = useRouter();
+  const resultsId = useId();
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [scope, setScope] = useState<Scope>(versionId === 'snapshot' ? 'snapshot' : 'latest');
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
-  const [indexes, setIndexes] = useState<Partial<Record<Scope, SearchIndex>>>({});
-  const [failedScope, setFailedScope] = useState<Scope | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [indexes, setIndexes] = useState<SearchIndexes | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
-        setOpen((previous) => !previous);
+        inputRef.current?.focus();
+        setOpen(true);
       } else if (event.key === 'Escape') {
         setOpen(false);
       }
     }
+    function onPointerDown(event: PointerEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
   }, []);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || indexes[scope] || failedScope === scope) return;
+    if (!open || indexes || loadError) return;
     const controller = new AbortController();
 
-    fetch('/search-index/' + scope, { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error('Search index unavailable');
-        return response.json() as Promise<SearchIndex>;
-      })
-      .then((index) => setIndexes((previous) => ({ ...previous, [scope]: index })))
+    const loadIndex = async (scope: 'latest' | 'snapshot'): Promise<SearchIndex> => {
+      const response = await fetch('/search-index/' + scope, { signal: controller.signal });
+      if (!response.ok) throw new Error('Could not load documentation search');
+      return response.json() as Promise<SearchIndex>;
+    };
+
+    Promise.all([loadIndex('latest'), loadIndex('snapshot')])
+      .then(([latest, snapshot]) => setIndexes({ latest, snapshot }))
       .catch(() => {
-        if (!controller.signal.aborted) setFailedScope(scope);
+        if (!controller.signal.aborted) setLoadError(true);
       });
 
     return () => controller.abort();
-  }, [open, scope, indexes, failedScope]);
+  }, [open, indexes, loadError]);
 
-  const index = indexes[scope];
-  const results = useMemo(() => searchDocumentation(index?.entries ?? [], query), [index, query]);
+  const groups = useMemo(
+    () => indexes ? searchBothVersions(indexes.latest, indexes.snapshot, query) : [],
+    [indexes, query],
+  );
+
+  const allResults = useMemo(
+    () => groups.flatMap((group) => group.results),
+    [groups],
+  );
 
   function selectResult(result: SearchEntry) {
     setOpen(false);
+    setQuery('');
+    setActiveIndex(0);
     router.push(result.url);
   }
 
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Search documentation"
-        title="Search documentation (⌘K / Ctrl+K)"
-        onClick={() => setOpen(true)}
-        className={marketing
-          ? 'inline-flex h-9 shrink-0 items-center gap-2 rounded-full border border-[#d0dcd8] bg-white/60 px-3 text-sm text-[#34544a] hover:bg-white'
-          : 'inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-[var(--border-color)] px-3 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]'}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
-        </svg>
-        <span className="hidden xl:inline">Search docs</span>
-        <kbd className="hidden rounded border border-current/20 px-1 text-[10px] opacity-70 2xl:inline">⌘ K</kbd>
-      </button>
-
-      {open ? createPortal(
-        <div
-          className="fixed inset-0 z-[200] overflow-y-auto bg-black/45 px-4 pt-[12vh]"
-          onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}
+    <div ref={searchRef} className="relative min-w-0 flex-1">
+      <label className="relative block w-full">
+        <span className="sr-only">Search documentation</span>
+        <svg
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+          width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" aria-hidden="true"
         >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-label="Search documentation"
-            className="mx-auto w-full max-w-xl overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-2xl"
-            onKeyDown={(event) => {
-              if (event.key === 'ArrowDown' && results.length > 0) {
-                event.preventDefault();
-                setActiveIndex((previous) => (previous + 1) % results.length);
-              } else if (event.key === 'ArrowUp' && results.length > 0) {
-                event.preventDefault();
-                setActiveIndex((previous) => (previous + results.length - 1) % results.length);
-              } else if (event.key === 'Enter' && event.target === inputRef.current && results[activeIndex]) {
-                event.preventDefault();
-                selectResult(results[activeIndex]);
-              } else if (event.key === 'Tab') {
-                const focusable = event.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), input');
-                const first = focusable[0];
-                const last = focusable[focusable.length - 1];
-                if (event.shiftKey && document.activeElement === first) {
-                  event.preventDefault();
-                  last?.focus();
-                } else if (!event.shiftKey && document.activeElement === last) {
-                  event.preventDefault();
-                  first?.focus();
-                }
-              }
-            }}
-          >
-            <div className="flex items-center gap-3 border-b border-[var(--border-color)] p-4">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
-              </svg>
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(event) => { setQuery(event.target.value); setActiveIndex(0); }}
-                placeholder="Search documentation..."
-                aria-label="Search query"
-                className="min-w-0 flex-1 bg-transparent text-base text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-              />
-              <button type="button" onClick={() => setOpen(false)} aria-label="Close search" className="rounded px-2 py-1 text-xs text-[var(--text-muted)] hover:bg-[var(--surface-overlay)]">Esc</button>
-            </div>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-4-4" />
+        </svg>
+        <input
+          ref={inputRef}
+          type="search"
+          value={query}
+          onFocus={() => setOpen(true)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setActiveIndex(0);
+            setOpen(true);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown' && allResults.length) {
+              event.preventDefault();
+              setActiveIndex((index) => (index + 1) % allResults.length);
+            } else if (event.key === 'ArrowUp' && allResults.length) {
+              event.preventDefault();
+              setActiveIndex((index) => (index + allResults.length - 1) % allResults.length);
+            } else if (event.key === 'Enter' && allResults[activeIndex]) {
+              event.preventDefault();
+              selectResult(allResults[activeIndex]);
+            } else if (event.key === 'Escape') {
+              setOpen(false);
+              inputRef.current?.blur();
+            }
+          }}
+          placeholder="Search documentation..."
+          aria-label="Search documentation"
+          aria-expanded={open}
+          aria-controls={resultsId}
+          aria-keyshortcuts="Meta+K Control+K"
+          className={
+            'h-[42px] w-full min-w-0 border py-2 pl-10 pr-3 text-sm outline-none transition-colors focus:ring-2 focus:ring-[var(--ring-soft)] ' +
+            (marketing
+              ? 'rounded-full border-[#d0dcd8] bg-white/70 text-[#243e36] placeholder:text-[#60756e] hover:bg-white'
+              : 'rounded-lg border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] hover:border-[var(--text-muted)]')
+          }
+        />
+      </label>
 
-            <div className="flex items-center gap-2 border-b border-[var(--border-color)] px-4 py-2 text-xs">
-              <span className="mr-1 text-[var(--text-muted)]">Search in</span>
-              {(['latest', 'snapshot'] as const).map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  aria-pressed={scope === item}
-                  onClick={() => { setScope(item); setActiveIndex(0); }}
-                  className={'rounded-md px-2 py-1.5 transition-colors ' + (scope === item
-                    ? 'bg-[var(--surface-overlay)] font-semibold text-[var(--text-primary)]'
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]')}
-                >
-                  {item === 'latest' ? 'Latest release' : 'Snapshot'}
+      {open && (
+        <section
+          id={resultsId}
+          aria-label="Documentation search results"
+          className="absolute right-0 top-[calc(100%+0.75rem)] z-[100] flex max-h-[min(72vh,720px)] w-[min(840px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-2xl max-md:fixed max-md:left-3 max-md:right-3 max-md:top-[4.75rem] max-md:w-auto"
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--border-color)] px-5 py-3">
+            <span className="text-sm font-semibold">Documentation search</span>
+            <span className="text-xs text-[var(--text-muted)]">Latest release + Snapshot</span>
+          </div>
+          <div className="min-h-28 overflow-y-auto px-3 py-3" aria-live="polite">
+            {loadError ? (
+              <p className="px-3 py-4 text-sm text-[var(--text-secondary)]">
+                Could not load search results.{' '}
+                <button type="button" className="underline" onClick={() => setLoadError(false)}>
+                  Retry
                 </button>
-              ))}
-              {index ? <span className="ml-auto text-[var(--text-muted)]">{index.version}</span> : null}
-            </div>
-
-            <div className="max-h-[55vh] min-h-28 overflow-y-auto p-2">
-              {!index && failedScope === scope ? (
-                <div className="p-4 text-sm text-[var(--text-secondary)]">
-                  Could not load search results.
-                  <button type="button" className="ml-2 underline" onClick={() => setFailedScope(null)}>Retry</button>
+              </p>
+            ) : !indexes ? (
+              <p className="px-3 py-4 text-sm text-[var(--text-muted)]">Loading documentation…</p>
+            ) : !query.trim() ? (
+              <p className="px-3 py-4 text-sm text-[var(--text-muted)]">
+                Search chart names, guides, and Kotlin API symbols across both versions.
+              </p>
+            ) : allResults.length === 0 ? (
+              <p className="px-3 py-4 text-sm text-[var(--text-muted)]">
+                No results found in the latest release or snapshot.
+              </p>
+            ) : groups.map((group, groupIndex) => group.results.length > 0 && (
+              <div key={group.scope} className={groupIndex > 0 ? 'mt-5 border-t border-[var(--border-color)] pt-4' : ''}>
+                <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                  {group.scope === 'latest' ? 'Latest release' : 'Snapshot'} · {group.version}
+                </p>
+                <div className="flex flex-col gap-1">
+                  {group.results.map((result, index) => {
+                    const resultIndex = (groupIndex === 0 ? 0 : groups[0].results.length) + index;
+                    return (
+                      <button
+                        key={result.url}
+                        type="button"
+                        onMouseEnter={() => setActiveIndex(resultIndex)}
+                        onClick={() => selectResult(result)}
+                        className={
+                          'block w-full rounded-lg px-3 py-3 text-left transition-colors ' +
+                          (resultIndex === activeIndex
+                            ? 'bg-[var(--surface-overlay)]'
+                            : 'hover:bg-[var(--surface-overlay)]')
+                        }
+                      >
+                        <span className="block text-sm font-semibold">
+                          {result.title}{result.section ? ' / ' + result.section : ''}
+                        </span>
+                        <span className="mt-1 block text-xs leading-relaxed text-[var(--text-secondary)]">
+                          {searchSnippet(result.text, query) || result.url}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
-              ) : !index ? (
-                <p className="p-4 text-sm text-[var(--text-muted)]">Loading documentation…</p>
-              ) : !query.trim() ? (
-                <p className="p-4 text-sm text-[var(--text-muted)]">Type a keyword, chart name, or API symbol.</p>
-              ) : results.length === 0 ? (
-                <p className="p-4 text-sm text-[var(--text-muted)]">No results in {index.version}.</p>
-              ) : results.map((result, resultIndex) => (
-                <button
-                  key={result.url}
-                  type="button"
-                  onMouseEnter={() => setActiveIndex(resultIndex)}
-                  onClick={() => selectResult(result)}
-                  className={'block w-full rounded-lg px-3 py-2.5 text-left ' + (activeIndex === resultIndex
-                    ? 'bg-[var(--surface-overlay)]'
-                    : 'hover:bg-[var(--surface-overlay)]')}
-                >
-                  <span className="block text-sm font-semibold">{result.title}{result.section ? ' / ' + result.section : ''}</span>
-                  <span className="mt-1 block text-xs text-[var(--text-secondary)]">{searchSnippet(result.text, query) || result.url}</span>
-                </button>
-              ))}
-            </div>
-            <p className="border-t border-[var(--border-color)] px-4 py-2 text-xs text-[var(--text-muted)]">
-              ↑ ↓ Navigate · Enter Open · Esc Close
-            </p>
-          </section>
-        </div>, document.body
-      ) : null}
-    </>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-[var(--border-color)] px-5 py-2 text-xs text-[var(--text-muted)]">
+            ↑ ↓ Navigate · Enter Open · Esc Close
+          </div>
+        </section>
+      )}
+    </div>
   );
 }

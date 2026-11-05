@@ -52,3 +52,15 @@ export function searchSnippet(text: string, query: string): string {
   const end = Math.min(text.length, start + 155);
   return (start > 0 ? '…' : '') + text.slice(start, end).trim() + (end < text.length ? '…' : '');
 }
+
+export function searchBothVersions(
+  latest: SearchIndex,
+  snapshot: SearchIndex,
+  query: string,
+  limitPerVersion = 6,
+): { version: string; scope: 'latest' | 'snapshot'; results: SearchEntry[] }[] {
+  return [
+    { scope: 'latest', version: latest.version, results: searchDocumentation(latest.entries, query, limitPerVersion) },
+    { scope: 'snapshot', version: snapshot.version, results: searchDocumentation(snapshot.entries, query, limitPerVersion) },
+  ];
+}

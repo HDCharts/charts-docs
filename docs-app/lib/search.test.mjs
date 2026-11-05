@@ -10,13 +10,14 @@ const lib = path.dirname(fileURLToPath(import.meta.url));
 const build = mkdtempSync(path.join(lib, '.test-search-'));
 let searchDocumentation;
 let searchSnippet;
+let searchBothVersions;
 
 try {
   execFileSync('tsc', [
     '--ignoreConfig', '--module', 'commonjs', '--target', 'es2022', '--skipLibCheck',
     '--outDir', build, path.join(lib, 'search.ts'),
   ], { cwd: path.dirname(lib), stdio: 'inherit' });
-  ({ searchDocumentation, searchSnippet } = createRequire(import.meta.url)(path.join(build, 'search.js')));
+  ({ searchDocumentation, searchSnippet, searchBothVersions } = createRequire(import.meta.url)(path.join(build, 'search.js')));
 } finally {
   rmSync(build, { recursive: true, force: true });
 }
@@ -40,6 +41,26 @@ test('search matches Kotlin API symbols in section bodies', () => {
   assert.equal(searchDocumentation(entries, 'tochartdata')[0].url, entries[0].url);
   assert.deepEqual(searchDocumentation(entries, 'missing'), []);
   assert.deepEqual(searchDocumentation(entries, ''), []);
+});
+
+test('searches the latest release and snapshot together without choosing a scope', () => {
+  const latest = {
+    version: '3.1.0',
+    entries: [{ title: 'Line Chart', url: '/3.1.0/wiki/line-chart', text: 'Gradient support' }],
+  };
+  const snapshot = {
+    version: 'snapshot',
+    entries: [{ title: 'Line Chart', url: '/snapshot/wiki/line-chart', text: 'Gradient support' }],
+  };
+  const groups = searchBothVersions(latest, snapshot, 'gradient');
+  assert.deepEqual(groups.map(({ scope, version }) => [scope, version]), [
+    ['latest', '3.1.0'],
+    ['snapshot', 'snapshot'],
+  ]);
+  assert.deepEqual(groups.flatMap(({ results }) => results.map((entry) => entry.url)), [
+    '/3.1.0/wiki/line-chart',
+    '/snapshot/wiki/line-chart',
+  ]);
 });
 
 test('snippets show nearby matches and stay bounded', () => {

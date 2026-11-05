@@ -32,9 +32,9 @@ export function MarketingHeader({ versionId }: MarketingHeaderProps) {
           <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
-          <DocsSearch versionId={versionId} marketing />
-          <div className="marketing-nav-setup-cta">
+        <div className="ml-auto flex min-w-0 flex-1 items-center gap-2">
+          <DocsSearch marketing />
+          <div className="marketing-nav-setup-cta shrink-0">
             <SetupMenu versionId={versionId} variant="marketing" />
           </div>
 
