@@ -18,7 +18,7 @@ const ICONS: Record<string, string> = {
   screenshots: 'screenshots',
 };
 
-export function WikiNavIcon({ slug }: { slug: string }) {
+export function WikiNavIcon({ slug, active }: { slug: string; active: boolean }) {
   const icon = ICONS[slug] ?? 'document';
 
   return (
@@ -26,7 +26,7 @@ export function WikiNavIcon({ slug }: { slug: string }) {
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 24 24"
-      className="h-[18px] w-[18px] shrink-0"
+      className={`h-[18px] w-[18px] shrink-0 ${active ? 'text-[var(--color-primary)]' : 'text-[var(--text-muted)]'}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1.7"
