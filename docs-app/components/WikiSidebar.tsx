@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRef } from 'react';
+import { WikiNavIcon } from './WikiNavIcon';
 import type { NavItem } from '@/lib/types';
 import { useScrollActiveIntoView } from '@/lib/use-scroll-active-into-view';
 import { cn, stickySidebar } from '@/lib/utils';
@@ -44,7 +45,10 @@ export function WikiSidebar({ navigation }: WikiSidebarProps) {
               )}
               aria-current={isActive(item.path) ? 'page' : undefined}
             >
-              {item.title}
+              <span className="flex min-w-0 items-center gap-2.5">
+                <WikiNavIcon slug={item.slug} active={isActive(item.path)} />
+                <span className="min-w-0">{item.title}</span>
+              </span>
               {item.badgeCount ? (
                 <span className="rounded-full bg-[var(--color-warning)] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[var(--bg-primary)]">
                   {item.badgeCount}
