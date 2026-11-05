@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { Breadcrumbs, MarkdownRenderer, OnThisPage } from '@/components';
 import { getMigrationReleasePage, getMigrationReleases, getPageHeadings } from '@/lib/content';
 import { getAllVersions, hasLargeGifs } from '@/lib/versions';
+import { getWikiImageDimensions } from '@/lib/wiki-image-dimensions';
 import { getWikiSourceRevision } from '@/lib/wiki-source-revisions';
 import { getCanonicalUrl } from '@/lib/seo';
 
@@ -49,7 +50,7 @@ export default async function MigrationReleasePage({ params }: MigrationReleaseP
             { label: release },
           ]}
         />
-        <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} sourceRevision={getWikiSourceRevision(version)} />
+        <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} sourceRevision={getWikiSourceRevision(version)} imageDimensions={getWikiImageDimensions(page.content)} />
       </article>
       <OnThisPage headings={headings} />
     </div>
