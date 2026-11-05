@@ -13,6 +13,7 @@ let getWikiImageDimensions;
 try {
   execFileSync('tsc', [
     '--ignoreConfig', '--module', 'commonjs', '--target', 'es2022', '--skipLibCheck',
+    '--types', 'node',
     '--outDir', build, path.join(lib, 'wiki-image-dimensions.ts'),
   ], { cwd: path.dirname(lib), stdio: 'inherit' });
   ({ getWikiImageDimensions } = createRequire(import.meta.url)(path.join(build, 'wiki-image-dimensions.js')));
