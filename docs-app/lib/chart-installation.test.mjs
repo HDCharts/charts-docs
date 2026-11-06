@@ -51,20 +51,44 @@ test('snapshot repository is required for snapshot artifacts, not releases', () 
   assert.equal(isSnapshotChartDependency({ ...bar, version: '3.1.0' }), false);
 });
 
-test('all snapshot chart pages provide their module without a maintained chart list', () => {
-  const wikiDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../content/snapshot/wiki');
-  const files = fs.readdirSync(wikiDir).filter((file) => file.endsWith('-chart.md'));
-  assert.ok(files.length > 0);
-
+test('all versioned chart pages have a single installable dependency in Setup', () => {
+  const contentRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../content');
+  const versions = fs.readdirSync(contentRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory());
   const fence = String.fromCharCode(96).repeat(3);
-  const snippetPattern = new RegExp(fence + 'kotlin\\s*\\n(implementation\\("[^"\\n]+"\\))\\s*\\n' + fence);
-  for (const file of files) {
-    const content = fs.readFileSync(path.join(wikiDir, file), 'utf8');
-    const match = content.match(snippetPattern);
-    assert.ok(match, file + ' is missing a standalone dependency snippet');
+  const snippetPattern = new RegExp(fence + 'kotlin\\s*\\n(implementation\\("[^"\\n]+"\\))\\s*\\n' + fence, 'g');
+  let checked = 0;
 
-    // Wiki {{artifactVersion}} is resolved by getPage() at render time.
-    const dependency = parseChartDependency(match[1].replace('{{artifactVersion}}', '3.2.0-SNAPSHOT'));
-    assert.ok(dependency, file + ' must have published HDCharts coordinates');
+  for (const version of versions) {
+    const wikiDir = path.join(contentRoot, version.name, 'wiki');
+    if (!fs.existsSync(wikiDir)) continue;
+    const files = fs.readdirSync(wikiDir).filter((file) => file.endsWith('-chart.md'));
+
+    for (const file of files) {
+      const content = fs.readFileSync(path.join(wikiDir, file), 'utf8');
+      const label = version.name + '/' + file;
+      const setups = [...content.matchAll(/^## Setup$/gm)];
+      assert.equal(setups.length, 1, label + ' must contain exactly one Setup section');
+
+      const matches = [...content.matchAll(snippetPattern)];
+      assert.equal(matches.length, 1, label + ' must contain exactly one standalone dependency');
+      const setupStart = setups[0].index;
+      const nextSection = content.indexOf('\n## ', setupStart + '## Setup'.length);
+      const setupEnd = nextSection === -1 ? content.length : nextSection;
+      assert.ok(matches[0].index > setupStart && matches[0].index < setupEnd,
+        label + ' must place the dependency in Setup');
+
+      // Wiki {{artifactVersion}} is resolved by getPage() at render time.
+      const versionNumber = version.name === 'snapshot' ? '3.2.0-SNAPSHOT' : version.name;
+      const dependency = parseChartDependency(matches[0][1].replace('{{artifactVersion}}', versionNumber));
+      assert.ok(dependency, label + ' must use published HDCharts coordinates');
+
+      const apiReference = content.indexOf('\n## API Reference');
+      if (apiReference !== -1) {
+        assert.ok(setupStart < apiReference, label + ' must place Setup before API Reference');
+      }
+      checked++;
+    }
   }
+
+  assert.ok(checked > 0, 'expected at least one versioned chart page');
 });
