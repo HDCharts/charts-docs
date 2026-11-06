@@ -57,3 +57,9 @@ PieChart(
     selectedValueFormatter = ChartValueFormatter { share -> "${share.roundToInt()}%" },
 )
 ```
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:pie:{{artifactVersion}}")
+```

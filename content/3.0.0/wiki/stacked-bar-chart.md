@@ -57,3 +57,9 @@ StackedBarChartDefaults.segments(
     gradient = ChartGradients.fade(endAlpha = 0.35f),
 )
 ```
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:stacked-bar:{{artifactVersion}}")
+```
