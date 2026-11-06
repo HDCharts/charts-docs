@@ -59,6 +59,23 @@ test('snapshot wiki dependency uses the published version in the real manifest',
   assert.doesNotMatch(page.content, /\{\{artifactVersion\}\}/);
 });
 
+
+test('snapshot badges use the docs manifest, not highest Maven metadata version', () => {
+  for (const version of ['3.0.0', '3.1.0', 'snapshot']) {
+    const page = getPage(version, 'getting-started');
+
+    assert.ok(page);
+    assert.ok(
+      page.content.includes(
+        `https://img.shields.io/static/v1?label=Snapshots&message=${snapshotArtifactVersion}&color=4285F4`,
+      ),
+      `expected ${version} snapshot badge to match the manifest`,
+    );
+    assert.doesNotMatch(page.content, /maven-metadata\/v\?/);
+    assert.doesNotMatch(page.content, /\{\{snapshotVersion\}\}/);
+  }
+});
+
 test('release wiki uses its selected version and existing route substitution', () => {
   assert.equal(resolveArtifactVersion('3.0.0'), '3.0.0');
   const page = getPage('3.0.0', 'getting-started');
