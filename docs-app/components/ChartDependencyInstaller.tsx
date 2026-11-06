@@ -76,7 +76,7 @@ export function ChartDependencyInstaller({
       aria-label="Install this chart"
       className="my-6 min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-4"
     >
-      <h3 className="mb-1 text-lg font-semibold text-[var(--text-primary)]">Add this chart to your project</h3>
+      <h3 className="mt-0 mb-1 text-lg font-semibold text-[var(--text-primary)]">Add this chart to your project</h3>
       <p className="mb-4 text-sm text-[var(--text-secondary)]">
         Choose the target and dependency scope to generate a Gradle Kotlin DSL snippet.
       </p>
