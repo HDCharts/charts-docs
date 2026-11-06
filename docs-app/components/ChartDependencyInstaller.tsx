@@ -36,7 +36,7 @@ function targetNote(target: Target): string {
     case 'androidMain':
       return 'For an Android target within a Kotlin Multiplatform module, not an Android-only module.';
     default:
-      return 'Shared by all configured Kotlin Multiplatform targets. Add to the module’s existing Kotlin source-set configuration.';
+      return 'A commonMain dependency is shared with every consuming target. Use this only if HDCharts publishes compatible variants for all those targets; otherwise choose a supported platform source set.';
   }
 }
 
@@ -129,15 +129,15 @@ export function ChartDependencyInstaller({
       </p>
 
       {snapshot ? (
-        <details className="mt-4 rounded-md border border-[var(--border-color)] p-3">
-          <summary className="cursor-pointer text-sm font-semibold text-[var(--text-primary)]">
+        <div className="mt-4 rounded-md border border-[var(--border-color)] p-3">
+          <h4 className="m-0 text-sm font-semibold text-[var(--text-primary)]">
             Required for snapshot builds: Maven repository
-          </summary>
+          </h4>
           <p className="mb-3 mt-3 text-sm text-[var(--text-secondary)]">
             Merge this repository into the existing repositories in settings.gradle.kts. Do not replace your other repositories.
           </p>
           <Snippet code={SNAPSHOT_REPOSITORY_SNIPPET} />
-        </details>
+        </div>
       ) : (
         <p className="mt-3 text-xs text-[var(--text-muted)]">
           Requires Maven Central in your Gradle dependency repositories.
