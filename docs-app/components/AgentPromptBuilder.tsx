@@ -1,31 +1,20 @@
 'use client';
 
 /* eslint-disable react-hooks/set-state-in-effect -- Intentional: controlled state sync patterns */
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { copyToClipboard } from '@/lib/copy-to-clipboard';
 import { cn } from '@/lib/utils';
-
-type PlatformOption = 'KMP + Compose' | 'Android Compose' | 'Compose Multiplatform';
-type ScopeOption = 'Selected chart module' | 'HDCharts umbrella (all modules)';
+import { buildAgentPrompt, PLATFORM_OPTIONS, resolveRequestedChartSlug } from '@/lib/agent-prompt.mjs';
 
 interface ChartPage {
   slug: string;
   title: string;
+  dependency?: { groupId: string; artifactId: string; version: string } | null;
 }
-
-const PLATFORM_OPTIONS: PlatformOption[] = [
-  'KMP + Compose',
-  'Android Compose',
-  'Compose Multiplatform',
-];
-const SCOPE_OPTIONS: ScopeOption[] = [
-  'Selected chart module',
-  'HDCharts umbrella (all modules)',
-];
-const CHARTS_REPO_URL = 'https://github.com/HDCharts/charts';
 
 interface AgentPromptBuilderProps {
   versionId: string;
+  artifactVersion: string | null;
   chartPages: ChartPage[];
 }
 
@@ -44,69 +33,47 @@ function useSiteOrigin() {
   return useSyncExternalStore(subscribe, getSnapshot, () => '');
 }
 
-export function AgentPromptBuilder({ versionId, chartPages }: AgentPromptBuilderProps) {
-  const [platform, setPlatform] = useState<PlatformOption>('KMP + Compose');
-  const [scope, setScope] = useState<ScopeOption>('Selected chart module');
-  const [selectedChartSlugs, setSelectedChartSlugs] = useState<string[]>(
-    chartPages[0] ? [chartPages[0].slug] : [],
-  );
-  const [includeSampleData, setIncludeSampleData] = useState(true);
-  const [includeNavigation, setIncludeNavigation] = useState(false);
+export function AgentPromptBuilder({ versionId, artifactVersion, chartPages }: AgentPromptBuilderProps) {
+  const [platform, setPlatform] = useState('auto');
+  const [requestedChartSlug, setRequestedChartSlug] = useState<string | null>(null);
   const [extraRequirements, setExtraRequirements] = useState('');
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const [copyAnnouncement, setCopyAnnouncement] = useState('');
   const siteOrigin = useSiteOrigin();
   const promptPreRef = useRef<HTMLPreElement>(null);
-  const isUmbrellaScope = scope === 'HDCharts umbrella (all modules)';
-  const prevIsUmbrellaScope = useRef(isUmbrellaScope);
-
-  useLayoutEffect(() => {
-    if (isUmbrellaScope && !prevIsUmbrellaScope.current) {
-      setSelectedChartSlugs(chartPages.map((page) => page.slug));
-    }
-    prevIsUmbrellaScope.current = isUmbrellaScope;
-  }, [isUmbrellaScope, chartPages]);
+  // Retain chart context from versioned Setup links, without requiring chart
+  // selection on the website. Generic entry points let the agent ask the user.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('chart');
+    setRequestedChartSlug(resolveRequestedChartSlug(requested, chartPages));
+  }, [chartPages]);
 
   const selectedChartPages = useMemo(
-    () => chartPages.filter((page) => selectedChartSlugs.includes(page.slug)),
-    [chartPages, selectedChartSlugs],
+    () => chartPages.filter((page) => page.slug === requestedChartSlug),
+    [chartPages, requestedChartSlug],
   );
 
   const prompt = useMemo(
     () =>
       buildAgentPrompt({
         versionId,
+        artifactVersion,
         siteOrigin,
         platform,
-        scope,
         selectedChartPages,
-        includeSampleData,
-        includeNavigation,
+        availableChartPages: chartPages,
         extraRequirements,
       }),
     [
       selectedChartPages,
+      chartPages,
       extraRequirements,
-      includeNavigation,
-      includeSampleData,
       platform,
-      scope,
       siteOrigin,
       versionId,
+      artifactVersion,
     ],
   );
-
-  const onChartToggle = useCallback((slug: string) => {
-    if (isUmbrellaScope) {
-      return;
-    }
-    setSelectedChartSlugs((current) => {
-      const next = current.includes(slug)
-        ? current.filter((item) => item !== slug)
-        : [...current, slug];
-      return next.length > 0 ? next : [slug];
-    });
-  }, [isUmbrellaScope]);
 
   const onCopy = useCallback(async () => {
     const success = await copyToClipboard(prompt);
@@ -156,139 +123,51 @@ export function AgentPromptBuilder({ versionId, chartPages }: AgentPromptBuilder
           Agent Prompt Builder
         </h1>
         <p className="mb-6 text-base text-[var(--text-secondary)]">
-          Configure what your integration agent should do, then copy the generated prompt and paste
-          it into your preferred AI assistant.
+          Copy this prompt into your coding agent. It will inspect your project and ask about chart types,
+          migration needs, and screen placement, including a separate demo screen for testing.
         </p>
 
         <div className="mb-4 flex flex-col gap-2 md:container-[52rem]:flex-row md:container-[52rem]:flex-wrap">
           <div className="flex flex-col gap-2">
             <label htmlFor="agent-platform" className="text-sm font-semibold text-[var(--text-secondary)]">
-              Platform
+              Preferred platform
             </label>
             <select
               id="agent-platform"
               value={platform}
-              onChange={(event) => setPlatform(event.target.value as PlatformOption)}
+              onChange={(event) => setPlatform(event.target.value)}
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-tertiary)] px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
             >
               {PLATFORM_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        <details className="mb-4 mt-2 rounded-md border border-[var(--border-color)] bg-[var(--bg-secondary)]">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)] [&::-webkit-details-marker]:hidden">
-            Advanced options
-            <svg
-              className="h-3 w-3 shrink-0 transition-transform [[open]_&]:rotate-180"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 4L6 8L10 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </summary>
-          <div className="border-t border-[var(--border-color)] p-4">
-            <div className="mb-4 flex flex-col gap-2">
-              <label htmlFor="agent-scope" className="text-sm font-semibold text-[var(--text-secondary)]">
-                Scope
-              </label>
-              <select
-                id="agent-scope"
-                value={scope}
-                onChange={(event) => setScope(event.target.value as ScopeOption)}
-                className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-tertiary)] px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
-              >
-                {SCOPE_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <p className="mb-5 text-sm text-[var(--text-secondary)]">
+          {selectedChartPages.length > 0 ? (
+            <>Starting with <strong>{selectedChartPages[0].title}</strong> from its Setup page. Your agent can adapt if you request other charts.</>
+          ) : (
+            'No chart selection needed here. Your agent will ask which chart types or visualization goals you have.'
+          )}
+        </p>
 
-            <div className="mb-4 flex flex-col gap-2">
-              <span id="chart-chips-label" className="text-sm font-semibold text-[var(--text-secondary)]">
-                Chart types to include
-              </span>
-              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="chart-chips-label">
-                {chartPages.map((page) => {
-                  const selected = selectedChartSlugs.includes(page.slug);
-                  return (
-                    <button
-                      key={page.slug}
-                      type="button"
-                      className={cn(
-                        "rounded-full border border-[var(--border-subtle)] bg-[var(--surface-overlay)] px-3 py-2 text-sm transition-colors",
-                        "hover:bg-[var(--surface-overlay-hover)] hover:text-[var(--text-primary)]",
-                        selected && "border-[var(--color-primary)] bg-[var(--surface-tint)] text-[var(--text-primary)] font-semibold",
-                        (isUmbrellaScope || selected) && "[disabled]:opacity-50 [disabled]:cursor-not-allowed",
-                        isUmbrellaScope && "cursor-not-allowed"
-                      )}
-                      onClick={() => onChartToggle(page.slug)}
-                      aria-pressed={selected}
-                      disabled={isUmbrellaScope}
-                    >
-                      {page.title}
-                    </button>
-                  );
-                })}
-              </div>
-              {isUmbrellaScope ? (
-                <p className="mt-2 text-xs text-[var(--text-muted)]">Umbrella includes all chart modules, so chart selection is locked.</p>
-              ) : null}
-            </div>
-
-            <div className="mb-4 flex flex-wrap gap-4 md:container-[52rem]:flex-col md:container-[52rem]:items-start">
-              <label htmlFor="agent-sample-data" className="flex cursor-pointer items-center gap-2 text-sm text-[var(--text-secondary)]">
-                <input
-                  id="agent-sample-data"
-                  type="checkbox"
-                  checked={includeSampleData}
-                  onChange={(event) => setIncludeSampleData(event.target.checked)}
-                  className="h-4 w-4 shrink-0 rounded border-[var(--border-subtle)] bg-[var(--bg-tertiary)] text-[var(--color-primary)] accent-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
-                />
-                Include sample data
-              </label>
-              <label htmlFor="agent-include-nav" className="flex cursor-pointer items-center gap-2 text-sm text-[var(--text-secondary)]">
-                <input
-                  id="agent-include-nav"
-                  type="checkbox"
-                  checked={includeNavigation}
-                  onChange={(event) => setIncludeNavigation(event.target.checked)}
-                  className="h-4 w-4 shrink-0 rounded border-[var(--border-subtle)] bg-[var(--bg-tertiary)] text-[var(--color-primary)] accent-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
-                />
-                Include navigation/screen wiring
-              </label>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="agent-extra" className="text-sm font-semibold text-[var(--text-secondary)]">
-                Extra requirements
-              </label>
-              <textarea
-                id="agent-extra"
-                value={extraRequirements}
-                onChange={(event) => setExtraRequirements(event.target.value)}
-                placeholder="Example: optimize for small APK size and avoid unnecessary modules."
-                rows={3}
-                className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-tertiary)] px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
-              />
-            </div>
-          </div>
-        </details>
+        <div className="mb-4 flex flex-col gap-2">
+          <label htmlFor="agent-extra" className="text-sm font-semibold text-[var(--text-secondary)]">
+            Extra requirements <span className="font-normal text-[var(--text-muted)]">(optional)</span>
+          </label>
+          <textarea
+            id="agent-extra"
+            value={extraRequirements}
+            onChange={(event) => setExtraRequirements(event.target.value)}
+            placeholder="e.g. Match our app theme, preserve existing chart interactions, support dark mode, and avoid unrelated refactoring."
+            rows={3}
+            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-tertiary)] px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-soft)]"
+          />
+        </div>
 
         <div className="rounded-lg border border-[var(--border-color)] bg-[var(--code-bg)] p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
@@ -342,75 +221,4 @@ export function AgentPromptBuilder({ versionId, chartPages }: AgentPromptBuilder
       </section>
     </>
   );
-}
-
-interface PromptInputs {
-  versionId: string;
-  siteOrigin: string;
-  platform: PlatformOption;
-  scope: ScopeOption;
-  selectedChartPages: ChartPage[];
-  includeSampleData: boolean;
-  includeNavigation: boolean;
-  extraRequirements: string;
-}
-
-function buildAgentPrompt(inputs: PromptInputs): string {
-  const {
-    versionId,
-    siteOrigin,
-    platform,
-    scope,
-    selectedChartPages,
-    includeSampleData,
-    includeNavigation,
-    extraRequirements,
-  } = inputs;
-
-  const scopeLine =
-    scope === 'Selected chart module'
-      ? 'Prefer scoped chart modules over umbrella dependency.'
-      : 'Use umbrella dependency and include all required modules.';
-
-  const sampleDataLine = includeSampleData
-    ? 'Include minimal sample data for first render.'
-    : 'Do not include sample data.';
-
-  const navigationLine = includeNavigation
-    ? 'Include navigation and screen wiring guidance.'
-    : 'Do not include app navigation setup.';
-
-  const extraLine = extraRequirements.trim()
-    ? `Extra requirements: ${extraRequirements.trim()}`
-    : 'Extra requirements: none';
-  const buildDocsUrl = (path: string) => (siteOrigin ? `${siteOrigin}${path}` : path);
-  const manualPath = buildDocsUrl(`/${versionId}/wiki/getting-started`);
-  const chartDocLines = selectedChartPages.map(
-    (page) => `- ${page.title} docs: ${buildDocsUrl(`/${versionId}/wiki/${page.slug}`)}`,
-  );
-  // Give agents the published Dokka entry point directly. The local `/api`
-  // route is a redirect intended for browser navigation, while generated
-  // prompts should point at the API document that agents need to read.
-  const apiPath = buildDocsUrl(`/static/api/${versionId}/index.html`);
-
-  return [
-    'You are an HDCharts integration agent.',
-    '',
-    'Goal:',
-    '- Help integrate HDCharts into an app based on the constraints below.',
-    '',
-    'Context:',
-    `- Platform: ${platform}`,
-    `- Chart types: ${selectedChartPages.map((page) => page.title).join(', ')}`,
-    `- Scope policy: ${scopeLine}`,
-    `- Data policy: ${sampleDataLine}`,
-    `- Navigation policy: ${navigationLine}`,
-    `- ${extraLine}`,
-    '',
-    'Primary sources:',
-    `- Manual setup guide: ${manualPath}`,
-    ...chartDocLines,
-    `- API reference: ${apiPath}`,
-    `- Repository: ${CHARTS_REPO_URL}`,
-  ].join('\n');
 }

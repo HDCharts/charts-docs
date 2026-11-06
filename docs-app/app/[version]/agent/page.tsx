@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getAllVersions } from '@/lib/versions';
-import { getChartPages } from '@/lib/content';
+import { getChartPages, getPage, resolveArtifactVersion } from '@/lib/content';
+import { extractChartDependency } from '@/lib/agent-prompt.mjs';
 import { AgentPromptBuilder } from '@/components/AgentPromptBuilder';
 import { getCanonicalUrl } from '@/lib/seo';
 
@@ -21,9 +22,20 @@ export async function generateMetadata({ params }: AgentPromptPageProps): Promis
 
 export default async function AgentPromptPage({ params }: AgentPromptPageProps) {
   const { version } = await params;
+  const chartPages = getChartPages(version).map((page) => ({
+    ...page,
+    // Chart modules come from each version's canonical Setup line, not a
+    // maintained chart-to-artifact registry.
+    dependency: extractChartDependency(getPage(version, page.slug)?.content ?? ''),
+  }));
+
   return (
     <div className="mx-auto max-w-[900px] px-4">
-      <AgentPromptBuilder versionId={version} chartPages={getChartPages(version)} />
+      <AgentPromptBuilder
+        versionId={version}
+        artifactVersion={resolveArtifactVersion(version)}
+        chartPages={chartPages}
+      />
     </div>
   );
 }

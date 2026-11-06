@@ -55,6 +55,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
           imageDimensions={getWikiImageDimensions(page.content)}
           versionId={version}
           chartDependencies={pageSlug.endsWith('-chart')}
+          chartSlug={pageSlug.endsWith('-chart') ? pageSlug : undefined}
         />
       </article>
       <OnThisPage headings={headings} />
