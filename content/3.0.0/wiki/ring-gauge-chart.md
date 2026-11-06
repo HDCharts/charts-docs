@@ -9,12 +9,6 @@ values on one scale.
 
 ![Ring Gauge Demo](/content/{{version}}/wiki/assets/ring_gauge_default.gif)
 
-Add the `gauge` module:
-
-```kotlin
-implementation("io.github.hdcharts:gauge:{{artifactVersion}}")
-```
-
 A ring gauge is one series. Each value fills its ring from the start of the range towards the end,
 and the first value is the outer ring. Categories are optional and name the rings in the legend and
 while they are selected; when you pass them, there must be one per value.
@@ -102,3 +96,9 @@ The chart shows an error instead of drawing when:
 - The category count or the color count does not match the value count.
 
 If `max` is not greater than `min`, the chart draws the default `0..100` range.
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:gauge:{{artifactVersion}}")
+```

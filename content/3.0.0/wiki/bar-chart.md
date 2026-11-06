@@ -53,3 +53,9 @@ fun ShowBarWithRange() {
 
 Bars take a linear gradient through `BarChartDefaults.bars(gradient = ...)`,
 covered in [Gradients](/{{version}}/wiki/gradients).
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:bar:{{artifactVersion}}")
+```

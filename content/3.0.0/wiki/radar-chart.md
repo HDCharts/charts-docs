@@ -36,3 +36,9 @@ Each category name sits at the end of its axis, and the web shrinks to leave roo
 chart keeps its full width in a wider box, so a small chart shows a small web and readable labels.
 Pass `RadarChartDefaults.style(axes = RadarChartDefaults.axes(labelVisible = false))` for a web that
 fills the chart instead.
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:radar:{{artifactVersion}}")
+```

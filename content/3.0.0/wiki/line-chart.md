@@ -207,3 +207,9 @@ fun ShowLiveLine() {
     )
 }
 ```
+
+## Setup
+
+```kotlin
+implementation("io.github.hdcharts:line:{{artifactVersion}}")
+```

@@ -48,7 +48,14 @@ export default async function WikiPage({ params }: WikiPageProps) {
         {pageSlug !== '' ? (
           <Breadcrumbs items={[{ label: 'Docs', href: `/${version}/wiki` }, { label: page.title }]} />
         ) : null}
-        <MarkdownRenderer content={page.content} usesLargeGif={hasLargeGifs(version)} sourceRevision={getWikiSourceRevision(version)} imageDimensions={getWikiImageDimensions(page.content)} />
+        <MarkdownRenderer
+          content={page.content}
+          usesLargeGif={hasLargeGifs(version)}
+          sourceRevision={getWikiSourceRevision(version)}
+          imageDimensions={getWikiImageDimensions(page.content)}
+          versionId={version}
+          chartDependencies={pageSlug.endsWith('-chart')}
+        />
       </article>
       <OnThisPage headings={headings} />
     </div>
