@@ -60,13 +60,14 @@ interface MarkdownRendererProps {
   sourceRevision?: string | null;
   versionId?: string;
   chartDependencies?: boolean;
+  chartSlug?: string;
   imageDimensions?: Record<string, { width: number; height: number }>;
 }
 
-export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null, imageDimensions, versionId = '', chartDependencies = false }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null, imageDimensions, versionId = '', chartDependencies = false, chartSlug }: MarkdownRendererProps) {
   const components = useMemo(
-    () => createMarkdownComponents(usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies),
-    [usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies],
+    () => createMarkdownComponents(usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies, chartSlug),
+    [usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies, chartSlug],
   );
 
   return (
@@ -164,6 +165,7 @@ function createMarkdownComponents(
   imageDimensions?: Record<string, { width: number; height: number }>,
   versionId = '',
   chartDependencies = false,
+  chartSlug?: string,
 ) {
   return createSharedMarkdownComponents(
     slugifyHeading,
@@ -172,7 +174,7 @@ function createMarkdownComponents(
         ? parseChartDependency(code)
         : null;
       if (dependency) {
-        return <ChartDependencyInstaller dependency={dependency} versionId={versionId} />;
+        return <ChartDependencyInstaller dependency={dependency} versionId={versionId} chartSlug={chartSlug} />;
       }
 
       const sourceUrl = source && sourceRevision

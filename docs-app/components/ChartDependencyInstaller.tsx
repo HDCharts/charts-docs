@@ -53,9 +53,11 @@ function Snippet({ code }: { code: string }) {
 export function ChartDependencyInstaller({
   dependency,
   versionId,
+  chartSlug,
 }: {
   dependency: ChartDependency;
   versionId: string;
+  chartSlug?: string;
 }) {
   const selectorId = useId();
   const [target, setTarget] = useState<Target>('commonMain');
@@ -144,15 +146,22 @@ export function ChartDependencyInstaller({
         </p>
       )}
 
-      <p className="mb-0 mt-4 text-sm text-[var(--text-secondary)]">
-        For repository configuration and additional setup, see the{' '}
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
         <a
           href={'/' + encodeURIComponent(versionId) + '/wiki/getting-started'}
           className="text-[var(--link-color)] underline underline-offset-2 hover:text-[var(--link-color-hover)]"
         >
-          manual setup guide
-        </a>.
-      </p>
+          Manual setup guide
+        </a>
+        {chartSlug ? (
+          <a
+            href={'/' + encodeURIComponent(versionId) + '/agent?chart=' + encodeURIComponent(chartSlug)}
+            className="text-[var(--link-color)] underline underline-offset-2 hover:text-[var(--link-color-hover)]"
+          >
+            Generate an agent prompt for this chart
+          </a>
+        ) : null}
+      </div>
     </section>
   );
 }
