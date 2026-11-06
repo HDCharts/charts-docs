@@ -8,7 +8,9 @@ import { slugifyHeading } from '@/lib/anchors';
 import { remarkWikiExampleMarkers } from '@/lib/remark-wiki-example-markers.mjs';
 import { buildWikiSourceUrl } from '@/lib/wiki-source-links.mjs';
 import { cn } from '@/lib/utils';
+import { parseChartDependency } from '@/lib/chart-installation.mjs';
 import { MermaidDiagram } from './MermaidDiagram';
+import { ChartDependencyInstaller } from './ChartDependencyInstaller';
 import { CodeBlockContainer, createSharedMarkdownComponents } from './shared-markdown';
 
 let highlighterPromise: Promise<Highlighter> | null = null;
@@ -56,13 +58,15 @@ interface MarkdownRendererProps {
   content: string;
   usesLargeGif?: boolean;
   sourceRevision?: string | null;
+  versionId?: string;
+  chartDependencies?: boolean;
   imageDimensions?: Record<string, { width: number; height: number }>;
 }
 
-export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null, imageDimensions }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, usesLargeGif = false, sourceRevision = null, imageDimensions, versionId = '', chartDependencies = false }: MarkdownRendererProps) {
   const components = useMemo(
-    () => createMarkdownComponents(usesLargeGif, sourceRevision, imageDimensions),
-    [usesLargeGif, sourceRevision, imageDimensions],
+    () => createMarkdownComponents(usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies),
+    [usesLargeGif, sourceRevision, imageDimensions, versionId, chartDependencies],
   );
 
   return (
@@ -158,10 +162,19 @@ function createMarkdownComponents(
   usesLargeGif: boolean,
   sourceRevision: string | null,
   imageDimensions?: Record<string, { width: number; height: number }>,
+  versionId = '',
+  chartDependencies = false,
 ) {
   return createSharedMarkdownComponents(
     slugifyHeading,
     ({ code, language, source }) => {
+      const dependency = chartDependencies && language === 'kotlin' && !source
+        ? parseChartDependency(code)
+        : null;
+      if (dependency) {
+        return <ChartDependencyInstaller dependency={dependency} versionId={versionId} />;
+      }
+
       const sourceUrl = source && sourceRevision
         ? buildWikiSourceUrl(source, sourceRevision)
         : null;
