@@ -705,7 +705,8 @@ export function getPage(versionId: string, slug: string): DocPage | null {
     let pageContent = content
       .replace(/\{\{version\}\}/g, versionId)
       .replace(/\{\{versionLabel\}\}/g, versionLabel)
-      .replace(/\{\{artifactVersion\}\}/g, resolveArtifactVersion(versionId) ?? '{{artifactVersion}}');
+      .replace(/\{\{artifactVersion\}\}/g, resolveArtifactVersion(versionId) ?? '{{artifactVersion}}')
+      .replace(/\{\{snapshotVersion\}\}/g, resolveArtifactVersion('snapshot') ?? 'unavailable');
 
     if (slug === '') {
       const changesetsMarkdown = renderChangesetsMarkdown(getVersionChangesets(versionId));
