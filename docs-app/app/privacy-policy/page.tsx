@@ -42,9 +42,8 @@ export default function PrivacyPolicyPage() {
       <p className="mb-4 text-base text-[var(--text-secondary)]">
         The HDCharts library includes optional chart usage telemetry, powered
         by PostHog, that reports when a chart is displayed in an application.
-        Reporting is enabled by default on Android, JVM, and Wasm; it is
-        currently disabled on iOS. The telemetry sends one event per chart
-        composition lifetime.
+        Reporting is enabled by default on Android, iOS, JVM, and Wasm. The
+        telemetry sends one event per chart composition lifetime.
       </p>
       <p className="mb-4 text-base text-[var(--text-secondary)]">
         The following information is collected for each reported chart display:
@@ -52,7 +51,7 @@ export default function PrivacyPolicyPage() {
       <ul className="mb-4 ml-6 list-disc text-base text-[var(--text-secondary)]">
         <li>Chart type (for example, line, bar, or pie).</li>
         <li>PostHog persistent anonymous installation identifier.</li>
-        <li>Platform (Android, JVM, or Wasm).</li>
+        <li>Platform (Android, iOS, JVM, or Wasm).</li>
         <li>HDCharts library version in use.</li>
         <li>PostHog SDK metadata (SDK name and version, event timestamp, event ID).</li>
       </ul>
